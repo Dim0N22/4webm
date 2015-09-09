@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+//	"fmt"
 	"io/ioutil"
 	"net/http"
 	"encoding/json"
@@ -24,5 +24,8 @@ func main() {
 	err = json.Unmarshal(body, &threads)
 	check(err)
 	sort.Sort(byViews(threads.Threads))
-	fmt.Println(threads.Threads)
+
+	for _, thread := range threads.Threads {
+		thread.GetWebmLinks()
+	}
 }
