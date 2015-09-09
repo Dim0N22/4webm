@@ -5,9 +5,6 @@ import (
 	"net/http"
 	"io/ioutil"
 	"regexp"
-//	"github.com/steadway/amqp"
-	"strconv"
-	"time"
 )
 
 type thread struct {
@@ -17,8 +14,6 @@ type thread struct {
 	Timestamp int `json:"timestamp"`
 	Views int `json:"views"`
 }
-
-//href="/b/src/101559252/14418223929520.webm"
 
 type byViews []thread
 
@@ -45,13 +40,7 @@ func (thread thread) GetWebmLinks(){
 		webmUrls := re.FindAllStringSubmatch(string(body), -1)
 
 		for _, match := range webmUrls {
-			url := match[1]
-			board := match[2]
-			threadId, err := strconv.Atoi(match[3])
-			check(err)
-			webmId, err := strconv.Atoi(match[4])
-			check(err)
-			webm := webm{Url: url, Board: board, ThreadId: threadId, Id: webmId, CreateDate: time.Now()}
+			webm := NewWebm(match)
 			fmt.Println(webm)
 		}
 
