@@ -20,15 +20,13 @@ func NewWebm(match []string) *webm{
 	board := match[2]
 	threadId, err := strconv.Atoi(match[3])
 	check(err)
-	//webmId, err := strconv.Atoi(match[4])
-	check(err)
-	//webm := webm{Url: url, Board: board, ThreadId: threadId, Id: webmId, CreateDate: time.Now()}
-	webm := webm{Url: url, Board: board, ThreadId: threadId, CreateDate: time.Now()}
+	
+	webm := webm{Id:bson.NewObjectId(), Url: url, Board: board, ThreadId: threadId, CreateDate: time.Now()}
 	return &webm
 }
 
-//// saveWebmUrlIfNew saves webm url to mongo if web is new
-//// otherwise it does nothing
-//func (webm webm) saveWebmIfNew(link string){
-//	webm.
-//}
+// saveWebm saves webm url to mongo
+func (webm webm) saveWebm(){
+	err := webmCollection.Insert(webm)
+	check(err)
+}

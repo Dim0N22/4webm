@@ -41,7 +41,7 @@ func (thread thread) GetWebmLinks(){
 		fmt.Println(string(body))
 		for _, match := range webmUrls {
 			webm := NewWebm(match)
-//			webm.saveWebmIfNew()
+			webm.saveWebm()
 			fmt.Println(webm)
 		}
 

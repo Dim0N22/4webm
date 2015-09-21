@@ -7,8 +7,8 @@ import (
 	"sort"
 	"flag"
 
-	"4webm/cloudflare-bypasser"
-	"net/url"
+	//"4webm/cloudflare-bypasser"
+	//"net/url"
 	"gopkg.in/mgo.v2"
 )
 
@@ -21,6 +21,7 @@ func check(e error) {
 var (
 	MIN_VIEWS = flag.Int("w", 1000, "Minimum views to parse thread")
 	ERROR_CODE = flag.Int("e", 503, "Cloudflare error code")
+	webmCollection * mgo.Collection
 )
 
 func main() {
@@ -29,12 +30,13 @@ func main() {
 	s, err := mgo.Dial("mongodb://localhost")
 	check(err)
 	defer s.Close()
+	webmCollection = s.DB("4webm").C("webms")
 
-	url, _ := url.Parse("http://2ch.hk/b/threads.json")
+	//url, _ := url.Parse("http://2ch.hk/b/threads.json")
 
-	cloudflarebypasser.GetCloudflareClearanceCookie(url)
+	//cloudflarebypasser.GetCloudflareClearanceCookie(url)
 
-	panic("Cloudflare protection!")
+//	panic("Cloudflare protection!")
 	client := &http.Client{}
 	
 	req, err := http.NewRequest("GET", "http://2ch.hk/b/threads.json", nil)
