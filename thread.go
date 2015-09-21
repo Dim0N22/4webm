@@ -38,9 +38,10 @@ func (thread thread) GetWebmLinks(){
 		defer resp.Body.Close()
 		body, err := ioutil.ReadAll(resp.Body)
 		webmUrls := re.FindAllStringSubmatch(string(body), -1)
-
+		fmt.Println(string(body))
 		for _, match := range webmUrls {
 			webm := NewWebm(match)
+//			webm.saveWebmIfNew()
 			fmt.Println(webm)
 		}
 
