@@ -1,22 +1,22 @@
 package cloudflarebypasser
 
 import (
-	"time"
 	"errors"
+	"fmt" // TODO DELETE
+	"net/http"
+	"net/url"
 	"regexp"
 	"strconv"
-	"net/url"
-	"net/http"
-	"fmt" // TODO DELETE
+	"time"
 
-	"github.com/robertkrimen/otto"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/robertkrimen/otto"
 )
 
 const (
-	UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36"
-	Connection = "keep-alive"
-	Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+	UserAgent      = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36"
+	Connection     = "keep-alive"
+	Accept         = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
 	AcceptLanguage = "ru,en-US;q=0.8,en;q=0.6"
 	AcceptEncoding = "gzip, deflate, sdch"
 )
@@ -33,7 +33,7 @@ func GetCloudflareClearanceCookie(url *url.URL) (*http.Cookie, error) {
 	fmt.Print(req)
 	resp, err := client.Do(req)
 
-//	cookies := resp.Cookies()[0]
+	//	cookies := resp.Cookies()[0]
 
 	doc, err := goquery.NewDocumentFromResponse(resp)
 	if err != nil {
@@ -81,26 +81,26 @@ func GetCloudflareClearanceCookie(url *url.URL) (*http.Cookie, error) {
 	values.Add("jschl_answer", strconv.FormatInt(jschl_answer, 10))
 	req.URL.RawQuery = values.Encode()
 
-//	req1, err := http.NewRequest("GET", getString, nil)//"http://2ch.hk" + action + "?jschl_vc=" + jschl + "&pass=" + pass + "&jschl_answer=" + strconv.FormatInt(value + 6, 10), nil)
-//	http.que
+	//	req1, err := http.NewRequest("GET", getString, nil)//"http://2ch.hk" + action + "?jschl_vc=" + jschl + "&pass=" + pass + "&jschl_answer=" + strconv.FormatInt(value + 6, 10), nil)
+	//	http.que
 
-//	req1.Header.Add("Referer", "http://2ch.hk/b/")
-//	req1.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
-//	req1.Header.Set("Connection", "keep-alive")
-//	req1.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-//	req1.Header.Set("Upgrade-Insecure-Requests", "1")
-//	req1.Header.Set("Accept-Language", "ru,en-US;q=0.8,en;q=0.6")
-//	req1.Header.Set("Accept-Encoding", "gzip, deflate, sdch")
-//	req1.AddCookie(cookies)
-//	check(err)
+	//	req1.Header.Add("Referer", "http://2ch.hk/b/")
+	//	req1.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
+	//	req1.Header.Set("Connection", "keep-alive")
+	//	req1.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	//	req1.Header.Set("Upgrade-Insecure-Requests", "1")
+	//	req1.Header.Set("Accept-Language", "ru,en-US;q=0.8,en;q=0.6")
+	//	req1.Header.Set("Accept-Encoding", "gzip, deflate, sdch")
+	//	req1.AddCookie(cookies)
+	//	check(err)
 
 	time.Sleep(5000 * time.Millisecond)
 
-//	esrp, err := http.DefaultTransport.RoundTrip(req1)
+	//	esrp, err := http.DefaultTransport.RoundTrip(req1)
 	//fmt.Printf("%+v\n", req1)
 	//fmt.Println(resp1)
 
-//	fmt.Println(esrp.Cookies()[0])
+	//	fmt.Println(esrp.Cookies()[0])
 	fmt.Print(req)
 	return nil, nil
 }
