@@ -12,8 +12,8 @@ import (
 	"os"
 	"path"
 	"strconv"
-	"time"
 	"strings"
+	"time"
 )
 
 func check(e error) {
@@ -22,11 +22,17 @@ func check(e error) {
 	}
 }
 
+type MaxWebmId struct {
+	Id        bson.ObjectId `json:"id" bson:"_id"`
+	CurrentId int           `json:"currentId" bson:"currentId"`
+}
+
 func main() {
 	mongoSession, err := mgo.Dial("mongodb://localhost")
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
+	seqIdCollection := mongoSession.DB("4webm").C("maxwebmid")
 
 	amqpConnection, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	check(err)
@@ -69,8 +75,10 @@ func main() {
 			objId := bson.ObjectId(msg.Body)
 			webmCollection.FindId(objId).One(&webm)
 
-			req, err := http.NewRequest("GET", "http://2ch.hk/" + strings.TrimLeft(webm.Url, "/"), nil)
+			req, err := http.NewRequest("GET", "http://2ch.hk/"+strings.TrimLeft(webm.Url, "/"), nil)
 			check(err)
+
+			fmt.Println(req.URL)
 
 			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
 			req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
@@ -98,7 +106,16 @@ func main() {
 				err = ioutil.WriteFile(filePath, bytes, 0644)
 				check(err)
 
-				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
+				change := mgo.Change{
+					Update:    bson.M{"$inc": bson.M{"currentId": 1}},
+					ReturnNew: true,
+				}
+
+				id := MaxWebmId{}
+				_, err = seqIdCollection.FindId(bson.ObjectIdHex("56030ee44c0ae715b98278cb")).Apply(change, &id)
+				check(err)
+
+				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"seqid": id.CurrentId, "file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
 				check(err)
 			} else {
 				fmt.Println(err)
