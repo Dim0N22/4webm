@@ -13,6 +13,7 @@ import (
 	"path"
 	"strconv"
 	"time"
+	"strings"
 )
 
 func check(e error) {
@@ -68,7 +69,7 @@ func main() {
 			objId := bson.ObjectId(msg.Body)
 			webmCollection.FindId(objId).One(&webm)
 
-			req, err := http.NewRequest("GET", "http://2ch.hk/"+webm.Url, nil)
+			req, err := http.NewRequest("GET", "http://2ch.hk/" + strings.TrimLeft(webm.Url, "/"), nil)
 			check(err)
 
 			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
@@ -85,8 +86,9 @@ func main() {
 			hasher.Write(bytes)
 			checksum := hasher.Sum32()
 
-			err = webmCollection.Find(bson.M{"file_info.size": len(bytes), "file_info.checksum": checksum}).One(&Webm{})
-			if err == nil {
+			sameWebm := &Webm{}
+			err = webmCollection.Find(bson.M{"file_info.size": len(bytes), "file_info.checksum": checksum}).One(sameWebm)
+			if err != nil {
 				fmt.Println(len(bytes), checksum)
 
 				directoryPath := path.Join("G:/webms", strconv.Itoa(webm.ThreadId))
@@ -99,12 +101,15 @@ func main() {
 				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
 				check(err)
 			} else {
+				fmt.Println(err)
+				fmt.Println(webm)
+				fmt.Println(sameWebm)
 				fmt.Println("Found same file!")
 			}
 
 			resp.Body.Close()
 
-			sleepTime := rand.Int63n(30)
+			sleepTime := rand.Int63n(15)
 			time.Sleep(time.Duration(sleepTime) * time.Second)
 
 			msg.Ack(false)
