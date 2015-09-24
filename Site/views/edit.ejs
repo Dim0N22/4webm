@@ -6,37 +6,88 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
+<style>
+    .navigate-arrow {
+        font-size: 140px;
+        margin-top: 10%;
+        opacity: 0.05;
+    }
+
+    .navigate-arrow:hover {
+        opacity: 0.4;
+    }
+
+    /*@screen-xs*/
+    @media (max-width: 1000px) {
+        .navigate-arrow {
+            display: none;
+        }
+    }
+</style>
 <div class="container" style="margin-top: 5%">
     <div class="row">
+        <div class="col-md-2 navigate-arrow">
+            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+        </div>
         <div class="col-md-8">
             <p><em># <%= id %></em></p>
+
             <div class="embed-responsive embed-responsive-16by9">
                 <video class="embed-responsive-item" controls>
                     <source src="<%= path %>" type="video/webm">
                     Your browser does not support HTML5 video.
                 </video>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    Comments
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4" style="float: none;">
+
+            <br>
+
             <% tags.forEach(function(tag){ %>
-            <button type="button" class="btn btn-xs <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>" onclick="clickTag(this);"><%= tag.name %></button>
+            <button type="button"
+                    class="btn btn-xs <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>"
+                    onclick="clickTag(this);"><%= tag.name %></button>
             <% }); %>
+        </div>
+        <div class="col-md-2 navigate-arrow">
+            <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
         </div>
     </div>
 </div>
 
 <script>
+    var webmId = '<%= id %>';
     function clickTag(tag) {
-        console.log(tag.innerHTML);
+        var action;
+        if ($(tag).hasClass("btn-default")) {
+            // add tag
+
+            action = 'add';
+            $(tag).removeClass("btn-default");
+            $(tag).addClass("btn-success");
+        } else {
+            // remove tag
+
+            action = 'remove';
+            $(tag).addClass("btn-default");
+            $(tag).removeClass("btn-success");
+        }
+
+        $.ajax({
+            url: '/api/webm/' + webmId,
+            type: 'PUT',
+            data: {
+                property: 'tags',
+                action: action,
+                value: tag.innerHTML
+            }
+        });
+    }
+
+    function next() {
+
+    }
+
+    function prev() {
+
     }
 </script>
 
