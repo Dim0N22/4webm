@@ -12,6 +12,7 @@
     "body-parser": "^1.14.0",
     "compression": "^1.5.2",
     "cookie-parser": "^1.4.0",
+    "ejs": "^2.3.4",
     "express": "^4.13.3"
   }
 }
