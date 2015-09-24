@@ -13,6 +13,7 @@
     "compression": "^1.5.2",
     "cookie-parser": "^1.4.0",
     "ejs": "^2.3.4",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "mongoose": "^4.1.8"
   }
 }

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var db = require('../db');
 
 
 router.get('/', function (req, res) {
@@ -13,6 +14,13 @@ router.get('/:id([0-9]+)', function (req, res) {
 
 
 router.get('/edit/:id([0-9]+)', function (req, res) {
+//webms.find()
+//    .limit(20)
+//    .exec(function (err, kittens) {
+//        if (err) return console.error(err);
+//        console.log(kittens);
+//    });
+
     var tags = [
         {name: 'tag1', enable: true},
         {name: 'tag2'}];
