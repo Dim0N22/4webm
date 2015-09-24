@@ -69,3 +69,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+
+Site/.idea/
+Site/node_modules

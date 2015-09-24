@@ -1,0 +1,7 @@
+#!/usr/bin/node
+
+var app = require('../app');
+
+var server = app.listen(36677);
+
+console.log('Server running at http://localhost:36677/');
