@@ -8,12 +8,22 @@ router.get('/', function (req, res, next) {
 
 
 router.get('/:id([0-9]+)', function (req, res, next) {
-    res.render('view', {title: 'View ' + req.params.id});
+    res.render('view', {title: 'webm ' + req.params.id});
 });
 
 
-router.get('/edit/:id([0-9]+)?', function (req, res, next) {
-    res.render('edit', {title: 'Edit ' + req.params.id});
+router.get('/edit/:id([0-9]+)', function (req, res, next) {
+    var tags = [
+        {name: 'tag1', enable: true},
+        {name: 'tag2'}];
+
+    res.render('edit', {
+        title: 'Edit ' + req.params.id,
+        id: req.params.id,
+        path: "",
+        tags: tags
+    });
+
 });
 
 

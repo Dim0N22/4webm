@@ -7,4 +7,6 @@ router.get('/', function(req, res, next) {
 });
 
 
+// TODO add tag to video
+
 module.exports = router;
