@@ -115,7 +115,7 @@ func main() {
 				_, err = seqIdCollection.FindId(bson.ObjectIdHex("56030ee44c0ae715b98278cb")).Apply(change, &id)
 				check(err)
 
-				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"seqid": id.CurrentId, "file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
+				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"seqid": id.CurrentId, "tags":[]string{},"file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
 				check(err)
 			} else {
 				fmt.Println(err)
