@@ -88,7 +88,8 @@ func main() {
 			resp, err := client.Do(req)
 			check(err)
 
-			bytes, _ := ioutil.ReadAll(resp.Body)
+			bytes, err := ioutil.ReadAll(resp.Body)
+			check(err)
 
 			hasher := adler32.New()
 			hasher.Write(bytes)
@@ -112,7 +113,7 @@ func main() {
 				}
 
 				id := MaxWebmId{}
-				_, err = seqIdCollection.FindId(bson.ObjectIdHex("56030ee44c0ae715b98278cb")).Apply(change, &id)
+				_, err = seqIdCollection.Find(nil).Apply(change, &id)
 				check(err)
 
 				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"seqid": id.CurrentId, "tags":[]string{},"file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
