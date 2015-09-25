@@ -35,9 +35,9 @@
             <br>
 
             <% tags.forEach(function(tag){ %>
-            <button type="button"
-                    class="btn btn-xs <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>"
-                    onclick="clickTag(this);"><%= tag.name %></button>
+            <a type="button"
+                    class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>"
+                    onclick="clickTag(this);"><%= tag.name %></a>
             <% }); %>
         </div>
         <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
