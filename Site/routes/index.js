@@ -6,7 +6,7 @@ var config = require('../config');
 
 
 router.get('/', function (req, res) {
-    res.render('index', {title: 'Express'});
+    res.render('index', {title: '4webm'});
 });
 
 
