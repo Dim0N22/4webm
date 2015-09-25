@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title><%= title %></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
@@ -17,13 +18,24 @@
 
 <div class="container" style="margin-top: 5%">
     <div class="row">
+        <div class="col-md-2 hidden-xs hidden-sm"></div>
+        <div class="col-md-3"><p><em>#<%= id %></em></p></div>
+        <div class="col-md-3 pull-right">
+            <div class="btn-group" role="group" aria-label="...">
+                <a type="button" class="btn btn-link btn-xs" title="Зациклить"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span></a>
+                <a type="button" class="btn btn-link btn-xs" title="LIKE A BOSS"><span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span></a>
+                <a type="button" class="btn btn-link btn-xs" title="Автопереход"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span></a>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-xs hidden-sm"></div>
+    </div>
+    <div class="row">
         <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
             <a id="prev" href="<%= prevHref %>">
                 <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
             </a>
         </div>
         <div class="col-md-8">
-            <p><em># <%= id %></em></p>
 
             <div class="embed-responsive embed-responsive-16by9">
                 <video class="embed-responsive-item" controls>
