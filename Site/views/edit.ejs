@@ -18,7 +18,7 @@
 <div class="container" style="margin-top: 5%">
     <div class="row">
         <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
-            <a href="<%= prevHref %>">
+            <a id="prev" href="<%= prevHref %>">
                 <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
             </a>
         </div>
@@ -41,7 +41,7 @@
             <% }); %>
         </div>
         <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
-            <a href="<%= nextHref %>">
+            <a id="next" href="<%= nextHref %>">
                 <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
             </a>
         </div>
@@ -54,6 +54,7 @@
 </script>
 
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="/mousetrap.min.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

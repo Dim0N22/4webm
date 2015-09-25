@@ -25,10 +25,19 @@ function clickTag(tag) {
     });
 }
 
-function next() {
+Mousetrap.bind('right', next);
+Mousetrap.bind('left', prev);
+Mousetrap.bind('space', startStopVideo)
 
+function next() {
+    $('a#next').get(0).click();
 }
 
 function prev() {
+    $('a#prev').get(0).click();
+}
 
+function startStopVideo() {
+    var video = $('video').get(0);
+    video.paused ? video.play() : video.pause();
 }
