@@ -15,7 +15,35 @@
 </nav>
 
 <div class="container">
-    <p>Welcome to <%= title %></p>
+    <div class="row">
+        <div class="col-sm-10 well">
+
+            <% tags.forEach(function(tag){ %>
+            <button class="btn btn-default" type="button" style="margin: 3px">
+                <%= tag.name %> <span class="badge">4</span>
+            </button>
+            <% }); %>
+
+        </div>
+        <div class="col-sm-2" style="vertical-align: middle">
+            <button type="button" class="btn btn-default btn-lg">
+                <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Random play
+            </button>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-sm-3"><img src="URL" alt="альтернативный текст"></div>
+        <div class="col-sm-3" style="background-color: #2f6fad">.col-md-4</div>
+        <div class="col-sm-3">.col-md-4</div>
+        <div class="col-sm-3" style="background-color: #2f6fad">.col-md-4</div>
+    </div>
 </div>
+
+
 </body>
 </html>

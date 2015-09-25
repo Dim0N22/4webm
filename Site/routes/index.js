@@ -6,7 +6,18 @@ var config = require('../config');
 
 
 router.get('/', function (req, res) {
-    res.render('index', {title: '4webm'});
+    db.tags.find(function (err, tags) {
+        if (err) {
+            console.log(err);
+            res.status(500).end();
+            return;
+        }
+
+        res.render('index', {
+            title: '4webm',
+            tags: tags
+        });
+    });
 });
 
 
@@ -25,16 +36,11 @@ router.get('/:id([0-9]+)', function (req, res) {
             return;
         }
 
-        var tags = [];
-        for (var i = 0; i < webm.tags.length; i++) {
-            tags.push({name: webm.tags[i]})
-        }
-
         res.render('view', {
             title: '4webm #' + id,
             id: id,
             videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
-            tags: tags,
+            tags: webm.tags,
             prevHref: id > 1 ? '/' + (id - 1) : '/',
             nextHref: '/' + (id + 1)
         });
