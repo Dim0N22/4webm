@@ -21,7 +21,8 @@ var webm = new Schema({
     url: String,
     create_date: Date,
     file_info: Object,
-    seqid: Number
+    seqid: Number,
+    tags: [String]
 });
 
 var webms = mongoose.model('webms', webm);

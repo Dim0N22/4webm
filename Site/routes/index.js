@@ -20,8 +20,8 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
 
     db.webms.findOne({seqid: id}, function (err, webm) {
         if (err) {
-            res.status(500).end();
             console.log(err);
+            res.status(500).end();
             return;
         }
 
@@ -32,16 +32,17 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
 
         db.tags.find(function (err, tags) {
             if (err) {
-                res.status(500).end();
                 console.log(err);
+                res.status(500).end();
                 return;
             }
 
-            // mark enable tags
-            if (webm.tags) {
+            if (webm.tags && webm.tags.length > 0) {
                 for (var i = 0; i < tags.length; i++) {
-                    if (webm.tags[tags[i].name]) {
-                        tags[i].enable = true;
+                    for (var j = 0; j < webm.tags.length; j++) {
+                        if (webm.tags[j] === tags[i].name) {
+                            tags[i].enable = true;
+                        }
                     }
                 }
             }
