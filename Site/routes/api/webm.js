@@ -42,14 +42,7 @@ router.put('/:id([0-9]+)', function (req, res) {
 });
 
 
-router.put('/:id([0-9]+)/next', function (req, res) {
-    res.send('webm');
-});
 
-
-router.put('/:id([0-9]+)/prev', function (req, res) {
-    res.send('webm');
-});
 
 
 module.exports = router;
