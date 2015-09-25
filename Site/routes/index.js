@@ -93,4 +93,32 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
 });
 
 
+router.get('/random', function (req, res) {
+    db.maxwebmid.findOne(function (err, item) {
+        if (err) {
+            console.log(err);
+            res.status(500).end();
+            return;
+        }
+
+        var randomId = Math.round(Math.random() * (item.currentId - 1) + 1);
+        db.webms.findOne({seqid: {$gte: randomId}}, function (err, webm) {
+            if (err) {
+                console.log(err);
+                res.status(500).end();
+                return;
+            }
+
+            if (!webm) {
+                console.log('Not found random webm');
+                res.status(500).end();
+                return;
+            }
+
+            res.redirect('/' + webm.seqid);
+        })
+    });
+});
+
+
 module.exports = router;

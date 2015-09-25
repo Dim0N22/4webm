@@ -24,13 +24,15 @@ var webm = new Schema({
     seqid: Number,
     tags: [String]
 });
-
 var webms = mongoose.model('webms', webm);
-
 
 var tag = new Schema({name: String});
 var tags = mongoose.model('tags', tag);
 
+var maxwebmidSchema = new Schema({currentId: Number}, { collection: 'maxwebmid' });
+var maxwebmid = mongoose.model('maxwebmid', maxwebmidSchema);
+
 
 module.exports.webms = webms;
 module.exports.tags = tags;
+module.exports.maxwebmid = maxwebmid;
