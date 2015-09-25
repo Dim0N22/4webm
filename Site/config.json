@@ -1,5 +1,6 @@
 {
   "mongoose": {
     "uri": "mongodb://localhost/4webm"
-  }
+  },
+  "videoServer": "http://localhost/webms"
 }

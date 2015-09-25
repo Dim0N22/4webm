@@ -14,10 +14,21 @@ db.once('open', function callback() {
     console.log("Connected to DB!");
 });
 
-var Any = new Schema({any: {}});
 
-var webms = mongoose.model('webms', Any);
-var tags = mongoose.model('tags', Any);
+var webm = new Schema({
+    thread_id: Number,
+    board: String,
+    url: String,
+    create_date: Date,
+    file_info: Object,
+    seqid: Number
+});
+
+var webms = mongoose.model('webms', webm);
+
+
+var tag = new Schema({name: String});
+var tags = mongoose.model('tags', tag);
 
 
 module.exports.webms = webms;
