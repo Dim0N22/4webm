@@ -17,7 +17,7 @@
 
 <div class="container" style="margin-top: 5%">
     <div class="row">
-        <div class="col-md-2 navigate-arrow">
+        <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
             <a href="<%= prevHref %>">
                 <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
             </a>
@@ -40,7 +40,7 @@
                     onclick="clickTag(this);"><%= tag.name %></button>
             <% }); %>
         </div>
-        <div class="col-md-2 navigate-arrow">
+        <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
             <a href="<%= nextHref %>">
                 <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
             </a>
