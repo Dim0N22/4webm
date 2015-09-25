@@ -1,0 +1,16 @@
+.navigate-arrow {
+    font-size: 140px;
+    margin-top: 10%;
+    opacity: 0.05;
+}
+
+.navigate-arrow:hover {
+    opacity: 0.4;
+}
+
+/*@screen-xs*/
+@media (max-width: 1000px) {
+    .navigate-arrow {
+        display: none;
+    }
+}

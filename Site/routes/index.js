@@ -25,11 +25,15 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
         {name: 'tag1', enable: true},
         {name: 'tag2'}];
 
+    var id = Number(req.params.id);
+
     res.render('edit', {
-        title: 'Edit ' + req.params.id,
-        id: req.params.id,
-        path: "",
-        tags: tags
+        title: 'Edit ' + id,
+        id: id,
+        videoSrc: '',
+        tags: tags,
+        prevHref: id > 1 ? '/edit/' + (id - 1) : '/',
+        nextHref: '/edit/' + (id + 1)
     });
 
 });
