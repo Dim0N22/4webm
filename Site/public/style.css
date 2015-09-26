@@ -22,3 +22,15 @@
 .enabled-boss {
     color: black;
 }
+
+.inner-thumbnail {
+    background-color: black;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.inner-thumbnail > img {
+    width: auto;
+    height: 160px;
+    display: block;
+}
