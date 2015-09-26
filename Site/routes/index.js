@@ -36,13 +36,21 @@ router.get('/:id([0-9]+)', function (req, res) {
             return;
         }
 
-        res.render('view', {
-            title: '4webm #' + id,
-            id: id,
-            videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
-            tags: webm.tags,
-            prevHref: id > 1 ? '/' + (id - 1) : '/',
-            nextHref: '/' + (id + 1)
+        db.maxwebmid.findOne(function (err, item) {
+            if (err) {
+                console.log(err);
+                res.status(500).end();
+                return;
+            }
+
+            res.render('view', {
+                title: '4webm #' + id,
+                id: id,
+                videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
+                tags: webm.tags,
+                prevHref: id > 1 ? '/' + (id - 1) : '/' + item.currentId,
+                nextHref: id < item.currentId ? '/' + (id + 1) : '/1'
+            });
         });
     });
 });
@@ -80,13 +88,20 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 }
             }
 
-            res.render('edit', {
-                title: '4webm edit #' + id,
-                id: id,
-                videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
-                tags: tags,
-                prevHref: id > 1 ? '/edit/' + (id - 1) : '/',
-                nextHref: '/edit/' + (id + 1)
+            db.maxwebmid.findOne(function (err, item) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).end();
+                    return;
+                }
+                res.render('edit', {
+                    title: '4webm edit #' + id,
+                    id: id,
+                    videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
+                    tags: tags,
+                    prevHref: id > 1 ? '/edit/' + (id - 1) : '/edit/' + item.currentId,
+                    nextHref: id < item.currentId ? '/edit/' + (id + 1) : '/edit/1'
+                });
             });
         });
     });
