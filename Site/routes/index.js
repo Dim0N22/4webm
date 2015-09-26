@@ -103,8 +103,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                         console.log(err);
                         res.status(500).end();
                     }
-                    console.log("conditions", conditions);
-                    console.log(values[0], nextId);
+
                     response(values[0].seqid, nextId.seqid);
                 });
                 return;
