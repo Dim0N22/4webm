@@ -40,7 +40,7 @@
 
     <% for(var webmCounter = 0; webmCounter < webms.length; webmCounter = webmCounter + 4) { %>
     <div class="row">
-        <% for(var innerCounter = 0; innerCounter < 4; innerCounter++) { %>
+        <% for(var innerCounter = 0; innerCounter < 4 && webmCounter + innerCounter < webms.length; innerCounter++) { %>
         <div class="col-xs-12 col-sm-6 col-md-3">
             #<%= webms[webmCounter + innerCounter].seqid %>
             <a href="/<%= webms[webmCounter + innerCounter].seqid %>" class="thumbnail">
@@ -50,6 +50,14 @@
         <% } %>
     </div>
     <% } %>
+
+    <br>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn btn-default center-block" role="button">MOAR</a>
+        </div>
+    </div>
 </div>
 
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>

@@ -3,8 +3,24 @@ var router = express.Router();
 var db = require('../../db');
 
 
+/**
+ * Get webms for index page with tags or get moar webms
+ *
+ * @param tags, lastSeqid
+ */
 router.get('/', function (req, res) {
-    res.send('webm');
+    db.getWebms({
+        tags: req.query.tags,
+        lastSeqid: req.query.lastSeqid
+    }, function (err, webms) {
+        if (err) {
+            console.log(err);
+            res.status(500).end();
+            return;
+        }
+
+        res.json('index', webms);
+    });
 });
 
 

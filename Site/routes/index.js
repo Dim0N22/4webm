@@ -18,30 +18,19 @@ router.get('/', function (req, res) {
             return;
         }
 
-        db.webms.find({seqid: {$exists: true}}, 'seqid file_info.path')
-            .sort({seqid: -1})
-            .limit(config.webmsPerPage)
-            .exec(function (err, webmsdb) {
-                if (err) {
-                    console.log(err);
-                    res.status(500).end();
-                    return;
-                }
+        db.getWebms(function (err, webms) {
+            if (err) {
+                console.log(err);
+                res.status(500).end();
+                return;
+            }
 
-                var webms = [];
-                for (var i = 0; i < webmsdb.length; i++) {
-                    webms.push({
-                        seqid: webmsdb[i].seqid,
-                        previewSrc: url.resolve(config.videoServer, String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg')
-                    });
-                }
-
-                res.render('index', {
-                    title: '4webm',
-                    tags: tags,
-                    webms: webms
-                });
+            res.render('index', {
+                title: '4webm',
+                tags: tags,
+                webms: webms
             });
+        });
     });
 });
 
@@ -142,7 +131,7 @@ router.get('/random', function (req, res) {
         }
 
         var randomId = Math.round(Math.random() * (item.currentId - 1) + 1);
-        db.webms.findOne({seqid: {$gte: randomId}}, function (err, webm) {
+        db.webms.findOne({seqid: {$gte: randomId}}, null, {sort: {seqid: 1}}, function (err, webm) {
             if (err) {
                 console.log(err);
                 res.status(500).end();
@@ -150,6 +139,8 @@ router.get('/random', function (req, res) {
             }
 
             if (!webm) {
+
+
                 console.log('Not found random webm');
                 res.status(500).end();
                 return;
