@@ -52,6 +52,16 @@ func main() {
 	)
 	check(err)
 
+	processingQueue, err := channel.QueueDeclare(
+		"webmProcess",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+	check(err)
+
 	err = channel.Qos(1, 0, false)
 
 	msgs, err := channel.Consume(
@@ -117,6 +127,18 @@ func main() {
 				check(err)
 
 				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"seqid": id.CurrentId, "tags":[]string{},"file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
+				check(err)
+
+				err = channel.Publish(
+					"",
+					processingQueue.Name,
+					false,
+					false,
+					amqp.Publishing{
+						DeliveryMode: amqp.Persistent,
+						ContentType:  "text/plain",
+						Body:         []byte(webm.Id),
+					})
 				check(err)
 			} else {
 				fmt.Println(err)
