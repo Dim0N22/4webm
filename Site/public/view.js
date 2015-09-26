@@ -27,7 +27,11 @@ function clickTag(tag) {
 
 Mousetrap.bind('right', next);
 Mousetrap.bind('left', prev);
-Mousetrap.bind('space', startStopVideo)
+Mousetrap.bind('space', startStopVideo);
+Mousetrap.bind('ctrl+up', upVolume);
+Mousetrap.bind('ctrl+down', downVolume);
+Mousetrap.bind('ctrl+right', rewindForward);
+Mousetrap.bind('ctrl+left', rewindBack);
 
 $('#autoNext').click(function(){
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
@@ -55,6 +59,26 @@ function prev() {
 function startStopVideo() {
     var video = $('video').get(0);
     video.paused ? video.play() : video.pause();
+}
+
+function upVolume() {
+    var video = $('video').get(0);
+    video.volume += 0.1;
+}
+
+function downVolume() {
+    var video = $('video').get(0);
+    video.volume -= 0.1;
+}
+
+function rewindForward() {
+    var video = $('video').get(0);
+    video.currentTime += 5;
+}
+
+function rewindBack() {
+    var video = $('video').get(0);
+    video.currentTime -= 5;
 }
 
 $(function(){
