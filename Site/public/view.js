@@ -90,6 +90,10 @@ $('video').on('ended', function () {
     }
 });
 
+$('video').on('volumechange', function () {
+    localStorage.volume = this.volume;
+});
+
 function next() {
     $('a#next').get(0).click();
 }
@@ -126,6 +130,8 @@ function rewindBack() {
 $(function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
+    $('video').prop("volume", localStorage.volume || 1);
+
     if (autoNextEnabled) {
         $('#autoNext').addClass('enabled');
         $('video').get(0).play();
