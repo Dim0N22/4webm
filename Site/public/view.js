@@ -43,8 +43,10 @@ $('#autoNext').click(function () {
     }
 
     var likeABoss = $('#likeABoss');
-    if (likeABoss.hasClass('enabled-boss')) {
+    if (!autoNextEnabled && likeABoss.hasClass('enabled-boss')) {
         likeABoss.removeClass('enabled-boss');
+    } else {
+        likeABoss.addClass('enabled-boss');
     }
 
     localStorage.autoNext = !autoNextEnabled;
@@ -61,8 +63,10 @@ $('#autoCycle').click(function () {
     }
 
     var likeABoss = $('#likeABoss');
-    if (likeABoss.hasClass('enabled-boss')) {
+    if (!autoCycleEnabled && likeABoss.hasClass('enabled-boss')) {
         likeABoss.removeClass('enabled-boss');
+    } else {
+        likeABoss.addClass('enabled-boss');
     }
 
     localStorage.autoCycle = !autoCycleEnabled;
