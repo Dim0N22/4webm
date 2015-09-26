@@ -18,7 +18,16 @@ router.get('/', function (req, res) {
             return;
         }
 
-        db.getWebms(function (err, webms) {
+        var params;
+        if (req.cookies.tags) {
+            var clientTags = JSON.parse(req.cookies.tags);
+
+            if (clientTags.length > 0) {
+                params = {tags: clientTags};
+            }
+        }
+
+        db.getWebms(params, function (err, webms) {
             if (err) {
                 console.log(err);
                 res.status(500).end();
@@ -123,31 +132,44 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
 
 
 router.get('/random', function (req, res) {
-    db.maxwebmid.findOne(function (err, item) {
+    var conditions = {seqid: {$exists: true}};
+    if (req.cookies.tags) {
+        try {
+            var tags = JSON.parse(req.cookies.tags);
+
+            if (tags && tags.length > 0) {
+                conditions.tags = {$all: tags};
+            }
+        } catch (e) {
+        }
+    }
+
+    db.webms.count(conditions, function (err, count) {
         if (err) {
             console.log(err);
             res.status(500).end();
             return;
         }
 
-        var randomId = Math.round(Math.random() * (item.currentId - 1) + 1);
-        db.webms.findOne({seqid: {$gte: randomId}}, null, {sort: {seqid: 1}}, function (err, webm) {
-            if (err) {
-                console.log(err);
-                res.status(500).end();
-                return;
-            }
+        var randomId = Math.round(Math.random() * (count - 1) + 1);
+        db.webms.find(conditions, 'seqid')
+            .skip(randomId - 1)
+            .limit(1)
+            .exec(function (err, webms) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).end();
+                    return;
+                }
 
-            if (!webm) {
+                if (!webms || webms.length === 0) {
+                    console.log('Not found random webm');
+                    res.redirect('/');
+                    return;
+                }
 
-
-                console.log('Not found random webm');
-                res.status(500).end();
-                return;
-            }
-
-            res.redirect('/' + webm.seqid);
-        })
+                res.redirect('/' + webms[0].seqid);
+            });
     });
 });
 

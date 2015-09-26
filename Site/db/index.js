@@ -51,7 +51,7 @@ function getWebms(params, done) {
     }
 
     if (params && params.tags) {
-        query = query.find({tags: { $in: params.tags}});
+        query = query.find({tags: { $all: params.tags}});
     }
 
     query.sort({seqid: -1})
