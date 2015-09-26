@@ -20,7 +20,7 @@ router.get('/', function (req, res) {
 
         db.webms.find({seqid: {$exists: true}}, 'seqid file_info.path')
             .sort({seqid: -1})
-            .limit(20)
+            .limit(config.webmsPerPage)
             .exec(function (err, webmsdb) {
                 if (err) {
                     console.log(err);
@@ -42,8 +42,6 @@ router.get('/', function (req, res) {
                     webms: webms
                 });
             });
-
-
     });
 });
 
