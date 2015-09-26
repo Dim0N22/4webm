@@ -9,17 +9,35 @@ var db = require('../../db');
  * @param tags, lastSeqid
  */
 router.get('/', function (req, res) {
-    db.getWebms({
-        tags: req.query.tags,
-        lastSeqid: req.query.lastSeqid
-    }, function (err, webms) {
+    var params = {lastSeqid: req.query.lastSeqid};
+
+    if (req.cookies.tags) {
+        try {
+            var tags = JSON.parse(req.cookies.tags);
+
+            if (tags && tags.length > 0) {
+                params.tags = tags;
+            }
+        } catch (e) {
+        }
+    }
+
+    db.getWebms(params, function (err, webms) {
         if (err) {
             console.log(err);
             res.status(500).end();
             return;
         }
 
-        res.json('index', webms);
+        if (!webms || webms.length === 0) {
+            res.status(404).end();
+            return;
+        }
+
+        res.json({
+            webms: webms,
+            lastSeqid: webms[webms.length - 1].seqid
+        });
     });
 });
 

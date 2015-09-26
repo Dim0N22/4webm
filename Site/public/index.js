@@ -26,15 +26,51 @@ function clickTag(tag) {
 
     Cookies.set('tags', tags);
 
-    // TODO refresh videos
+    refreshVideos();
 }
 
-function addMoarWebms() {
-    //
+function generateHtml(webms) {
+    var html = '';
+    for (var i = 0; i < webms.length; i = i + 4) {
+        html += '<div class="row">';
+        for (var j = 0; j < 4 && i + j < webms.length; j++) {
+            html += '<div class="col-xs-12 col-sm-6 col-md-3">';
+            html += '#' + webms[i + j].seqid;
+            html += '<a href="/' + webms[i + j].seqid + '" class="thumbnail">';
+            html += '<img alt="#' + webms[i + j].seqid + '" src="' + webms[i + j].previewSrc + '" data-holder-rendered="true" style="width: 300px; height: 100%; display: block;">';
+            html += '</a>';
+            html += '</div>';
+        }
+        html += '</div>';
+    }
+
+    return html;
 }
 
-function changeMainPage() {
-    //
+function getWebmsFromServer(done) {
+    $.get('/api/webm', {lastSeqid: lastSeqid}).done(done);
+}
+
+function moarWebms() {
+    getWebmsFromServer(function (data) {
+        if (!data) {
+            return;
+        }
+
+        document.getElementById('webmsGrid').innerHTML += generateHtml(data.webms);
+        lastSeqid = data.lastSeqid;
+    });
+}
+
+function refreshVideos() {
+    getWebmsFromServer(function (data) {
+        if (!data) {
+            return;
+        }
+
+        document.getElementById('webmsGrid').innerHTML = generateHtml(data.webms);
+        lastSeqid = data.lastSeqid;
+    });
 }
 
 $(function () {

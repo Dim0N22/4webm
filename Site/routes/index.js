@@ -37,7 +37,8 @@ router.get('/', function (req, res) {
             res.render('index', {
                 title: '4webm',
                 tags: tags,
-                webms: webms
+                webms: webms,
+                lastSeqid: webms[webms.length-1].seqid
             });
         });
     });
