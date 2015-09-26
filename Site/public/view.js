@@ -29,6 +29,20 @@ Mousetrap.bind('right', next);
 Mousetrap.bind('left', prev);
 Mousetrap.bind('space', startStopVideo)
 
+$('#autoNext').click(function(){
+    var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
+    
+    localStorage.autoNext = !autoNextEnabled;
+});
+
+$('video').on('ended',function(){
+    var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
+
+    if (autoNextEnabled) {
+        next();
+    }
+});
+
 function next() {
     $('a#next').get(0).click();
 }
