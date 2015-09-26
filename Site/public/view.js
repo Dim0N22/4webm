@@ -28,12 +28,12 @@ function clickTag(tag) {
 Mousetrap.bind('right', next);
 Mousetrap.bind('left', prev);
 Mousetrap.bind('space', startStopVideo);
-Mousetrap.bind('ctrl+up', upVolume);
-Mousetrap.bind('ctrl+down', downVolume);
+Mousetrap.bind('up', upVolume);
+Mousetrap.bind('down', downVolume);
 Mousetrap.bind('ctrl+right', rewindForward);
 Mousetrap.bind('ctrl+left', rewindBack);
 
-$('#autoNext').click(function(){
+$('#autoNext').click(function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
 
     $(this).toggleClass('enabled');
@@ -41,11 +41,17 @@ $('#autoNext').click(function(){
     if (autoCycle.hasClass('enabled')) {
         autoCycle.removeClass('enabled');
     }
+
+    var likeABoss = $('#likeABoss');
+    if (likeABoss.hasClass('enabled-boss')) {
+        likeABoss.removeClass('enabled-boss');
+    }
+
     localStorage.autoNext = !autoNextEnabled;
     localStorage.autoCycle = false;
 });
 
-$('#autoCycle').click(function(){
+$('#autoCycle').click(function () {
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
 
     $(this).toggleClass('enabled');
@@ -53,18 +59,25 @@ $('#autoCycle').click(function(){
     if (autoNext.hasClass('enabled')) {
         autoNext.removeClass('enabled');
     }
+
+    var likeABoss = $('#likeABoss');
+    if (likeABoss.hasClass('enabled-boss')) {
+        likeABoss.removeClass('enabled-boss');
+    }
+
     localStorage.autoCycle = !autoCycleEnabled;
     localStorage.autoNext = false;
 });
 
-$('#likeABoss').click(function(){
+$('#likeABoss').click(function () {
+    $(this).toggleClass('enabled-boss');
     $('#autoNext').removeClass('enabled');
     $('#autoCycle').removeClass('enabled');
     localStorage.autoNext = false;
     localStorage.autoCycle = false;
-})
+});
 
-$('video').on('ended',function(){
+$('video').on('ended', function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
 
@@ -110,14 +123,15 @@ function rewindBack() {
     video.currentTime -= 5;
 }
 
-$(function(){
+$(function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
     if (autoNextEnabled) {
         $('#autoNext').addClass('enabled');
         $('video').get(0).play();
-    }
-    if (autoCycleEnabled) {
+    } else if (autoCycleEnabled) {
         $('#autoCycle').addClass('enabled');
+    } else {
+        $('#likeABoss').addClass('enabled-boss');
     }
 });
