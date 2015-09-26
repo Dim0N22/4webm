@@ -31,7 +31,8 @@ Mousetrap.bind('space', startStopVideo)
 
 $('#autoNext').click(function(){
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
-    
+
+    $(this).toggleClass('enabled');
     localStorage.autoNext = !autoNextEnabled;
 });
 
@@ -55,3 +56,10 @@ function startStopVideo() {
     var video = $('video').get(0);
     video.paused ? video.play() : video.pause();
 }
+
+$(function(){
+    var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
+    if (autoNextEnabled){
+        $('#autoNext').addClass('enabled');
+    }
+});
