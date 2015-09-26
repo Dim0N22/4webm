@@ -38,7 +38,7 @@ router.get('/', function (req, res) {
                 title: '4webm',
                 tags: tags,
                 webms: webms,
-                lastSeqid: webms[webms.length-1].seqid
+                lastSeqid: webms[webms.length - 1].seqid
             });
         });
     });
@@ -48,59 +48,112 @@ router.get('/', function (req, res) {
 router.get('/:id([0-9]+)', function (req, res) {
     var id = Number(req.params.id);
 
-    db.webms.findOne({seqid: id}, function (err, webm) {
-        if (err) {
-            console.log(err);
-            res.status(500).end();
-            return;
-        }
+    var conditions = {};
+    if (req.cookies.tags) {
+        try {
+            var tags = JSON.parse(req.cookies.tags);
 
-        if (!webm) {
-            res.redirect('/');
-            return;
+            if (tags && tags.length > 0) {
+                conditions.tags = {$all: tags};
+            }
+        } catch (e) {
         }
+    }
 
-        db.maxwebmid.findOne(function (err, item) {
-            if (err) {
-                console.log(err);
-                res.status(500).end();
+    var prevIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
+    var nextIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = db.webms.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
+
+    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise])
+        .then(function (values) {
+            function response(prevId, nextId) {
+                res.render('view', {
+                    title: '4webm #' + id,
+                    id: id,
+                    videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
+                    tags: webm.tags,
+                    prevHref: '/edit/' + prevId,
+                    nextHref: '/edit/' + nextId
+                });
+            }
+
+            var webm = values[2];
+
+
+            // if prev not found (actually for first webm)
+            if (!values[0]) {
+                conditions.seqid = {$exists: true};
+                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).end();
+                        return;
+                    }
+
+                    response(prevId.seqid, values[1].seqid);
+                });
                 return;
             }
 
-            res.render('view', {
-                title: '4webm #' + id,
-                id: id,
-                videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
-                tags: webm.tags,
-                prevHref: id > 1 ? '/' + (id - 1) : '/' + item.currentId,
-                nextHref: id < item.currentId ? '/' + (id + 1) : '/1'
-            });
+            // if next not found (actually for last webm)
+            if (!values[1]) {
+                conditions.seqid = {$exists: true};
+                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).end();
+                    }
+                    console.log("conditions", conditions);
+                    console.log(values[0], nextId);
+                    response(values[0].seqid, nextId.seqid);
+                });
+                return;
+            }
+
+            response(values[0].seqid, values[1].seqid);
+        }).catch(function (exeption) {
+            console.log(exeption);
+            res.status(500).end();
         });
-    });
 });
 
 
 router.get('/edit/:id([0-9]+)', function (req, res) {
     var id = Number(req.params.id);
 
-    db.webms.findOne({seqid: id}, function (err, webm) {
-        if (err) {
-            console.log(err);
-            res.status(500).end();
-            return;
-        }
+    var conditions = {};
+    if (req.cookies.tags) {
+        try {
+            var tags = JSON.parse(req.cookies.tags);
 
-        if (!webm) {
-            res.redirect('/');
-            return;
-        }
-
-        db.tags.find(function (err, tags) {
-            if (err) {
-                console.log(err);
-                res.status(500).end();
-                return;
+            if (tags && tags.length > 0) {
+                conditions.tags = {$all: tags};
             }
+        } catch (e) {
+        }
+    }
+
+
+    var prevIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
+    var nextIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = db.webms.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
+    var tagsPromise = db.tags.find().exec();
+
+    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise, tagsPromise])
+        .then(function (values) {
+            function response(prevId, nextId) {
+                res.render('edit', {
+                    title: '4webm edit #' + id,
+                    id: id,
+                    videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
+                    tags: tags,
+                    prevHref: '/edit/' + prevId,
+                    nextHref: '/edit/' + nextId
+                });
+            }
+
+            var webm = values[2];
+            var tags = values[3];
 
             if (webm.tags && webm.tags.length > 0) {
                 for (var i = 0; i < tags.length; i++) {
@@ -112,23 +165,40 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 }
             }
 
-            db.maxwebmid.findOne(function (err, item) {
-                if (err) {
-                    console.log(err);
-                    res.status(500).end();
-                    return;
-                }
-                res.render('edit', {
-                    title: '4webm edit #' + id,
-                    id: id,
-                    videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
-                    tags: tags,
-                    prevHref: id > 1 ? '/edit/' + (id - 1) : '/edit/' + item.currentId,
-                    nextHref: id < item.currentId ? '/edit/' + (id + 1) : '/edit/1'
+            // if prev not found (actually for first webm)
+            if (!values[0]) {
+                conditions.seqid = {$exists: true};
+                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).end();
+                        return;
+                    }
+
+                    response(prevId.seqid, values[1].seqid);
                 });
-            });
+                return;
+            }
+
+            // if next not found (actually for last webm)
+            if (!values[1]) {
+                conditions.seqid = {$exists: true};
+                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).end();
+                    }
+
+                    response(values[0].seqid, nextId.seqid);
+                });
+                return;
+            }
+
+            response(values[0].seqid, values[1].seqid);
+        }).catch(function (exeption) {
+            console.log(exeption);
+            res.status(500).end();
         });
-    });
 });
 
 
