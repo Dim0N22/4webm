@@ -37,14 +37,43 @@ $('#autoNext').click(function(){
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
 
     $(this).toggleClass('enabled');
+    var autoCycle = $('#autoCycle');
+    if (autoCycle.hasClass('enabled')) {
+        autoCycle.removeClass('enabled');
+    }
     localStorage.autoNext = !autoNextEnabled;
+    localStorage.autoCycle = false;
 });
+
+$('#autoCycle').click(function(){
+    var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
+
+    $(this).toggleClass('enabled');
+    var autoNext = $('#autoNext');
+    if (autoNext.hasClass('enabled')) {
+        autoNext.removeClass('enabled');
+    }
+    localStorage.autoCycle = !autoCycleEnabled;
+    localStorage.autoNext = false;
+});
+
+$('#likeABoss').click(function(){
+    $('#autoNext').removeClass('enabled');
+    $('#autoCycle').removeClass('enabled');
+    localStorage.autoNext = false;
+    localStorage.autoCycle = false;
+})
 
 $('video').on('ended',function(){
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
+    var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
 
     if (autoNextEnabled) {
         next();
+    } else if (autoCycleEnabled) {
+        var video = $('video').get(0);
+        video.currentTime = 0;
+        video.play();
     }
 });
 
@@ -83,7 +112,12 @@ function rewindBack() {
 
 $(function(){
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
-    if (autoNextEnabled){
+    var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
+    if (autoNextEnabled) {
         $('#autoNext').addClass('enabled');
+        $('video').get(0).play();
+    }
+    if (autoCycleEnabled) {
+        $('#autoCycle').addClass('enabled');
     }
 });
