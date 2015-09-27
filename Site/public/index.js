@@ -29,7 +29,7 @@ function clickTag(tag) {
     refreshVideos();
 }
 
-function generateHtml(webms) {
+function generateHtml(webms, authorized) {
     if (!webms) {
         return '';
     }
@@ -40,6 +40,9 @@ function generateHtml(webms) {
         for (var j = 0; j < 4 && i + j < webms.length; j++) {
             html += '<div class="col-xs-12 col-sm-6 col-md-3">';
             html += '#' + webms[i + j].seqid;
+            if (authorized) {
+                html += '<a href="/edit/' + webms[i + j].seqid + '" type="button" class="btn btn-link btn-xs" title="Редактировать"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
+            }
             html += '<a href="/' + webms[i + j].seqid + '" class="thumbnail">';
             html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';
             html += '</a>';
@@ -57,14 +60,14 @@ function getWebmsFromServer(params, done) {
 
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
-        document.getElementById('webmsGrid').innerHTML += generateHtml(data.webms);
+        document.getElementById('webmsGrid').innerHTML += generateHtml(data.webms, data.authorized);
         lastSeqid = data.lastSeqid;
     });
 }
 
 function refreshVideos() {
     getWebmsFromServer(null, function (data) {
-        document.getElementById('webmsGrid').innerHTML = generateHtml(data.webms);
+        document.getElementById('webmsGrid').innerHTML = generateHtml(data.webms, data.authorized);
         lastSeqid = data.lastSeqid;
     });
 }

@@ -38,7 +38,8 @@ router.get('/', function (req, res) {
                 title: '4webm',
                 tags: tags,
                 webms: result.webms,
-                lastSeqid: result.lastSeqid
+                lastSeqid: result.lastSeqid,
+                authorized: Boolean(req.cookies.token)
             });
         });
     });

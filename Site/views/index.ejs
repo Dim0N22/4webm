@@ -44,6 +44,10 @@
             <% for(var j = 0; j < 4 && i + j < webms.length; j++) { %>
             <div class="col-xs-12 col-sm-6 col-md-3">
                 #<%= webms[i + j].seqid %>
+
+                <%if (authorized) { %>
+                    <a href="/edit/<%= webms[i + j].seqid %>" type="button" class="btn btn-link btn-xs" title="Редактировать"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                <% } %>
                 <a href="/<%= webms[i + j].seqid %>" class="thumbnail">
                     <div class="thumbnail inner-thumbnail" style="background-image: url(<%= webms[i + j].previewSrc %>)"></div>
                 </a>
