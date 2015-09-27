@@ -1,10 +1,10 @@
 package main
 
 import (
-	"gopkg.in/mgo.v2"
-	"github.com/streadway/amqp"
-	"gopkg.in/mgo.v2/bson"
 	"fmt"
+	"github.com/streadway/amqp"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"os/exec"
 )
 
@@ -60,7 +60,7 @@ func main() {
 			webmCollection.FindId(objId).One(&webm)
 
 			fmt.Println("processing: " + webm.FileInfo.Path)
-			err := exec.Command("D://PROJECTS/Go/src/4webm/ffmpeg.exe", "-i", webm.FileInfo.Path, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webm.FileInfo.Path + ".300x300.jpg").Run()
+			err := exec.Command("D://PROJECTS/Go/src/4webm/ffmpeg.exe", "-i", webm.FileInfo.Path, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webm.FileInfo.Path+".300x300.jpg").Run()
 			fmt.Println(err)
 			fmt.Println("End processing: " + webm.FileInfo.Path)
 

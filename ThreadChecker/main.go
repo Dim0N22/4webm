@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"sort"
 
+	"fmt"
 	"github.com/streadway/amqp"
 	"gopkg.in/mgo.v2"
-	"fmt"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -22,11 +22,10 @@ func check(e error) {
 }
 
 var (
-	MIN_VIEWS = flag.Int("w", 1000, "Minimum views to parse thread")
-	ERROR_CODE = flag.Int("e", 503, "Cloudflare error code")
+	ERROR_CODE     = flag.Int("e", 503, "Cloudflare error code")
 	webmCollection *mgo.Collection
 	channel        *amqp.Channel
-	queue amqp.Queue
+	queue          amqp.Queue
 )
 
 func main() {
@@ -85,14 +84,13 @@ func main() {
 
 		total := len(threads.Threads)
 		for i, thread := range threads.Threads {
-			fmt.Println("Процессим тред № " + strconv.Itoa(i + 1) + "из " + strconv.Itoa(total))
-			if thread.Views > *MIN_VIEWS {
-				thread.GetWebmLinks()
-			}
+			fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + "из " + strconv.Itoa(total))
+
+			thread.GetWebmLinks()
 		}
 	} else {
 		fmt.Println("Парсим главную")
-		req.URL, _ = url.Parse("http://2ch.hk/b/");
+		req.URL, _ = url.Parse("http://2ch.hk/b/")
 		resp, err = client.Do(req)
 		check(err)
 
@@ -104,8 +102,8 @@ func main() {
 		threadNums := re.FindAllStringSubmatch(string(body), -1)
 		total := len(threadNums)
 		for i, match := range threadNums {
-			fmt.Println("Процессим тред № " + strconv.Itoa(i + 1) + " из " + strconv.Itoa(total))
-			thread := thread{Num:match[1]}
+			fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
+			thread := thread{Num: match[1]}
 			thread.GetWebmLinks()
 			fmt.Println()
 		}

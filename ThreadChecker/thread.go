@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"regexp"
-	"time"
-	"fmt"
 	"strconv"
+	"time"
 )
 
 type thread struct {
