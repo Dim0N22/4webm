@@ -27,7 +27,7 @@ router.get('/', function (req, res) {
             }
         }
 
-        db.getWebms(params, function (err, webms) {
+        db.getWebms(params, function (err, result) {
             if (err) {
                 console.log(err);
                 res.status(500).end();
@@ -37,8 +37,8 @@ router.get('/', function (req, res) {
             res.render('index', {
                 title: '4webm',
                 tags: tags,
-                webms: webms,
-                lastSeqid: webms[webms.length - 1].seqid
+                webms: result.webms,
+                lastSeqid: result.lastSeqid
             });
         });
     });
@@ -72,8 +72,8 @@ router.get('/:id([0-9]+)', function (req, res) {
                     id: id,
                     videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
                     tags: webm.tags,
-                    prevHref: '/edit/' + prevId,
-                    nextHref: '/edit/' + nextId
+                    prevHref: '/' + prevId,
+                    nextHref: '/' + nextId
                 });
             }
 

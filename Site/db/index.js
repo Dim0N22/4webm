@@ -52,7 +52,7 @@ function getWebms(params, done) {
     }
 
     if (params && params.tags) {
-        query = query.find({tags: { $all: params.tags}});
+        query = query.find({tags: {$all: params.tags}});
     }
 
     query.sort({seqid: -1})
@@ -71,7 +71,10 @@ function getWebms(params, done) {
                 });
             }
 
-            done(null, webms);
+            done(null, {
+                webms: webms,
+                lastSeqid: webms.length > 0 ? webms[webms.length - 1].seqid : 0
+            });
         });
 }
 

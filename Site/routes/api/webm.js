@@ -22,21 +22,21 @@ router.get('/', function (req, res) {
         }
     }
 
-    db.getWebms(params, function (err, webms) {
+    db.getWebms(params, function (err, result) {
         if (err) {
             console.log(err);
             res.status(500).end();
             return;
         }
 
-        if (!webms || webms.length === 0) {
+        if (!result || !result.webms || result.webms.length === 0) {
             res.status(200).end();
             return;
         }
 
         res.json({
-            webms: webms,
-            lastSeqid: webms[webms.length - 1].seqid
+            webms: result.webms,
+            lastSeqid: result.lastSeqid
         });
     });
 });
