@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"regexp"
+	//	"regexp"
+	//	"strconv"
+	"encoding/json"
+	"gopkg.in/mgo.v2/bson"
 	"strconv"
 	"time"
 )
@@ -15,6 +18,19 @@ type thread struct {
 	Subject   string  `json:"subject"`
 	Timestamp int     `json:"timestamp"`
 	Views     int     `json:"views"`
+	Board     string  `json:"Board"`
+	Threads   []struct {
+		Posts []struct {
+			Comment   string `json:"comment"`
+			Timestamp int64  `json:"timestamp"`
+			Files     []struct {
+				Md5  string `json:"md5"`
+				Name string `json:"name"`
+				Path string `json:"path"`
+				Type int32  `json:"type"`
+			} `json:"files"`
+		} `json:"posts"`
+	} `json:"threads" `
 }
 
 type byViews []thread
@@ -31,24 +47,43 @@ func (slice byViews) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
-func (thread thread) GetWebmLinks() {
-	re := regexp.MustCompile("href=\"(\\/(\\w+)\\/\\w+\\/(\\d+)\\/(\\d+).webm)\"")
-	link := "https://2ch.hk/b/res/" + thread.Num + ".html"
+func (th thread) GetWebmLinks() {
+	link := "https://2ch.hk/b/res/" + th.Num + ".json"
 	resp, err := http.Get(link)
 	check(err)
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	webmUrls := re.FindAllStringSubmatch(string(body), -1)
-	fmt.Println("Всего вебмок в треде: " + strconv.Itoa(len(webmUrls)))
+	check(err)
 
-	newCount := 0
-	for _, match := range webmUrls {
-		webm := newWebm(match)
-		if webm.saveWebm() {
-			newCount += 1
+	dat := thread{}
+	err = json.Unmarshal(body, &dat)
+	check(err)
+
+	totalFiles := 0
+	newFiles := 0
+	for _, thread := range dat.Threads {
+		for _, post := range thread.Posts {
+			for _, file := range post.Files {
+				if file.Type == 6 {
+					totalFiles += 1
+					threadId, _ := strconv.Atoi(dat.Num)
+					webm := Webm{
+						Id:         bson.NewObjectId(),
+						Url:        "/" + dat.Board + "/" + file.Path,
+						ThreadId:   threadId,
+						Board:      dat.Board,
+						CreateDate: time.Now(),
+						Md5:        file.Md5,
+					}
+					if webm.saveWebm() {
+						newFiles += 1
+					}
+				}
+			}
 		}
 	}
-	fmt.Println("Из них новых: " + strconv.Itoa(newCount))
+	fmt.Println("Всего вебмок в треде: " + strconv.Itoa(totalFiles))
+	fmt.Println("Из них новых: " + strconv.Itoa(newFiles))
 
-	time.Sleep(15 * time.Second)
+	time.Sleep(5 * time.Second)
 }

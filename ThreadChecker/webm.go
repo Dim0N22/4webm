@@ -14,6 +14,7 @@ type Webm struct {
 	Board      string        `json:"board" bson:"board"`
 	Url        string        `json:"url" bson:"url"`
 	CreateDate time.Time     `json:"create_date" bson:"create_date"`
+	Md5        string        `json:"md5" bson:"md5"`
 }
 
 func newWebm(match []string) *Webm {
@@ -28,7 +29,13 @@ func newWebm(match []string) *Webm {
 
 // saveWebm saves webm url to mongo
 func (webm Webm) saveWebm() bool {
-	err := webmCollection.Find(bson.M{"url": webm.Url}).One(&Webm{})
+	err := webmCollection.Find(bson.M{
+		"$or": []interface{}{
+			bson.M{"url": webm.Url},
+			bson.M{"md5": webm.Md5},
+		},
+	}).One(&Webm{})
+
 	if err != nil {
 		err := webmCollection.Insert(webm)
 		check(err)

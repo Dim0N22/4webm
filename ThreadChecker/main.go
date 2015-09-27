@@ -84,7 +84,7 @@ func main() {
 
 		total := len(threads.Threads)
 		for i, thread := range threads.Threads {
-			fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + "из " + strconv.Itoa(total))
+			fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
 
 			thread.GetWebmLinks()
 		}
