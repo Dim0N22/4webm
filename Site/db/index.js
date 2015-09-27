@@ -73,7 +73,7 @@ function getWebms(params, done) {
 
             done(null, {
                 webms: webms,
-                lastSeqid: webms.length > 0 ? webms[webms.length - 1].seqid : 0
+                lastSeqid: webms.length > 0 ? webms[webms.length - 1].seqid : params.lastSeqid
             });
         });
 }

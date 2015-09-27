@@ -30,6 +30,10 @@ function clickTag(tag) {
 }
 
 function generateHtml(webms) {
+    if (!webms) {
+        return '';
+    }
+
     var html = '';
     for (var i = 0; i < webms.length; i = i + 4) {
         html += '<div class="row">';
@@ -37,7 +41,7 @@ function generateHtml(webms) {
             html += '<div class="col-xs-12 col-sm-6 col-md-3">';
             html += '#' + webms[i + j].seqid;
             html += '<a href="/' + webms[i + j].seqid + '" class="thumbnail">';
-            html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc  + ')"></div>';
+            html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';
             html += '</a>';
             html += '</div>';
         }
@@ -53,10 +57,6 @@ function getWebmsFromServer(params, done) {
 
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
-        if (!data) {
-            return;
-        }
-
         document.getElementById('webmsGrid').innerHTML += generateHtml(data.webms);
         lastSeqid = data.lastSeqid;
     });
@@ -64,10 +64,6 @@ function moarWebms() {
 
 function refreshVideos() {
     getWebmsFromServer(null, function (data) {
-        if (!data) {
-            return;
-        }
-
         document.getElementById('webmsGrid').innerHTML = generateHtml(data.webms);
         lastSeqid = data.lastSeqid;
     });
