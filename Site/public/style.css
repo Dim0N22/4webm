@@ -9,10 +9,7 @@
 }
 
 .tag-radius {
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
+    border-radius: 30px;
 }
 
 .enabled {
@@ -25,8 +22,10 @@
 
 .inner-thumbnail {
     background: black no-repeat center;
+    background-size: contain;
+    background-origin: border-box;
     margin-bottom: 0;
     padding: 0;
-    height: 160px;
+    height: 143px;
     width: auto;
 }
