@@ -102,6 +102,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                     if (err) {
                         console.log(err);
                         res.status(500).end();
+                        return;
                     }
 
                     response(values[0].seqid, nextId.seqid);
@@ -186,6 +187,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     if (err) {
                         console.log(err);
                         res.status(500).end();
+                        return;
                     }
 
                     response(values[0].seqid, nextId.seqid);
@@ -240,6 +242,44 @@ router.get('/random', function (req, res) {
 
                 res.redirect('/' + webms[0].seqid);
             });
+    });
+});
+
+
+router.get('/login', function (req, res) {
+    res.render('login', {
+        title: '4webm login',
+        error: req.query.error
+    });
+});
+
+
+router.post('/login', function (req, res) {
+    if (!req.body.login || !req.body.secret) {
+        //res.status(400).end();
+        res.redirect('/login?error=' + 400);
+        return;
+    }
+
+    db.users.findOne({
+        login: req.body.login,
+        secret: req.body.secret
+    }, function (err, user) {
+        if (err) {
+            console.log(err);
+            //res.status(500).end();
+            res.redirect('/login?error=' + 500);
+            return;
+        }
+
+        if (!user || !user.token) {
+            //res.status(404).end();
+            res.redirect('/login?error=' + 404);
+            return;
+        }
+
+        res.cookie('token', user.token, {expires: new Date(2100, 01, 01), httpOnly: true});
+        res.redirect('/');
     });
 });
 

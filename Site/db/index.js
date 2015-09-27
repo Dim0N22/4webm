@@ -34,6 +34,13 @@ var tags = mongoose.model('tags', tag);
 var maxwebmidSchema = new Schema({currentId: Number}, {collection: 'maxwebmid'});
 var maxwebmid = mongoose.model('maxwebmid', maxwebmidSchema);
 
+var user = new Schema({
+    login: String,
+    secret: String,
+    token: String
+});
+var users = mongoose.model('users', user);
+
 
 /**
  * Get webms by criteria
@@ -83,3 +90,4 @@ module.exports.webms = webms;
 module.exports.tags = tags;
 module.exports.maxwebmid = maxwebmid;
 module.exports.getWebms = getWebms;
+module.exports.users = users;
