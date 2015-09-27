@@ -47,12 +47,12 @@ function generateHtml(webms) {
     return html;
 }
 
-function getWebmsFromServer(done) {
-    $.get('/api/webm', {lastSeqid: lastSeqid}).done(done);
+function getWebmsFromServer(params, done) {
+    $.get('/api/webm', params).done(done);
 }
 
 function moarWebms() {
-    getWebmsFromServer(function (data) {
+    getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
         if (!data) {
             return;
         }
@@ -63,7 +63,7 @@ function moarWebms() {
 }
 
 function refreshVideos() {
-    getWebmsFromServer(function (data) {
+    getWebmsFromServer(null, function (data) {
         if (!data) {
             return;
         }
