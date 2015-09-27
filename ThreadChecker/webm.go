@@ -27,7 +27,7 @@ func newWebm(match []string) *Webm {
 }
 
 // saveWebm saves webm url to mongo
-func (webm Webm) saveWebm() {
+func (webm Webm) saveWebm() bool {
 	err := webmCollection.Find(bson.M{"url": webm.Url}).One(&Webm{})
 	if err != nil {
 		err := webmCollection.Insert(webm)
@@ -44,5 +44,8 @@ func (webm Webm) saveWebm() {
 				Body:         []byte(webm.Id),
 			})
 		check(err)
+
+		return true
 	}
+	return false
 }

@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"regexp"
 	"time"
+	"fmt"
+	"strconv"
 )
 
 type thread struct {
@@ -37,11 +39,16 @@ func (thread thread) GetWebmLinks() {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	webmUrls := re.FindAllStringSubmatch(string(body), -1)
+	fmt.Println("Всего вебмок в треде: " + strconv.Itoa(len(webmUrls)))
 
+	newCount := 0
 	for _, match := range webmUrls {
 		webm := newWebm(match)
-		webm.saveWebm()
+		if webm.saveWebm() {
+			newCount += 1
+		}
 	}
+	fmt.Println("Из них новых: " + strconv.Itoa(newCount))
 
 	time.Sleep(15 * time.Second)
 }

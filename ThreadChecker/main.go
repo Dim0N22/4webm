@@ -9,6 +9,10 @@ import (
 
 	"github.com/streadway/amqp"
 	"gopkg.in/mgo.v2"
+	"fmt"
+	"net/url"
+	"regexp"
+	"strconv"
 )
 
 func check(e error) {
@@ -18,11 +22,11 @@ func check(e error) {
 }
 
 var (
-	MIN_VIEWS      = flag.Int("w", 1000, "Minimum views to parse thread")
-	ERROR_CODE     = flag.Int("e", 503, "Cloudflare error code")
+	MIN_VIEWS = flag.Int("w", 1000, "Minimum views to parse thread")
+	ERROR_CODE = flag.Int("e", 503, "Cloudflare error code")
 	webmCollection *mgo.Collection
 	channel        *amqp.Channel
-	queue          amqp.Queue
+	queue amqp.Queue
 )
 
 func main() {
@@ -74,11 +78,36 @@ func main() {
 	var threads topThreads
 	err = json.Unmarshal(body, &threads)
 	check(err)
-	sort.Sort(byViews(threads.Threads))
+	if len(threads.Threads) > 21 {
+		fmt.Println("Парсим json")
+		fmt.Println("Количество тредов: " + strconv.Itoa(len(threads.Threads)))
+		sort.Sort(byViews(threads.Threads))
 
-	for _, thread := range threads.Threads {
-		if thread.Views > *MIN_VIEWS {
+		total := len(threads.Threads)
+		for i, thread := range threads.Threads {
+			fmt.Println("Процессим тред № " + strconv.Itoa(i + 1) + "из " + strconv.Itoa(total))
+			if thread.Views > *MIN_VIEWS {
+				thread.GetWebmLinks()
+			}
+		}
+	} else {
+		fmt.Println("Парсим главную")
+		req.URL, _ = url.Parse("http://2ch.hk/b/");
+		resp, err = client.Do(req)
+		check(err)
+
+		body, err = ioutil.ReadAll(resp.Body)
+		check(err)
+		defer resp.Body.Close()
+
+		re := regexp.MustCompile("<a class=\"orange\" href=\"\\/b\\/res\\/([0-9]+).html\">Ответ<\\/a>")
+		threadNums := re.FindAllStringSubmatch(string(body), -1)
+		total := len(threadNums)
+		for i, match := range threadNums {
+			fmt.Println("Процессим тред № " + strconv.Itoa(i + 1) + " из " + strconv.Itoa(total))
+			thread := thread{Num:match[1]}
 			thread.GetWebmLinks()
+			fmt.Println()
 		}
 	}
 }
