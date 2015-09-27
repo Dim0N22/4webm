@@ -25,12 +25,9 @@
 
 .inner-thumbnail {
     background-color: black;
+    background-size: contain;
     margin-bottom: 0;
     padding: 0;
-}
-
-.inner-thumbnail > img {
-    width: auto;
     height: 160px;
-    display: block;
+    width: auto;
 }

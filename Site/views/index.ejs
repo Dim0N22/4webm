@@ -45,9 +45,7 @@
             <div class="col-xs-12 col-sm-6 col-md-3">
                 #<%= webms[i + j].seqid %>
                 <a href="/<%= webms[i + j].seqid %>" class="thumbnail">
-                    <div class="thumbnail inner-thumbnail">
-                        <img alt="#<%= webms[i + j].seqid %>" src="<%= webms[i + j].previewSrc %>">
-                    </div>
+                    <div class="thumbnail inner-thumbnail" style="background-image: url(<%= webms[i + j].previewSrc %>)"></div>
                 </a>
             </div>
             <% } %>

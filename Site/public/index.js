@@ -37,9 +37,7 @@ function generateHtml(webms) {
             html += '<div class="col-xs-12 col-sm-6 col-md-3">';
             html += '#' + webms[i + j].seqid;
             html += '<a href="/' + webms[i + j].seqid + '" class="thumbnail">';
-            html += '<div class="thumbnail inner-thumbnail">';
-            html += '<img alt="#' + webms[i + j].seqid + '" src="' + webms[i + j].previewSrc + '">';
-            html += '</div>';
+            html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc  + ')"></div>';
             html += '</a>';
             html += '</div>';
         }
