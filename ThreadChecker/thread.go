@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	//	"regexp"
-	//	"strconv"
 	"encoding/json"
 	"gopkg.in/mgo.v2/bson"
 	"strconv"
@@ -57,7 +55,9 @@ func (th thread) GetWebmLinks() {
 
 	dat := thread{}
 	err = json.Unmarshal(body, &dat)
-	check(err)
+	if err != nil {
+		return
+	}
 
 	totalFiles := 0
 	newFiles := 0
@@ -66,7 +66,7 @@ func (th thread) GetWebmLinks() {
 			for _, file := range post.Files {
 				if file.Type == 6 {
 					totalFiles += 1
-					threadId, _ := strconv.Atoi(dat.Num)
+					threadId, _ := strconv.Atoi(th.Num)
 					webm := Webm{
 						Id:         bson.NewObjectId(),
 						Url:        "/" + dat.Board + "/" + file.Path,
