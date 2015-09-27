@@ -24,8 +24,7 @@
 }
 
 .inner-thumbnail {
-    background-color: black;
-    background-size: contain;
+    background: black no-repeat center;
     margin-bottom: 0;
     padding: 0;
     height: 160px;
