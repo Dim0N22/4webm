@@ -6,7 +6,7 @@ var config = require('../config');
 
 
 router.get('/', function (req, res) {
-    db.webms.aggregate([
+        db.webms.aggregate([
         {$match: {"tags.1": {$exists: true}}},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
@@ -155,7 +155,8 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
                     tags: tags,
                     prevHref: '/edit/' + prevId,
-                    nextHref: '/edit/' + nextId
+                    nextHref: '/edit/' + nextId,
+                    danger: danger
                 });
             }
 
@@ -167,11 +168,20 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 return;
             }
 
+            var danger = false;
+            for (var k = 0; k < webm.tags.length; k++) {
+                if (webm.tags[k] === 'danger') {
+                    danger = true;
+                    break;
+                }
+            }
+
             if (webm.tags && webm.tags.length > 0) {
                 for (var i = 0; i < tags.length; i++) {
                     for (var j = 0; j < webm.tags.length; j++) {
                         if (webm.tags[j] === tags[i].name) {
                             tags[i].enable = true;
+                            break;
                         }
                     }
                 }

@@ -5,13 +5,23 @@ function clickTag(tag) {
 
         action = 'add';
         $(tag).removeClass("btn-default");
-        $(tag).addClass("btn-success");
+
+        if (tag.dataset.tag === 'danger') {
+            $(tag).addClass("btn-danger");
+        } else {
+            $(tag).addClass("btn-success");
+        }
     } else {
         // remove tag
 
         action = 'remove';
         $(tag).addClass("btn-default");
-        $(tag).removeClass("btn-success");
+
+        if (tag.dataset.tag === 'danger') {
+            $(tag).removeClass("btn-danger");
+        } else {
+            $(tag).removeClass("btn-success");
+        }
     }
 
     $.ajax({
@@ -20,7 +30,7 @@ function clickTag(tag) {
         data: {
             property: 'tags',
             action: action,
-            value: tag.innerHTML
+            value: tag.dataset.tag
         }
     });
 }
