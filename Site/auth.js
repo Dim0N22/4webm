@@ -1,10 +1,17 @@
 var unless = require('express-unless');
 var db = require('./db');
 
-function isAuthenticated(req, res, next) {
+
+/**
+ * middleware set req.user by req.cookies.token
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function setUserFromToken(req, res, next) {
     if (!req.cookies.token) {
-        res.redirect('/login');
-        return;
+        return next();
     }
 
     db.users.findOne({
@@ -12,13 +19,11 @@ function isAuthenticated(req, res, next) {
     }, function (err, user) {
         if (err) {
             console.log(err);
-            res.redirect('/login');
-            return;
+            return next();
         }
 
         if (!user || !user.token) {
-            res.redirect('/login');
-            return;
+            return next();
         }
 
         req.user = user;
@@ -26,6 +31,17 @@ function isAuthenticated(req, res, next) {
     });
 }
 
+function isAuthenticated(req, res, next) {
+    console.log(req.user);
+    if (!req.user) {
+        res.redirect('/login');
+        return;
+    }
+
+    next();
+}
+
 isAuthenticated.unless = unless;
 
 module.exports.isAuthenticated = isAuthenticated;
+module.exports.setUserFromToken = setUserFromToken;

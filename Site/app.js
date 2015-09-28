@@ -18,6 +18,7 @@ app.use(bodyParser.raw());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(require('./auth').setUserFromToken); // authorization mechanism
 //app.use(require('./auth').isAuthenticated.unless({path: ['/login']})); // authorization mechanism
 
 

@@ -37,7 +37,7 @@ router.get('/', function (req, res) {
         res.json({
             webms: result.webms,
             lastSeqid: result.lastSeqid,
-            authorized: Boolean(req.cookies.token)
+            authorized: Boolean(req.user)
         });
     });
 });

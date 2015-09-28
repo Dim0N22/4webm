@@ -39,7 +39,7 @@ router.get('/', function (req, res) {
                 tags: tags,
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
-                authorized: Boolean(req.cookies.token)
+                authorized: Boolean(req.user)
             });
         });
     });
@@ -74,15 +74,23 @@ router.get('/:id([0-9]+)', function (req, res) {
                     videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
                     tags: webm.tags,
                     prevHref: '/' + prevId,
-                    nextHref: '/' + nextId
+                    nextHref: '/' + nextId,
+                    authorized: Boolean(req.user)
                 });
             }
 
             var webm = values[2];
 
+            if (!webm) {
+                res.redirect('/');
+                return;
+            }
 
-            // if prev not found (actually for first webm)
-            if (!values[0]) {
+
+            if (!values[0] && !values[1]) { // one webm on this criteria
+                response(id, id);
+                return;
+            } else if (!values[0]) { // if prev not found (actually for first webm)
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
                     if (err) {
@@ -94,10 +102,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                     response(prevId.seqid, values[1].seqid);
                 });
                 return;
-            }
-
-            // if next not found (actually for last webm)
-            if (!values[1]) {
+            } else if (!values[1]) { // if next not found (actually for last webm)
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
                     if (err) {
@@ -110,6 +115,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 });
                 return;
             }
+
 
             response(values[0].seqid, values[1].seqid);
         }).catch(function (exeption) {
@@ -156,6 +162,11 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
             var webm = values[2];
             var tags = values[3];
 
+            if (!webm) {
+                res.redirect('/');
+                return;
+            }
+
             if (webm.tags && webm.tags.length > 0) {
                 for (var i = 0; i < tags.length; i++) {
                     for (var j = 0; j < webm.tags.length; j++) {
@@ -166,8 +177,10 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 }
             }
 
-            // if prev not found (actually for first webm)
-            if (!values[0]) {
+            if (!values[0] && !values[1]) { // one webm on this criteria
+                response(id, id);
+                return;
+            } else if (!values[0]) { // if prev not found (actually for first webm)
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
                     if (err) {
@@ -179,10 +192,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     response(prevId.seqid, values[1].seqid);
                 });
                 return;
-            }
-
-            // if next not found (actually for last webm)
-            if (!values[1]) {
+            } else if (!values[1]) { // if next not found (actually for last webm)
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
                     if (err) {
