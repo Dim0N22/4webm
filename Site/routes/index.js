@@ -7,7 +7,7 @@ var config = require('../config');
 
 router.get('/', function (req, res) {
     db.webms.aggregate([
-        {$match: {"tags.1": {$exists: true}}},
+        {$match: {"tags": {$exists: true}}},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
         {$group: {_id: "$tags", count: {$sum: 1}}}
