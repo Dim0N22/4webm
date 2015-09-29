@@ -58,6 +58,14 @@ function getWebmsFromServer(params, done) {
     $.get('/api/webm', params).done(done);
 }
 
+$(window).scroll(function() {
+    var totalHeight = $(document).height() - $(window).height();
+    var currentHeight = $(window).scrollTop();
+    if ( (totalHeight - currentHeight) < 300 ) {
+        moarWebms(); // TODO throttling
+    }
+});
+
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
         document.getElementById('webmsGrid').innerHTML += generateHtml(data.webms, data.authorized);
