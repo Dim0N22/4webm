@@ -3,5 +3,6 @@
     "uri": "mongodb://localhost/4webm"
   },
   "videoServer": "http://localhost/webms",
-  "webmsPerPage": 40
+  "webmsPerPage": 40,
+  "projectName": "4webm"
 }

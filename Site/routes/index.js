@@ -6,7 +6,7 @@ var config = require('../config');
 
 
 router.get('/', function (req, res) {
-        db.webms.aggregate([
+    db.webms.aggregate([
         {$match: {"tags.1": {$exists: true}}},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
@@ -35,11 +35,12 @@ router.get('/', function (req, res) {
             }
 
             res.render('index', {
-                title: '4webm',
+                title: config.projectName,
                 tags: tags,
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
-                authorized: Boolean(req.user)
+                authorized: Boolean(req.user),
+                projectName: config.projectName
             });
         });
     });
@@ -69,13 +70,14 @@ router.get('/:id([0-9]+)', function (req, res) {
         .then(function (values) {
             function response(prevId, nextId) {
                 res.render('view', {
-                    title: '4webm #' + id,
+                    title: config.projectName + ' #' + id,
                     id: id,
                     videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
                     tags: webm.tags,
                     prevHref: '/' + prevId,
                     nextHref: '/' + nextId,
-                    authorized: Boolean(req.user)
+                    authorized: Boolean(req.user),
+                    projectName: config.projectName
                 });
             }
 
@@ -150,13 +152,14 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
         .then(function (values) {
             function response(prevId, nextId) {
                 res.render('edit', {
-                    title: '4webm edit #' + id,
+                    title: config.projectName + ' edit #' + id,
                     id: id,
                     videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
                     tags: tags,
                     prevHref: '/edit/' + prevId,
                     nextHref: '/edit/' + nextId,
-                    danger: danger
+                    danger: danger,
+                    projectName: config.projectName
                 });
             }
 
@@ -269,8 +272,9 @@ router.get('/random', function (req, res) {
 
 router.get('/login', function (req, res) {
     res.render('login', {
-        title: '4webm login',
-        error: req.query.error
+        title: config.projectName + ' login',
+        error: req.query.error,
+        projectName: config.projectName
     });
 });
 
