@@ -27,6 +27,7 @@ app.get('/api', function (req, res) {
 });
 app.use('/', require('./routes/index'));
 app.use('/api/webm', require('./routes/api/webm'));
+app.use('/api/tags', require('./routes/api/tags'));
 
 
 // catch 404 and forward to error handler

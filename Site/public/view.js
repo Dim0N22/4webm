@@ -36,6 +36,37 @@ function clickTag(tag) {
 }
 
 
+function addNewTag() {
+    var inputNewTag = document.getElementById('newTag');
+    var tag = inputNewTag.value.trim();
+    if (tag === '') {
+        inputNewTag.value = ''; // remove spaces
+        return;
+    }
+
+    $.post('/api/tags/' + encodeURIComponent(tag));
+
+    var tagHtml = '';
+    tagHtml += '<a type="button"';
+    tagHtml += 'class="btn btn-xs tag-radius btn-success" style="margin-top: 5px"';
+    tagHtml += 'data-tag="' + tag + '"';
+    tagHtml += 'onclick="clickTag(this);">' + tag + '</a>';
+    document.getElementById('tags').innerHTML += tagHtml;
+
+    $.ajax({
+        url: '/api/webm/' + webmId,
+        type: 'PUT',
+        data: {
+            property: 'tags',
+            action: 'add',
+            value: tag
+        }
+    });
+
+    inputNewTag.value = '';
+}
+
+
 document.getElementById('webm').addEventListener('volumechange', function () {
     localStorage.volume = this.volume;
 });
@@ -185,7 +216,7 @@ function handleTouchEnd(evt) {
             }
         }
     }
-    
+
     xDown = null;
     yDown = null;
 }

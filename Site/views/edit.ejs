@@ -59,35 +59,48 @@
 
     <div class="row" style="margin-top: 10px">
         <div class="col-md-2 hidden-xs hidden-sm"></div>
-        <div class="col-md-6">
-            <% tags.forEach(function(tag){ %>
-            <a type="button"
-               class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>"
-               style="margin-top: 5px"
-               data-tag="<%= tag.name %>"
-               onclick="clickTag(this);"><%= tag.name %></a>
-            <% }); %>
+        <div class="col-md-8">
+            <div id="tags">
+                <% tags.forEach(function(tag){ %>
+                <a type="button"
+                   class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>"
+                   style="margin-top: 5px"
+                   data-tag="<%= tag.name %>"
+                   onclick="clickTag(this);"><%= tag.name %></a>
+                <% }); %>
+            </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-2 hidden-xs hidden-sm"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 hidden-xs hidden-sm"></div>
+        <div class="col-md-3 col-sm-6" style="margin-top: 20px">
+            <div class="input-group">
+                <input type="text" id="newTag" class="form-control" placeholder="Новый тег">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" onclick="addNewTag()">Добавить</button>
+              </span>
+            </div>
+        </div>
+        <div class="col-md-2 hidden-sm hidden-xs"></div>
+        <div class="col-md-3 col-sm-6" style="margin-top: 20px">
             <button type="button"
-                    class="btn <% if (danger) { %> btn-danger <% } else{ %> btn-default <% } %>"
+                    class="btn <% if (danger) { %> btn-danger <% } else{ %> btn-default <% } %> pull-right btn-block"
                     data-tag="danger"
-                    style="margin-top: 5px"
                     onclick="clickTag(this);">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Пожаловаться
             </button>
         </div>
         <div class="col-md-2 hidden-xs hidden-sm"></div>
     </div>
-</div>
 
 
-<script>
-    var webmId = '<%= id %>';
-</script>
+    <script>
+        var webmId = '<%= id %>';
+    </script>
 
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="/vendors/mousetrap.min.js"></script>
-<script src="/view.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/vendors/mousetrap.min.js"></script>
+    <script src="/view.js"></script>
 </body>
 </html>
