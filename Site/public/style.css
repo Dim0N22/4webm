@@ -12,11 +12,11 @@
     border-radius: 30px;
 }
 
-.enabled {
+#navigation>.enabled {
     color: green;
 }
 
-.enabled-boss {
+#likeABoss.enabled {
     color: black;
 }
 
