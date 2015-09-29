@@ -28,7 +28,7 @@ var webm = new Schema({
 });
 var webms = mongoose.model('webms', webm);
 
-var tag = new Schema({name: String});
+var tag = new Schema({name: String}, { versionKey: false });
 var tags = mongoose.model('tags', tag);
 
 var maxwebmidSchema = new Schema({currentId: Number}, {collection: 'maxwebmid'});
