@@ -1,26 +1,26 @@
 function clickTag(tag) {
     var action;
-    if ($(tag).hasClass("btn-default")) {
+    if (tag.classList.contains("btn-default")) {
         // add tag
 
         action = 'add';
-        $(tag).removeClass("btn-default");
+        tag.classList.remove("btn-default");
 
         if (tag.dataset.tag === 'danger') {
-            $(tag).addClass("btn-danger");
+            tag.classList.add("btn-danger");
         } else {
-            $(tag).addClass("btn-success");
+            tag.classList.add("btn-success");
         }
     } else {
         // remove tag
 
         action = 'remove';
-        $(tag).addClass("btn-default");
+        tag.classList.add("btn-default");
 
         if (tag.dataset.tag === 'danger') {
-            $(tag).removeClass("btn-danger");
+            tag.classList.remove("btn-danger");
         } else {
-            $(tag).removeClass("btn-success");
+            tag.classList.remove("btn-success");
         }
     }
 
@@ -43,115 +43,116 @@ Mousetrap.bind('down', downVolume);
 Mousetrap.bind('ctrl+right', rewindForward);
 Mousetrap.bind('ctrl+left', rewindBack);
 
-$('#autoNext').click(function () {
+document.getElementById('autoNext').addEventListener('click', function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
 
-    $(this).toggleClass('enabled');
-    var autoCycle = $('#autoCycle');
-    if (autoCycle.hasClass('enabled')) {
-        autoCycle.removeClass('enabled');
+    this.classList.toggle('enabled');
+    var autoCycle = document.getElementById('autoCycle');
+    if (autoCycle.classList.contains('enabled')) {
+        autoCycle.classList.remove('enabled');
     }
 
-    var likeABoss = $('#likeABoss');
-    if (!autoNextEnabled && likeABoss.hasClass('enabled-boss')) {
-        likeABoss.removeClass('enabled-boss');
+    var likeABoss = document.getElementById('likeABoss');
+    if (!autoNextEnabled && likeABoss.classList.contains('enabled-boss')) {
+        likeABoss.classList.remove('enabled-boss');
     } else {
-        likeABoss.addClass('enabled-boss');
+        likeABoss.classList.add('enabled-boss');
     }
 
     localStorage.autoNext = !autoNextEnabled;
     localStorage.autoCycle = false;
 });
 
-$('#autoCycle').click(function () {
+document.getElementById('autoCycle').addEventListener('click', function () {
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
 
-    $(this).toggleClass('enabled');
-    var autoNext = $('#autoNext');
-    if (autoNext.hasClass('enabled')) {
-        autoNext.removeClass('enabled');
+    this.classList.toggle('enabled');
+
+    var autoNext = document.getElementById('autoNext');
+    if (autoNext.classList.contains('enabled')) {
+        autoNext.classList.remove('enabled');
     }
 
-    var likeABoss = $('#likeABoss');
-    if (!autoCycleEnabled && likeABoss.hasClass('enabled-boss')) {
-        likeABoss.removeClass('enabled-boss');
+    var likeABoss = document.getElementById('likeABoss');
+    if (!autoCycleEnabled && likeABoss.classList.contains('enabled-boss')) {
+        likeABoss.classList.remove('enabled-boss');
     } else {
-        likeABoss.addClass('enabled-boss');
+        likeABoss.classList.add('enabled-boss');
     }
 
     localStorage.autoCycle = !autoCycleEnabled;
     localStorage.autoNext = false;
 });
 
-$('#likeABoss').click(function () {
-    $(this).toggleClass('enabled-boss');
-    $('#autoNext').removeClass('enabled');
-    $('#autoCycle').removeClass('enabled');
+document.getElementById('likeABoss').addEventListener('click', function () {
+    this.classList.toggle('enabled-boss');
+    document.getElementById('autoNext').classList.remove('enabled');
+    document.getElementById('autoCycle').classList.remove('enabled');
     localStorage.autoNext = false;
     localStorage.autoCycle = false;
 });
 
-$('video').on('ended', function () {
+document.getElementById('webm').addEventListener('ended', function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
 
     if (autoNextEnabled) {
         next();
     } else if (autoCycleEnabled) {
-        var video = $('video').get(0);
+        var video = document.getElementById('webm');
         video.currentTime = 0;
         video.play();
     }
 });
 
-$('video').on('volumechange', function () {
+document.getElementById('webm').addEventListener('volumechange', function () {
     localStorage.volume = this.volume;
 });
 
 function next() {
-    $('a#next').get(0).click();
+    document.getElementById('next').click();
 }
 
 function prev() {
-    $('a#prev').get(0).click();
+    document.getElementById('prev').click();
 }
 
 function startStopVideo() {
-    var video = $('video').get(0);
+    var video = document.getElementById('webm');
     video.paused ? video.play() : video.pause();
 }
 
 function upVolume() {
-    var video = $('video').get(0);
+    var video = document.getElementById('webm');
     video.volume += 0.1;
 }
 
 function downVolume() {
-    var video = $('video').get(0);
+    var video = document.getElementById('webm');
     video.volume -= 0.1;
 }
 
 function rewindForward() {
-    var video = $('video').get(0);
+    var video = document.getElementById('webm');
     video.currentTime += 5;
 }
 
 function rewindBack() {
-    var video = $('video').get(0);
+    var video = document.getElementById('webm');
     video.currentTime -= 5;
 }
 
-$(function () {
+document.addEventListener("DOMContentLoaded", function () {
     var autoNextEnabled = JSON.parse(localStorage.getItem("autoNext"));
     var autoCycleEnabled = JSON.parse(localStorage.getItem("autoCycle"));
-    $('video').prop("volume", localStorage.volume || 1);
+    document.getElementById('webm').volume = localStorage.volume || 1;
 
     if (autoNextEnabled) {
-        $('#autoNext').addClass('enabled');
-        $('video').get(0).play();
+        document.getElementById('autoNext').classList.add('enabled');
+        document.getElementById('webm').play();
     } else if (autoCycleEnabled) {
-        $('#autoCycle').addClass('enabled');
+        document.getElementById('autoCycle').classList.add('enabled');
     } else {
-        $('#likeABoss').addClass('enabled-boss');
+        document.getElementById('likeABoss').classList.add('enabled-boss');
     }
 });

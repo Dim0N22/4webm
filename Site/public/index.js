@@ -1,16 +1,14 @@
 function clickTag(tag) {
-    var action;
     var tagName = tag.id;
     var tags = Cookies.getJSON('tags') || [];
 
-    if ($(tag).hasClass("btn-default")) {
+    if (tag.classList.contains("btn-default")) {
         // add tag
 
         tags.push(tagName);
 
-        action = 'add';
-        $(tag).removeClass("btn-default");
-        $(tag).addClass("btn-success");
+        tag.classList.remove("btn-default");
+        tag.classList.add("btn-success");
     } else {
         // remove tag
 
@@ -19,9 +17,8 @@ function clickTag(tag) {
             tags.splice(ind, 1);
         }
 
-        action = 'remove';
-        $(tag).addClass("btn-default");
-        $(tag).removeClass("btn-success");
+        tag.classList.add("btn-default");
+        tag.classList.remove("btn-success");
     }
 
     Cookies.set('tags', tags);
@@ -58,13 +55,13 @@ function getWebmsFromServer(params, done) {
     $.get('/api/webm', params).done(done);
 }
 
-$(window).scroll(function() {
+window.onscroll = function () {
     var totalHeight = $(document).height() - $(window).height();
     var currentHeight = $(window).scrollTop();
-    if ( (totalHeight - currentHeight) < 300 ) {
+    if ((totalHeight - currentHeight) < 300) {
         moarWebms(); // TODO throttling
     }
-});
+};
 
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
@@ -80,7 +77,7 @@ function refreshVideos() {
     });
 }
 
-$(function () {
+document.addEventListener("DOMContentLoaded", function () {
     var tags = Cookies.getJSON('tags') || [];
 
     for (var i in tags) {
