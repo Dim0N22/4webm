@@ -144,43 +144,48 @@ function rewindBack() {
 // ------------------------------------------------------------------------------
 // swipe
 document.addEventListener('touchstart', handleTouchStart, false);
-document.addEventListener('touchmove', handleTouchMove, false);
+document.addEventListener('touchend', handleTouchEnd, false);
 
 var xDown = null;
 var yDown = null;
+var threshold = 150; //required min distance traveled to be considered swipe
+var restraint = 100; // maximum distance allowed at the same time in perpendicular direction
+var allowedTime = 400; // maximum time allowed to travel that distance
+var startTime;
+var elapsedTime;
 
 function handleTouchStart(evt) {
     xDown = evt.touches[0].clientX;
     yDown = evt.touches[0].clientY;
+    startTime = new Date().getTime(); // record time when finger first makes contact with surface
 }
 
-function handleTouchMove(evt) {
+function handleTouchEnd(evt) {
+    console.log("2", evt);
     if (!xDown || !yDown) {
         return;
     }
 
-    var xUp = evt.touches[0].clientX;
-    var yUp = evt.touches[0].clientY;
+    var xUp = evt.changedTouches[0].clientX;
+    var yUp = evt.changedTouches[0].clientY;
+
+    elapsedTime = new Date().getTime() - startTime;
 
     var xDiff = xDown - xUp;
     var yDiff = yDown - yUp;
 
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
-        if (xDiff > 0) {
-            /* left swipe */
-            document.getElementById('next').click();
-        } else {
-            /* right swipe */
-            document.getElementById('prev').click();
-        }
-    } else {
-        if (yDiff > 0) {
-            /* up swipe */
-        } else {
-            /* down swipe */
+    if (elapsedTime <= allowedTime) {
+        if (Math.abs(xDiff) >= threshold && Math.abs(yDiff) <= restraint) {
+            if (xDiff > 0) {
+                /* left swipe */
+                document.getElementById('next').click();
+            } else {
+                /* right swipe */
+                document.getElementById('prev').click();
+            }
         }
     }
-    /* reset values */
+    
     xDown = null;
     yDown = null;
 }
