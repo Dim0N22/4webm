@@ -79,12 +79,10 @@ function refreshVideos() {
 
 document.addEventListener("DOMContentLoaded", function () {
     var tags = Cookies.getJSON('tags') || [];
-
-    for (var i in tags) {
-        if (tags.hasOwnProperty(i)) {
-            var el = document.getElementById(tags[i]);
-            el.classList.add("btn-success");
-            el.classList.remove("btn-default");
-        }
+    
+    for (var i = 0; i < tags.length; i++) {
+        var el = document.getElementById(tags[i]);
+        el.classList.add("btn-success");
+        el.classList.remove("btn-default");
     }
 });
