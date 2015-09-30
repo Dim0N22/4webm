@@ -30,7 +30,7 @@ router.get('/', function (req, res) {
         }
 
         if (!result || !result.webms || result.webms.length === 0) {
-            res.status(200).end();
+            res.status(404).end();
             return;
         }
 
