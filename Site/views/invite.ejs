@@ -24,20 +24,20 @@
             <%if (error) { %>
             <div class="alert alert-danger" role="alert">Произошла ошибка</div>
             <% } %>
-            <form action="login" method="post">
+
+            <%if (success) { %>
+            <div class="alert alert-success" role="alert">Пользователь <%= success %> создан</div>
+            <% } %>
+            <form action="invite" method="post">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Логин</label>
-                    <input type="text" class="form-control" name="login" placeholder="Логин" required>
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Пароль</label>
-                    <input type="password" class="form-control" name="secret" placeholder="Пароль" required>
+                    <input type="email" class="form-control" name="email" placeholder="Email" required>
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
         </div>
+        <div class="col-md-4"></div>
     </div>
-    <div class="col-md-4"></div>
+
 </div>
 
 </body>

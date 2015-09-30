@@ -1,8 +1,22 @@
 {
+  "port": 36677,
   "mongoose": {
     "uri": "mongodb://localhost/4webm"
   },
   "videoServer": "http://localhost/webms",
   "webmsPerPage": 40,
-  "projectName": "4webm"
+  "projectName": "4webm",
+  "email": {
+    "transport": {
+      "service": "Gmail",
+      "auth": {
+        "user": "webm4team@gmail.com",
+        "pass": "secret"
+      }
+    },
+    "from": "webm4team@gmail.com",
+    "subject": "Добро пожаловать!",
+    "text": "login: %s\r\nsecret: %s",
+    "html": ""
+  }
 }

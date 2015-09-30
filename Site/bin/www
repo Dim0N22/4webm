@@ -1,7 +1,8 @@
 #!/usr/bin/node
 
 var app = require('../app');
+var config = require('../config');
 
-var server = app.listen(36677);
+var server = app.listen(config.port);
 
-console.log('Server running at http://localhost:36677/');
+console.log('Server running at http://localhost:' + config.port);

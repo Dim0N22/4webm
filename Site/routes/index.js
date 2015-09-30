@@ -1,8 +1,10 @@
 var url = require('url');
+var crypto = require('crypto');
 var express = require('express');
 var router = express.Router();
 var db = require('../db');
 var config = require('../config');
+var mail = require('../mail');
 
 
 router.get('/', function (req, res) {
@@ -308,5 +310,46 @@ router.post('/login', function (req, res) {
     });
 });
 
+router.get('/invite', function (req, res) {
+    res.render('invite', {
+        title: config.projectName + ' invite',
+        error: req.query.error,
+        success: req.query.success,
+        projectName: config.projectName
+    });
+});
+
+
+router.post('/invite', function (req, res) {
+    if (!req.body.email) {
+        res.redirect('/invite?error=' + 400);
+        return;
+    }
+
+    var secret = crypto.randomBytes(8).toString('hex');
+    var token = crypto.randomBytes(64).toString('base64');
+
+    db.users.create({
+        login: req.body.email,
+        secret: secret,
+        token: token
+    }, function (err) {
+        if (err) {
+            console.log(err);
+            res.redirect('/invite?error=' + 500);
+            return;
+        }
+
+        mail.sendInvite(req.body.email, secret, function (err) {
+            if (err) {
+                console.log(err);
+                res.redirect('/invite?error=' + 500);
+                return;
+            }
+
+            res.redirect('/invite?success=' + req.body.email);
+        });
+    });
+});
 
 module.exports = router;
