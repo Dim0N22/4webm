@@ -47,7 +47,7 @@ function addNewTag() {
     $.post('/api/tags/' + encodeURIComponent(tag));
 
     var tagHtml = '';
-    tagHtml += '<a type="button"';
+    tagHtml += ' <a type="button"';
     tagHtml += 'class="btn btn-xs tag-radius btn-success" style="margin-top: 5px"';
     tagHtml += 'data-tag="' + tag + '"';
     tagHtml += 'onclick="clickTag(this);">' + tag + '</a>';

@@ -26,7 +26,7 @@
                 if (tag._id !== 'danger' || authorized) {
             %>
 
-            <a id="<%= tag._id %>" class="btn btn-default btn-sm tag-radius" type="button" style="margin: 3px" onclick="clickTag(this);">
+            <a id="<%= tag._id %>" class="btn btn-default btn-xs tag-radius" type="button" style="margin-top: 3px; margin-bottom: 3px;" onclick="clickTag(this);">
                 <%= tag._id %> <span class="badge"><%= tag.count %></span>
             </a>
             <% }}); %>
