@@ -18,7 +18,7 @@ function sendInvite(email, secret, done) {
     var mailOptions = {
         from: config.email.from,
         to: email,
-        subject: config.email.from,
+        subject: config.email.subject,
         text: util.format(config.email.text, email, secret)
         //html: util.format(config.email.html, email, secret)
     };
