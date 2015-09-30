@@ -38,7 +38,7 @@ var user = new Schema({
     login: String,
     secret: String,
     token: String,
-    role: [String]
+    roles: [String]
 }, {versionKey: false});
 var users = mongoose.model('users', user);
 

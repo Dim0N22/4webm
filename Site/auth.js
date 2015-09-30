@@ -31,17 +31,34 @@ function setUserFromToken(req, res, next) {
     });
 }
 
-function isAuthenticated(req, res, next) {
-    console.log(req.user);
-    if (!req.user) {
-        res.redirect('/login');
-        return;
+function isAuthenticated(role) {
+    function auth(req, res, next) {
+        if (!req.user) {
+            res.redirect('/login');
+            return;
+        }
+
+        if (!role) {
+            next();
+            return;
+        }
+
+
+        // check roles
+        if (!req.user.roles || req.user.roles.length === 0 || req.user.roles.indexOf(role) === -1) {
+            // user is authorized but don't have permissions for this url
+            res.redirect('/');
+            return;
+        }
+
+        next();
     }
 
-    next();
+    auth.unless = unless;
+
+    return auth;
 }
 
-isAuthenticated.unless = unless;
 
 module.exports.isAuthenticated = isAuthenticated;
 module.exports.setUserFromToken = setUserFromToken;

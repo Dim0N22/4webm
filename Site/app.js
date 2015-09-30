@@ -3,6 +3,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var compression = require('compression');
+var auth = require('./auth');
 
 var app = express();
 
@@ -18,8 +19,9 @@ app.use(bodyParser.raw());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('./auth').setUserFromToken); // authorization mechanism
-//app.use(require('./auth').isAuthenticated.unless({path: ['/login']})); // authorization mechanism
+app.use(auth.setUserFromToken); // authorization mechanism
+//app.use(auth.isAuthenticated().unless({path: ['/login']})); // authorization mechanism
+app.use('/invite', auth.isAuthenticated('admin'));
 
 
 app.get('/api', function (req, res) {
