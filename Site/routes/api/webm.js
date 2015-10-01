@@ -1,7 +1,7 @@
 var util = require('util');
 var express = require('express');
 var db = require('../../db');
-var logger = require('../../libs/logger');
+var log = require('../../libs/log');
 
 var router = express.Router();
 
@@ -27,7 +27,7 @@ router.get('/', function (req, res) {
 
     db.getWebms(params, function (err, result) {
         if (err) {
-            logger.error(err);
+            log.error(err);
             res.status(500).end();
             return;
         }
@@ -53,7 +53,7 @@ router.get('/', function (req, res) {
  */
 router.put('/:id([0-9]+)', function (req, res) {
     if (req.body.property === "tags" && (req.body.action === 'add' || req.body.action === 'remove') && req.body.value) {
-        logger.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
+        log.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
             login: req.user ? req.user.login : null,
             seqid: req.params.id,
             property: req.body.property,
@@ -64,7 +64,7 @@ router.put('/:id([0-9]+)', function (req, res) {
         if (req.body.action === 'add') {
             db.webms.update({seqid: req.params.id}, {$addToSet: {tags: req.body.value}}, function (err, raw) {
                 if (err) {
-                    logger.error(err);
+                    log.error(err);
                     res.status(500).end();
                     return;
                 }
@@ -74,7 +74,7 @@ router.put('/:id([0-9]+)', function (req, res) {
         } else {
             db.webms.update({seqid: req.params.id}, {$pull: {tags: req.body.value}}, function (err) {
                 if (err) {
-                    logger.error(err);
+                    log.error(err);
                     res.status(500).end();
                     return;
                 }

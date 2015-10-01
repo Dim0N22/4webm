@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var compression = require('compression');
 var auth = require('./libs/auth');
-var logger = require('./libs/logger');
+var log = require('./libs/log');
 
 var app = express();
 
@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
-        logger.error(err);
+        log.error(err);
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -59,7 +59,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
-    logger.error(err);
+    log.error(err);
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

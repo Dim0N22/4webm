@@ -1,6 +1,6 @@
 var express = require('express');
 var db = require('../../db');
-var logger = require('../../libs/logger');
+var log = require('../../libs/log');
 
 var router = express.Router();
 
@@ -14,7 +14,7 @@ router.post('/:tag', function (req, res) {
             when: new Date()
         }, function (err) {
             if (err) {
-                logger.error(err);
+                log.error(err);
                 return;
             }
         });

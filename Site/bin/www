@@ -1,8 +1,7 @@
 #!/usr/bin/node
 
 var config = require('../libs/config');
-var logger = require('../libs/logger');
-console.log(config.get());
+var log = require('../libs/log');
 
 if (process.env.NODE_ENV === 'production') {
     var cluster = require('cluster');
@@ -14,15 +13,15 @@ if (process.env.NODE_ENV === 'production') {
         }
 
         cluster.on('exit', function (worker) {
-            logger.info('worker ' + worker.process.pid + ' died');
+            log.info('worker ' + worker.process.pid + ' died');
             cluster.fork();
         });
 
-        logger.info('Server running at http://localhost:' + config.get('port'));
+        log.info('Server running at http://localhost:' + config.get('port'));
     } else {
         var app = require('../app');
         app.listen(config.get('port'), function () {
-            logger.info('Worker ' + cluster.worker.id + ' running!');
+            log.info('Worker ' + cluster.worker.id + ' running!');
         });
     }
 
