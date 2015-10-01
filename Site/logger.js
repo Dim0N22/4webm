@@ -1,53 +1,54 @@
-var winston = require('winston');
-winston.emitErrs = true;
+var db = require('./db');
 
-var logger = new winston.Logger({
-    transports: [
-        new winston.transports.DailyRotateFile({
-            level: 'info',
-            name: 'file_debug',
-            handleExceptions: true,
-            json: true,
-            datePattern: '.yyyy-MM-dd',
-            filename: "./logs/log_file.log",
-            colorize: false
-        })
-        //,
-        //new winston.transports.Console({
-        //    level: 'debug',
-        //    handleExceptions: true,
-        //    json: false,
-        //    colorize: true
-        //})
-        //new winston.transports.File({
-        //    level: 'info',
-        //    filename: './logs/all-logs.log',
-        //    handleExceptions: true,
-        //    json: true,
-        //    maxsize: 5242880, //5MB
-        //    maxFiles: 5,
-        //    colorize: false
-        //})
-    ],
-    exitOnError: false
-});
+module.exports.error = function (err, msg1, msg2, msg3) {
+    var error = {};
+    var messages;
 
+    if (err instanceof Error) {
+        var properties = Object.getOwnPropertyNames(err);
+        for (var property, i = 0, len = properties.length; i < len; ++i) {
+            error[properties[i]] = err[properties[i]]
+        }
 
-module.exports.stream = {
-    write: function (message, encoding) {
-        logger.info(message);
+        if (arguments.length > 0) {
+            messages = Array.prototype.slice.call(arguments, 1);
+        }
+    } else {
+        messages = Array.prototype.slice.call(arguments, 0);
     }
+
+
+    var logRecord = {
+        type: 'error',
+        messages: messages,
+        error: error
+    };
+
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(logRecord);
+    }
+
+    db.logs.create(logRecord, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
 };
 
 
-// логирование сообщения об ошибки со стеком
-module.exports.logerror = function () {
-    Array.prototype.push.call(arguments, (new Error()).stack.substring(86)); // обрезаю Error и первую строку стека
-    logger.error.apply(this, arguments);
-};
+module.exports.info = function (msg1, msg2, msg3) {
+    var logRecord ={
+        type: 'info',
+        messages: Array.prototype.slice.call(arguments, 0)
+    };
 
-// логирование информационного сообщения со стеком
-module.exports.loginfo = function () {
-    Array.prototype.push.call(arguments, (new Error()).stack.substring(85)); // обрезаю Error и первую строку стека
-    logger.info.apply(this, arguments);
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(logRecord);
+    }
+
+    db.logs.create(logRecord, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
 };

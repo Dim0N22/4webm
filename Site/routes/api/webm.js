@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../../db');
+var logger = require('../../logger');
 
 
 /**
@@ -24,7 +25,7 @@ router.get('/', function (req, res) {
 
     db.getWebms(params, function (err, result) {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.status(500).end();
             return;
         }
@@ -53,7 +54,7 @@ router.put('/:id([0-9]+)', function (req, res) {
         if (req.body.action === 'add') {
             db.webms.update({seqid: req.params.id}, {$addToSet: {tags: req.body.value}}, function (err, raw) {
                 if (err) {
-                    console.log(err);
+                    logger.error(err);
                     res.status(500).end();
                     return;
                 }
@@ -63,7 +64,7 @@ router.put('/:id([0-9]+)', function (req, res) {
         } else {
             db.webms.update({seqid: req.params.id}, {$pull: {tags: req.body.value}}, function (err) {
                 if (err) {
-                    console.log(err);
+                    logger.error(err);
                     res.status(500).end();
                     return;
                 }

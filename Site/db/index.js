@@ -28,11 +28,14 @@ var webm = new Schema({
 });
 var webms = mongoose.model('webms', webm);
 
+
 var tag = new Schema({name: String}, {versionKey: false});
 var tags = mongoose.model('tags', tag);
 
+
 var maxwebmidSchema = new Schema({currentId: Number}, {collection: 'maxwebmid'});
 var maxwebmid = mongoose.model('maxwebmid', maxwebmidSchema);
+
 
 var user = new Schema({
     login: String,
@@ -41,6 +44,14 @@ var user = new Schema({
     roles: [String]
 }, {versionKey: false});
 var users = mongoose.model('users', user);
+
+
+var log = new Schema({
+    type: String, // error|info
+    messages: [String],
+    error: Object
+}, {versionKey: false});
+var logs = mongoose.model('logs', log);
 
 
 /**
@@ -92,3 +103,4 @@ module.exports.tags = tags;
 module.exports.maxwebmid = maxwebmid;
 module.exports.getWebms = getWebms;
 module.exports.users = users;
+module.exports.logs = logs;

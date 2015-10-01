@@ -1,5 +1,6 @@
 var unless = require('express-unless');
 var db = require('./db');
+var logger = require('./logger');
 
 
 /**
@@ -18,7 +19,7 @@ function setUserFromToken(req, res, next) {
         token: req.cookies.token
     }, function (err, user) {
         if (err) {
-            console.log(err);
+            logger.error(err);
             return next();
         }
 

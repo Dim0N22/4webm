@@ -5,6 +5,7 @@ var router = express.Router();
 var db = require('../db');
 var config = require('../config');
 var mail = require('../mail');
+var logger = require('../logger');
 
 
 router.get('/', function (req, res) {
@@ -15,7 +16,7 @@ router.get('/', function (req, res) {
         {$group: {_id: "$tags", count: {$sum: 1}}}
     ], function (err, tags) {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.status(500).end();
             return;
         }
@@ -31,7 +32,7 @@ router.get('/', function (req, res) {
 
         db.getWebms(params, function (err, result) {
             if (err) {
-                console.log(err);
+                logger.error(err);
                 res.status(500).end();
                 return;
             }
@@ -98,7 +99,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                         res.status(500).end();
                         return;
                     }
@@ -110,7 +111,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                         res.status(500).end();
                         return;
                     }
@@ -122,8 +123,8 @@ router.get('/:id([0-9]+)', function (req, res) {
 
 
             response(values[0].seqid, values[1].seqid);
-        }).catch(function (exeption) {
-            console.log(exeption);
+        }).catch(function (err) {
+            logger.error(err);
             res.status(500).end();
         });
 });
@@ -199,7 +200,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                         res.status(500).end();
                         return;
                     }
@@ -211,7 +212,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 conditions.seqid = {$exists: true};
                 db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                         res.status(500).end();
                         return;
                     }
@@ -222,8 +223,8 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
             }
 
             response(values[0].seqid, values[1].seqid);
-        }).catch(function (exeption) {
-            console.log(exeption);
+        }).catch(function (err) {
+            logger.error(err);
             res.status(500).end();
         });
 });
@@ -244,7 +245,7 @@ router.get('/random', function (req, res) {
 
     db.webms.count(conditions, function (err, count) {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.status(500).end();
             return;
         }
@@ -255,13 +256,12 @@ router.get('/random', function (req, res) {
             .limit(1)
             .exec(function (err, webms) {
                 if (err) {
-                    console.log(err);
+                    logger.error(err);
                     res.status(500).end();
                     return;
                 }
 
                 if (!webms || webms.length === 0) {
-                    console.log('Not found random webm');
                     res.redirect('/');
                     return;
                 }
@@ -293,7 +293,7 @@ router.post('/login', function (req, res) {
         secret: req.body.secret
     }, function (err, user) {
         if (err) {
-            console.log(err);
+            logger.error(err);
             //res.status(500).end();
             res.redirect('/login?error=' + 500);
             return;
@@ -335,14 +335,14 @@ router.post('/invite', function (req, res) {
         token: token
     }, function (err) {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.redirect('/invite?error=' + 500);
             return;
         }
 
         mail.sendInvite(req.body.email, secret, function (err) {
             if (err) {
-                console.log(err);
+                logger.error(err);
                 res.redirect('/invite?error=' + 500);
                 return;
             }
