@@ -54,7 +54,7 @@ router.get('/', function (req, res) {
 router.put('/:id([0-9]+)', function (req, res) {
     if (req.body.property === "tags" && (req.body.action === 'add' || req.body.action === 'remove') && req.body.value) {
         logger.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
-            login: req.user.login,
+            login: req.user ? req.user.login : null,
             seqid: req.params.id,
             property: req.body.property,
             action: req.body.action,

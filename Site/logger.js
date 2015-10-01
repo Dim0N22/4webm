@@ -33,15 +33,15 @@ module.exports.error = function (err, message, data) {
         logRecord.data = data;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'production') {
+        db.logs.create(logRecord, function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    } else {
         console.log(logRecord);
     }
-
-    db.logs.create(logRecord, function (err) {
-        if (err) {
-            console.log(err);
-        }
-    });
 };
 
 
@@ -67,13 +67,13 @@ module.exports.info = function (message, data) {
         logRecord.data = data;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'production') {
+        db.logs.create(logRecord, function (err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    } else {
         console.log(logRecord);
     }
-
-    db.logs.create(logRecord, function (err) {
-        if (err) {
-            console.log(err);
-        }
-    });
 };
