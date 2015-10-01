@@ -23,10 +23,14 @@ router.get('/', function (req, res) {
 
         var params;
         if (req.cookies.tags) {
-            var clientTags = JSON.parse(req.cookies.tags);
+            try {
+                var clientTags = JSON.parse(req.cookies.tags);
 
-            if (clientTags.length > 0) {
-                params = {tags: clientTags};
+                if (clientTags.length > 0) {
+                    params = {tags: clientTags};
+                }
+            } catch (e) {
+                res.clearCookie('tags');
             }
         }
 
@@ -62,6 +66,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 conditions.tags = {$all: tags};
             }
         } catch (e) {
+            res.clearCookie('tags');
         }
     }
 
@@ -142,6 +147,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 conditions.tags = {$all: tags};
             }
         } catch (e) {
+            res.clearCookie('tags');
         }
     }
 
@@ -240,6 +246,7 @@ router.get('/random', function (req, res) {
                 conditions.tags = {$all: tags};
             }
         } catch (e) {
+            res.clearCookie('tags');
         }
     }
 

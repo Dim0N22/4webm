@@ -20,6 +20,7 @@ router.get('/', function (req, res) {
                 params.tags = tags;
             }
         } catch (e) {
+            res.clearCookie('tags');
         }
     }
 
