@@ -29,7 +29,11 @@ var webm = new Schema({
 var webms = mongoose.model('webms', webm);
 
 
-var tag = new Schema({name: String}, {versionKey: false});
+var tag = new Schema({
+    name: String,
+    creator: String,
+    where: Date
+}, {versionKey: false});
 var tags = mongoose.model('tags', tag);
 
 

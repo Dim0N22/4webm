@@ -155,7 +155,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
     var prevIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
     var nextIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
     var curWebmPromise = db.webms.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
-    var tagsPromise = db.tags.find().exec();
+    var tagsPromise = db.tags.find().select('name').exec();
 
     Promise.all([prevIdPromise, nextIdPromise, curWebmPromise, tagsPromise])
         .then(function (values) {
