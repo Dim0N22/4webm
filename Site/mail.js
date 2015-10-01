@@ -3,7 +3,7 @@ var nodemailer = require('nodemailer');
 var config = require('./config');
 
 // create reusable transporter object using SMTP transport
-var transporter = nodemailer.createTransport(config.email.transport);
+var transporter = nodemailer.createTransport(config.get('email:transport'));
 
 
 /**
@@ -16,11 +16,11 @@ function sendInvite(email, secret, done) {
     "use strict";
 
     var mailOptions = {
-        from: config.email.from,
+        from: config.get('email:from'),
         to: email,
-        subject: config.email.subject,
-        text: util.format(config.email.text, email, secret)
-        //html: util.format(config.email.html, email, secret)
+        subject: config.get('email:subject'),
+        text: util.format(config.get('email:text'), email, secret)
+        //html: util.format(config.get('email:html'), email, secret)
     };
 
     transporter.sendMail(mailOptions, function (error, info) {

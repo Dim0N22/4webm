@@ -37,12 +37,12 @@ router.get('/', function (req, res) {
             }
 
             res.render('index', {
-                title: config.projectName,
+                title: config.get('projectName'),
                 tags: tags,
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
                 authorized: Boolean(req.user),
-                projectName: config.projectName
+                projectName: config.get('projectName')
             });
         });
     });
@@ -72,14 +72,14 @@ router.get('/:id([0-9]+)', function (req, res) {
         .then(function (values) {
             function response(prevId, nextId) {
                 res.render('view', {
-                    title: config.projectName + ' #' + id,
+                    title: config.get('projectName') + ' #' + id,
                     id: id,
-                    videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
+                    videoSrc: url.resolve(config.get('videoServer'), String(webm.file_info.path).slice(2)),
                     tags: webm.tags,
                     prevHref: '/' + prevId,
                     nextHref: '/' + nextId,
                     authorized: Boolean(req.user),
-                    projectName: config.projectName
+                    projectName: config.get('projectName')
                 });
             }
 
@@ -154,14 +154,14 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
         .then(function (values) {
             function response(prevId, nextId) {
                 res.render('edit', {
-                    title: config.projectName + ' edit #' + id,
+                    title: config.get('projectName') + ' edit #' + id,
                     id: id,
-                    videoSrc: url.resolve(config.videoServer, String(webm.file_info.path).slice(2)),
+                    videoSrc: url.resolve(config.get('videoServer'), String(webm.file_info.path).slice(2)),
                     tags: tags,
                     prevHref: '/edit/' + prevId,
                     nextHref: '/edit/' + nextId,
                     danger: danger,
-                    projectName: config.projectName
+                    projectName: config.get('projectName')
                 });
             }
 
@@ -274,9 +274,9 @@ router.get('/random', function (req, res) {
 
 router.get('/login', function (req, res) {
     res.render('login', {
-        title: config.projectName + ' login',
+        title: config.get('projectName') + ' login',
         error: req.query.error,
-        projectName: config.projectName
+        projectName: config.get('projectName')
     });
 });
 
@@ -312,10 +312,10 @@ router.post('/login', function (req, res) {
 
 router.get('/invite', function (req, res) {
     res.render('invite', {
-        title: config.projectName + ' invite',
+        title: config.get('projectName') + ' invite',
         error: req.query.error,
         success: req.query.success,
-        projectName: config.projectName
+        projectName: config.get('projectName')
     });
 });
 

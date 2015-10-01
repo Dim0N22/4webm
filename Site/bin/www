@@ -16,17 +16,17 @@ if (process.env.NODE_ENV === 'production') {
             cluster.fork();
         });
 
-        console.log('Server running at http://localhost:' + config.port);
+        console.log('Server running at http://localhost:' + config.get('port'));
     } else {
         var app = require('../app');
-        app.listen(config.port, function () {
+        app.listen(config.get('port'), function () {
             console.log('Worker ' + cluster.worker.id + ' running!');
         });
     }
 
 } else {
     var app = require('../app');
-    app.listen(config.port, function () {
-        console.log('Server running at http://localhost:' + config.port);
+    app.listen(config.get('port'), function () {
+        console.log('Server running at http://localhost:' + config.get('port'));
     });
 }
