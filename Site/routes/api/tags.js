@@ -1,10 +1,8 @@
 var express = require('express');
-var router = express.Router();
 var db = require('../../db');
-var logger = require('../../logger');
+var logger = require('../../libs/logger');
 
-
-module.exports = router;
+var router = express.Router();
 
 router.post('/:tag', function (req, res) {
     res.status(200).end();
@@ -22,3 +20,6 @@ router.post('/:tag', function (req, res) {
         });
     });
 });
+
+
+module.exports = router;

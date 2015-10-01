@@ -1,6 +1,6 @@
 var url = require('url');
 var mongoose = require('mongoose');
-var config = require('../config');
+var config = require('../libs/config');
 var Schema = mongoose.Schema;
 
 mongoose.Promise = global.Promise;

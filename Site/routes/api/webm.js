@@ -1,9 +1,9 @@
 var util = require('util');
 var express = require('express');
-var router = express.Router();
 var db = require('../../db');
-var logger = require('../../logger');
+var logger = require('../../libs/logger');
 
+var router = express.Router();
 
 /**
  * Get webms for index page with tags or get moar webms

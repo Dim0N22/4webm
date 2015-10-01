@@ -1,5 +1,5 @@
 var unless = require('express-unless');
-var db = require('./db');
+var db = require('../db');
 var logger = require('./logger');
 
 

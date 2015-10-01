@@ -3,8 +3,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var compression = require('compression');
-var auth = require('./auth');
-var logger = require('./logger');
+var auth = require('./libs/auth');
+var logger = require('./libs/logger');
 
 var app = express();
 

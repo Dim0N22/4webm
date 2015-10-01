@@ -1,7 +1,8 @@
 #!/usr/bin/node
 
-var config = require('../config');
-var logger = require('../logger');
+var config = require('../libs/config');
+var logger = require('../libs/logger');
+console.log(config.get());
 
 if (process.env.NODE_ENV === 'production') {
     var cluster = require('cluster');

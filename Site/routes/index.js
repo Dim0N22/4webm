@@ -1,12 +1,12 @@
 var url = require('url');
 var crypto = require('crypto');
 var express = require('express');
-var router = express.Router();
 var db = require('../db');
-var config = require('../config');
-var mail = require('../mail');
-var logger = require('../logger');
+var config = require('../libs/config');
+var mail = require('../libs/mail');
+var logger = require('../libs/logger');
 
+var router = express.Router();
 
 router.get('/', function (req, res) {
     db.webms.aggregate([
@@ -358,5 +358,6 @@ router.post('/invite', function (req, res) {
         });
     });
 });
+
 
 module.exports = router;
