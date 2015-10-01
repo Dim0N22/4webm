@@ -22,6 +22,7 @@ module.exports.error = function (err, message, data) {
 
     var logRecord = {
         type: 'error',
+        when: new Date(),
         error: error
     };
 
@@ -56,7 +57,8 @@ module.exports.info = function (message, data) {
     }
 
     var logRecord = {
-        type: 'info'
+        type: 'info',
+        when: new Date()
     };
 
     if (message) {

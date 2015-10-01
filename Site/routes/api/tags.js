@@ -13,7 +13,7 @@ router.post('/:tag', function (req, res) {
         db.tags.create({
             name: req.params.tag,
             creator: req.user ? req.user.login : null,
-            where: new Date()
+            when: new Date()
         }, function (err) {
             if (err) {
                 logger.error(err);

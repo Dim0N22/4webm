@@ -32,7 +32,7 @@ var webms = mongoose.model('webms', webm);
 var tag = new Schema({
     name: String,
     creator: String,
-    where: Date
+    when: Date
 }, {versionKey: false});
 var tags = mongoose.model('tags', tag);
 
@@ -52,6 +52,7 @@ var users = mongoose.model('users', user);
 
 var log = new Schema({
     type: String, // error|info
+    when: Date,
     error: Object,
     message: String,
     data: Object
