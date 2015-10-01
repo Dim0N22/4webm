@@ -52,8 +52,9 @@ var users = mongoose.model('users', user);
 
 var log = new Schema({
     type: String, // error|info
-    messages: [String],
-    error: Object
+    error: Object,
+    message: String,
+    data: Object
 }, {versionKey: false});
 var logs = mongoose.model('logs', log);
 

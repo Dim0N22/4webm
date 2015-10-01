@@ -53,7 +53,13 @@ router.get('/', function (req, res) {
  */
 router.put('/:id([0-9]+)', function (req, res) {
     if (req.body.property === "tags" && (req.body.action === 'add' || req.body.action === 'remove') && req.body.value) {
-        logger.info(req.user.login, req.params.id, util.format('%s %s %s', req.body.action, req.body.property, req.body.value));
+        logger.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
+            login: req.user.login,
+            seqid: req.params.id,
+            property: req.body.property,
+            action: req.body.action,
+            value: req.body.value
+        });
 
         if (req.body.action === 'add') {
             db.webms.update({seqid: req.params.id}, {$addToSet: {tags: req.body.value}}, function (err, raw) {
