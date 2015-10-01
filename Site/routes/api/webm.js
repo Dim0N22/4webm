@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
         }
     }
 
-    db.getWebms(params, function (err, result) {
+    db.webms.getWebms(params, function (err, result) {
         if (err) {
             log.error(err);
             res.status(500).end();

@@ -23,11 +23,10 @@ function setUserFromToken(req, res, next) {
             return next();
         }
 
-        if (!user || !user.token) {
-            return next();
+        if (user && user.token) {
+            req.user = user;
         }
 
-        req.user = user;
         return next();
     });
 }

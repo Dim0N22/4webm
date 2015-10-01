@@ -13,7 +13,6 @@ var webmSchema = new Schema({
     seqid: Number,
     tags: [String]
 });
-var Webm = mongoose.model('Webm', webmSchema);
 
 
 /**
@@ -21,13 +20,13 @@ var Webm = mongoose.model('Webm', webmSchema);
  * @param {Object} [params] - tags, lastSeqid
  * @param {Function} done
  */
-function getWebms(params, done) {
+webmSchema.statics.getWebms = function (params, done) {
     if (typeof params === 'function' && !done) {
         done = params;
         params = undefined;
     }
 
-    var query = Webm.find({seqid: {$exists: true}}, 'seqid file_info.path');
+    var query = this.find({seqid: {$exists: true}}, 'seqid file_info.path');
     if (params && params.lastSeqid) {
         query = query.find({seqid: {$lt: params.lastSeqid}});
     }
@@ -57,8 +56,9 @@ function getWebms(params, done) {
                 lastSeqid: webms.length > 0 ? webms[webms.length - 1].seqid : params.lastSeqid
             });
         });
-}
+};
+
+var Webm = mongoose.model('Webm', webmSchema);
 
 
-module.exports.Webm = Webm;
-module.exports.getWebms = getWebms;
+module.exports = Webm;

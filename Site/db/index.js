@@ -15,8 +15,7 @@ db.once('open', function callback() {
 });
 
 
-module.exports.webms = require('./webm').Webm;
-module.exports.getWebms = require('./webm').getWebms;
+module.exports.webms = require('./webm');
 module.exports.tags = require('./tag');
 module.exports.maxwebmid = require('./maxwebmid');
 module.exports.users = require('./user');
