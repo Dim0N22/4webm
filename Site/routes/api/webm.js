@@ -17,6 +17,8 @@ router.get('/', function (req, res) {
         params.tags = req.tags;
     }
 
+    params.hideDanger = !req.user;
+
     Webm.getWebms(params, function (err, result) {
         if (err) {
             log.error(err);

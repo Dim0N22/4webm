@@ -10,6 +10,10 @@ router.get('/', function (req, res) {
         conditions.tags = {$all: req.tags};
     }
 
+    if (!req.user) {
+        conditions = {$and: [conditions, {tags: {$nin: ['danger']}}]};
+    }
+
     Webm.count(conditions, function (err, count) {
         if (err) {
             log.error(err);

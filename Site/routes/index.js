@@ -12,17 +12,19 @@ router.use('/invite', require('./invite'));
 
 
 router.get('/', function (req, res) {
-    Webm.countByTags(function (err, tags) {
+    Webm.countByTags({hideDanger: !req.user}, function (err, tags) {
         if (err) {
             log.error(err);
             res.status(500).end();
             return;
         }
 
-        var params;
+        var params = {};
         if (req.tags) {
-            params = {tags: req.tags};
+            params.tags = req.tags;
         }
+
+        params.hideDanger = !req.user;
 
         Webm.getWebms(params, function (err, result) {
             if (err) {
@@ -52,9 +54,13 @@ router.get('/:id([0-9]+)', function (req, res) {
         conditions.tags = {$all: req.tags};
     }
 
+    if (!req.user) {
+        conditions = {$and: [conditions, {tags: {$nin: ['danger']}}]};
+    }
+
     var prevIdPromise = Webm.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
     var nextIdPromise = Webm.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
-    var curWebmPromise = Webm.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = Webm.findOne({$and: [conditions, {seqid: id}]}, null, {sort: {seqid: 1}}).exec();
 
     Promise.all([prevIdPromise, nextIdPromise, curWebmPromise])
         .then(function (values) {
@@ -120,6 +126,10 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
     var conditions = {};
     if (req.tags) {
         conditions.tags = {$all: req.tags};
+    }
+
+    if (!req.user) {
+        conditions = {$and: [conditions, {tags: {$nin: ['danger']}}]};
     }
 
     var prevIdPromise = Webm.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();

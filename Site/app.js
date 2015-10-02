@@ -1,5 +1,6 @@
 var path = require('path');
 var express = require('express');
+var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var compression = require('compression');
@@ -9,6 +10,8 @@ var parseTagsFromCookies = require('./libs/parseTagsFromCookies');
 require('./models'); // init mongoose
 
 var app = express();
+
+app.use(favicon(path.join(__dirname + '/public/favicon.ico')));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

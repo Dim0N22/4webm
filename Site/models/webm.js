@@ -17,20 +17,24 @@ var webmSchema = new Schema({
 
 /**
  * Get webms by criteria
- * @param {Object} params - tags, lastSeqid
+ * @param {Object} params - tags, lastSeqid, hideDanger
  * @param {Function} done
  */
 webmSchema.statics.getWebms = function (params, done) {
-    var query = this.find({seqid: {$exists: true}}, 'seqid file_info.path');
+    var conditions = {seqid: {$exists: true}};
     if (params && params.lastSeqid) {
-        query = query.find({seqid: {$lt: params.lastSeqid}});
+        conditions = {$and: [conditions, {seqid: {$lt: params.lastSeqid}}]};
     }
 
     if (params && params.tags) {
-        query = query.find({tags: {$all: params.tags}});
+        conditions = {$and: [conditions, {tags: {$all: params.tags}}]};
     }
 
-    query.sort({seqid: -1})
+    if (params && params.hideDanger) {
+        conditions = {$and: [conditions, {tags: {$nin: ['danger']}}]};
+    }
+
+    this.find(conditions, 'seqid file_info.path').sort({seqid: -1})
         .limit(config.get('webmsPerPage'))
         .exec(function (err, webmsdb) {
             if (err) {
@@ -54,9 +58,14 @@ webmSchema.statics.getWebms = function (params, done) {
 };
 
 
-webmSchema.statics.countByTags = function (cb) {
+webmSchema.statics.countByTags = function (params, cb) {
+    var conditions = {"tags": {$exists: true}};
+    if (params && params.hideDanger) {
+        conditions = {$and: [conditions, {tags: {$nin: ['danger']}}]};
+    }
+
     return this.aggregate([
-        {$match: {"tags": {$exists: true}}},
+        {$match: conditions},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
         {$group: {_id: "$tags", count: {$sum: 1}}}
