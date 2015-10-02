@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
             return;
         }
 
-        params = {lastSeqid: req.query.lastSeqid};
+        params.lastSeqid = req.query.lastSeqid;
 
         Webm.getWebms(params, function (err, result) {
             if (err) {
