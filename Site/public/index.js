@@ -23,7 +23,7 @@ function clickTag(tag) {
         tag.classList.remove("btn-success");
     }
 
-    Cookies.set('tags', tags);
+    Cookies.set('tags', tags, { expires: 365 });
 
     refreshVideos();
 }
