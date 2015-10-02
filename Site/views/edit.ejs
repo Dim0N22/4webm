@@ -1,24 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<%- include('layout/header', {title: title, projectName: projectName}) -%>
 
-    <title><%= title %></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-<nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/"><%= projectName %></a>
-        </div>
-    </div>
-</nav>
-
-<div class="container" style="margin-top: 5%">
+<div class="container container-margin-top">
     <div class="row">
         <div class="col-md-2 hidden-xs hidden-sm"></div>
         <div class="col-md-4 col-xs-6 col-sm-6"><em>#<%= id %></em></div>
@@ -93,14 +75,15 @@
         </div>
         <div class="col-md-2 hidden-xs hidden-sm"></div>
     </div>
+</div>
 
 
-    <script>
-        var webmId = '<%= id %>';
-    </script>
+<script>
+    var webmId = '<%= id %>';
+</script>
 
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="/vendors/mousetrap.min.js"></script>
-    <script src="/view.js"></script>
-</body>
-</html>
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="/vendors/mousetrap.min.js"></script>
+<script src="/view.js"></script>
+
+<%- include('layout/footer') -%>
