@@ -1,6 +1,6 @@
 var util = require('util');
 var express = require('express');
-var db = require('../../db');
+var Webm = require('../../models/webm');
 var log = require('../../libs/log');
 
 var router = express.Router();
@@ -25,7 +25,7 @@ router.get('/', function (req, res) {
         }
     }
 
-    db.webms.getWebms(params, function (err, result) {
+    Webm.getWebms(params, function (err, result) {
         if (err) {
             log.error(err);
             res.status(500).end();
@@ -62,7 +62,7 @@ router.put('/:id([0-9]+)', function (req, res) {
         });
 
         if (req.body.action === 'add') {
-            db.webms.update({seqid: req.params.id}, {$addToSet: {tags: req.body.value}}, function (err, raw) {
+            Webm.update({seqid: req.params.id}, {$addToSet: {tags: req.body.value}}, function (err, raw) {
                 if (err) {
                     log.error(err);
                     res.status(500).end();
@@ -72,7 +72,7 @@ router.put('/:id([0-9]+)', function (req, res) {
                 res.status(200).end();
             });
         } else {
-            db.webms.update({seqid: req.params.id}, {$pull: {tags: req.body.value}}, function (err) {
+            Webm.update({seqid: req.params.id}, {$pull: {tags: req.body.value}}, function (err) {
                 if (err) {
                     log.error(err);
                     res.status(500).end();

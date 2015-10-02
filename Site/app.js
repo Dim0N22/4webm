@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var compression = require('compression');
 var auth = require('./libs/auth');
 var log = require('./libs/log');
+require('./models'); // init mongoose
 
 var app = express();
 

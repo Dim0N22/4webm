@@ -1,7 +1,9 @@
 var url = require('url');
 var crypto = require('crypto');
 var express = require('express');
-var db = require('../db');
+var Webm = require('../models/webm');
+var Tag = require('../models/tag');
+var User = require('../models/user');
 var config = require('../libs/config');
 var mail = require('../libs/mail');
 var log = require('../libs/log');
@@ -9,7 +11,7 @@ var log = require('../libs/log');
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    db.webms.aggregate([
+    Webm.aggregate([
         {$match: {"tags": {$exists: true}}},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
@@ -34,7 +36,7 @@ router.get('/', function (req, res) {
             }
         }
 
-        db.webms.getWebms(params, function (err, result) {
+        Webm.getWebms(params, function (err, result) {
             if (err) {
                 log.error(err);
                 res.status(500).end();
@@ -70,9 +72,9 @@ router.get('/:id([0-9]+)', function (req, res) {
         }
     }
 
-    var prevIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
-    var nextIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
-    var curWebmPromise = db.webms.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
+    var prevIdPromise = Webm.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
+    var nextIdPromise = Webm.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = Webm.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
 
     Promise.all([prevIdPromise, nextIdPromise, curWebmPromise])
         .then(function (values) {
@@ -102,7 +104,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 return;
             } else if (!values[0]) { // if prev not found (actually for first webm)
                 conditions.seqid = {$exists: true};
-                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
+                Webm.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
                     if (err) {
                         log.error(err);
                         res.status(500).end();
@@ -114,7 +116,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 return;
             } else if (!values[1]) { // if next not found (actually for last webm)
                 conditions.seqid = {$exists: true};
-                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
+                Webm.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
                     if (err) {
                         log.error(err);
                         res.status(500).end();
@@ -152,10 +154,10 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
     }
 
 
-    var prevIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
-    var nextIdPromise = db.webms.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
-    var curWebmPromise = db.webms.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
-    var tagsPromise = db.tags.find().select('name').exec();
+    var prevIdPromise = Webm.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
+    var nextIdPromise = Webm.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = Webm.findOne({seqid: id}, null, {sort: {seqid: 1}}).exec();
+    var tagsPromise = Tag.find().select('name').exec();
 
     Promise.all([prevIdPromise, nextIdPromise, curWebmPromise, tagsPromise])
         .then(function (values) {
@@ -204,7 +206,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 return;
             } else if (!values[0]) { // if prev not found (actually for first webm)
                 conditions.seqid = {$exists: true};
-                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
+                Webm.findOne(conditions, {seqid: 1}, {sort: {seqid: -1}}).exec(function (err, prevId) {
                     if (err) {
                         log.error(err);
                         res.status(500).end();
@@ -216,7 +218,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 return;
             } else if (!values[1]) { // if next not found (actually for last webm)
                 conditions.seqid = {$exists: true};
-                db.webms.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
+                Webm.findOne(conditions, {seqid: 1}, {sort: {seqid: 1}}).exec(function (err, nextId) {
                     if (err) {
                         log.error(err);
                         res.status(500).end();
@@ -250,7 +252,7 @@ router.get('/random', function (req, res) {
         }
     }
 
-    db.webms.count(conditions, function (err, count) {
+    Webm.count(conditions, function (err, count) {
         if (err) {
             log.error(err);
             res.status(500).end();
@@ -258,7 +260,7 @@ router.get('/random', function (req, res) {
         }
 
         var randomId = Math.round(Math.random() * (count - 1) + 1);
-        db.webms.find(conditions, 'seqid')
+        Webm.find(conditions, 'seqid')
             .skip(randomId - 1)
             .limit(1)
             .exec(function (err, webms) {
@@ -295,7 +297,7 @@ router.post('/login', function (req, res) {
         return;
     }
 
-    db.users.findOne({
+    User.findOne({
         login: req.body.login,
         secret: req.body.secret
     }, function (err, user) {
@@ -336,7 +338,7 @@ router.post('/invite', function (req, res) {
     var secret = crypto.randomBytes(8).toString('hex');
     var token = crypto.randomBytes(64).toString('base64');
 
-    db.users.create({
+    User.create({
         login: req.body.email,
         secret: secret,
         token: token

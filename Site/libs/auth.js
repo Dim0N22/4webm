@@ -1,5 +1,5 @@
 var unless = require('express-unless');
-var db = require('../db');
+var User = require('../models/user');
 var log = require('./log');
 
 
@@ -15,7 +15,7 @@ function setUserFromToken(req, res, next) {
         return next();
     }
 
-    db.users.findOne({
+    User.findOne({
         token: req.cookies.token
     }, function (err, user) {
         if (err) {

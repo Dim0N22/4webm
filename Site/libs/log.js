@@ -1,4 +1,4 @@
-var db = require('../db');
+var Log = require('../models/log');
 
 
 /**
@@ -35,7 +35,7 @@ module.exports.error = function (err, message, data) {
     }
 
     if (process.env.NODE_ENV === 'production') {
-        db.logs.create(logRecord, function (err) {
+        Log.create(logRecord, function (err) {
             if (err) {
                 console.log(err);
             }
@@ -70,7 +70,7 @@ module.exports.info = function (message, data) {
     }
 
     if (process.env.NODE_ENV === 'production') {
-        db.logs.create(logRecord, function (err) {
+        Log.create(logRecord, function (err) {
             if (err) {
                 console.log(err);
             }
