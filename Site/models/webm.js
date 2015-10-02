@@ -58,8 +58,19 @@ webmSchema.statics.getWebms = function (params, done) {
 };
 
 
+/**
+ *
+ * @param {Object} params - tags hideDanger
+ * @param {Function} cb
+ * @return {Aggregate|Promise}
+ */
 webmSchema.statics.countByTags = function (params, cb) {
     var conditions = {"tags": {$exists: true}};
+
+    if (params && params.tags) {
+        conditions = {$and: [conditions, {tags: {$all: params.tags}}]};
+    }
+
     if (params && params.hideDanger) {
         conditions = {$and: [conditions, {tags: {$nin: ['danger']}}]};
     }

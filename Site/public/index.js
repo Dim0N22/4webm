@@ -2,33 +2,25 @@ var loading = false;
 
 function clickTag(tag) {
     var tagName = tag.id;
-    var tags = Cookies.getJSON('tags') || [];
 
     if (tag.classList.contains("btn-default")) {
         // add tag
 
-        tags.push(tagName);
-
-        tag.classList.remove("btn-default");
-        tag.classList.add("btn-success");
+        selectedTags.push(tagName);
     } else {
         // remove tag
 
-        var ind = tags.indexOf(tagName);
+        var ind = selectedTags.indexOf(tagName);
         if (ind > -1) {
-            tags.splice(ind, 1);
+            selectedTags.splice(ind, 1);
         }
-
-        tag.classList.add("btn-default");
-        tag.classList.remove("btn-success");
     }
 
-    Cookies.set('tags', tags, { expires: 365 });
-
+    Cookies.set('tags', selectedTags, {expires: 365});
     refreshVideos();
 }
 
-function generateHtml(webms, authorized) {
+function generateWebmsGridHtml(webms, authorized) {
     if (!webms) {
         return '';
     }
@@ -50,6 +42,27 @@ function generateHtml(webms, authorized) {
         html += '</div>';
     }
 
+    return html;
+}
+
+function generateTagsHtml(tags) {
+    if (!tags) {
+        return '';
+    }
+
+    var html = '';
+    for (var i = 0; i < tags.length; i++) {
+        html += '<a id="' + tags[i]._id + '" class="btn ';
+
+        if (selectedTags.indexOf(tags[i]._id) !== -1) {
+            html += ' btn-success ';
+        } else {
+            html += ' btn-default ';
+        }
+
+        html += ' btn-xs tag-radius" type="button" style="margin-top: 3px; margin-bottom: 3px;" onclick="clickTag(this);">';
+        html += tags[i]._id.toString() + ' <span class="badge">' + tags[i].count + '</span></a> ';
+    }
     return html;
 }
 
@@ -75,7 +88,7 @@ window.onscroll = function () {
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
         if (data) {
-            document.getElementById('webmsGrid').innerHTML += generateHtml(data.webms, data.authorized);
+            document.getElementById('webmsGrid').innerHTML += generateWebmsGridHtml(data.webms, data.authorized);
             lastSeqid = data.lastSeqid;
         }
     });
@@ -83,16 +96,19 @@ function moarWebms() {
 
 function refreshVideos() {
     getWebmsFromServer(null, function (data) {
-        document.getElementById('webmsGrid').innerHTML = generateHtml(data.webms, data.authorized);
+        document.getElementById('tags').innerHTML = generateTagsHtml(data.tags);
+        document.getElementById('webmsGrid').innerHTML = generateWebmsGridHtml(data.webms, data.authorized);
         lastSeqid = data.lastSeqid;
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    var tags = Cookies.getJSON('tags') || [];
 
-    for (var i = 0; i < tags.length; i++) {
-        var el = document.getElementById(tags[i]);
+var selectedTags;
+document.addEventListener("DOMContentLoaded", function () {
+    selectedTags = Cookies.getJSON('tags') || [];
+
+    for (var i = 0; i < selectedTags.length; i++) {
+        var el = document.getElementById(selectedTags[i]);
         el.classList.add("btn-success");
         el.classList.remove("btn-default");
     }

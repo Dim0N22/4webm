@@ -11,30 +11,40 @@ var router = express.Router();
  * @param tags, lastSeqid
  */
 router.get('/', function (req, res) {
-    var params = {lastSeqid: req.query.lastSeqid};
-
+    var params = {};
     if (req.tags) {
         params.tags = req.tags;
     }
 
     params.hideDanger = !req.user;
 
-    Webm.getWebms(params, function (err, result) {
+    Webm.countByTags(params, function (err, tags) {
         if (err) {
             log.error(err);
             res.status(500).end();
             return;
         }
 
-        if (!result || !result.webms || result.webms.length === 0) {
-            res.status(404).end();
-            return;
-        }
+        params = {lastSeqid: req.query.lastSeqid};
 
-        res.json({
-            webms: result.webms,
-            lastSeqid: result.lastSeqid,
-            authorized: Boolean(req.user)
+        Webm.getWebms(params, function (err, result) {
+            if (err) {
+                log.error(err);
+                res.status(500).end();
+                return;
+            }
+
+            if (!result || !result.webms || result.webms.length === 0) {
+                res.status(404).end();
+                return;
+            }
+
+            res.json({
+                webms: result.webms,
+                lastSeqid: result.lastSeqid,
+                authorized: Boolean(req.user),
+                tags: tags
+            });
         });
     });
 });

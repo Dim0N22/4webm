@@ -12,19 +12,19 @@ router.use('/invite', require('./invite'));
 
 
 router.get('/', function (req, res) {
-    Webm.countByTags({hideDanger: !req.user}, function (err, tags) {
+    var params = {};
+    if (req.tags) {
+        params.tags = req.tags;
+    }
+
+    params.hideDanger = !req.user;
+
+    Webm.countByTags(params, function (err, tags) {
         if (err) {
             log.error(err);
             res.status(500).end();
             return;
         }
-
-        var params = {};
-        if (req.tags) {
-            params.tags = req.tags;
-        }
-
-        params.hideDanger = !req.user;
 
         Webm.getWebms(params, function (err, result) {
             if (err) {
