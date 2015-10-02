@@ -61,27 +61,22 @@ router.put('/:id([0-9]+)', function (req, res) {
             value: req.body.value
         });
 
+        var action;
         if (req.body.action === 'add') {
-            Webm.update({seqid: req.params.id}, {$addToSet: {tags: req.body.value}}, function (err, raw) {
-                if (err) {
-                    log.error(err);
-                    res.status(500).end();
-                    return;
-                }
-
-                res.status(200).end();
-            });
+            action = {$addToSet: {tags: req.body.value}};
         } else {
-            Webm.update({seqid: req.params.id}, {$pull: {tags: req.body.value}}, function (err) {
-                if (err) {
-                    log.error(err);
-                    res.status(500).end();
-                    return;
-                }
-
-                res.status(200).end();
-            });
+            action = {$pull: {tags: req.body.value}};
         }
+
+        Webm.update({seqid: req.params.id}, action, function (err) {
+            if (err) {
+                log.error(err);
+                res.status(500).end();
+                return;
+            }
+
+            res.status(200).end();
+        });
     } else {
         res.status(400).end();
     }
