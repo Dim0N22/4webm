@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var compression = require('compression');
 var auth = require('./libs/auth');
 var log = require('./libs/log');
+var parseTagsFromCookies = require('./libs/parseTagsFromCookies');
 require('./models'); // init mongoose
 
 var app = express();
@@ -21,14 +22,19 @@ app.use(bodyParser.raw());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use(auth.setUserFromToken); // authorization mechanism
 //app.use(auth.isAuthenticated().unless({path: ['/login']})); // authorization mechanism
 app.use('/invite', auth.isAuthenticated('admin'));
+
+app.use(parseTagsFromCookies);
 
 
 app.get('/api', function (req, res) {
     res.send('API is running');
 });
+
+
 app.use('/', require('./routes/index'));
 app.use('/api/webm', require('./routes/api/webm'));
 app.use('/api/tags', require('./routes/api/tags'));

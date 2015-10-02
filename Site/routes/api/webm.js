@@ -13,16 +13,8 @@ var router = express.Router();
 router.get('/', function (req, res) {
     var params = {lastSeqid: req.query.lastSeqid};
 
-    if (req.cookies.tags) {
-        try {
-            var tags = JSON.parse(req.cookies.tags);
-
-            if (tags && tags.length > 0) {
-                params.tags = tags;
-            }
-        } catch (e) {
-            res.clearCookie('tags');
-        }
+    if (req.tags) {
+        params.tags = req.tags;
     }
 
     Webm.getWebms(params, function (err, result) {

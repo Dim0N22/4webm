@@ -17,15 +17,10 @@ var webmSchema = new Schema({
 
 /**
  * Get webms by criteria
- * @param {Object} [params] - tags, lastSeqid
+ * @param {Object} params - tags, lastSeqid
  * @param {Function} done
  */
 webmSchema.statics.getWebms = function (params, done) {
-    if (typeof params === 'function' && !done) {
-        done = params;
-        params = undefined;
-    }
-
     var query = this.find({seqid: {$exists: true}}, 'seqid file_info.path');
     if (params && params.lastSeqid) {
         query = query.find({seqid: {$lt: params.lastSeqid}});
