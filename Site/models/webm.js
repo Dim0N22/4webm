@@ -58,6 +58,17 @@ webmSchema.statics.getWebms = function (params, done) {
         });
 };
 
+
+webmSchema.statics.countByTags = function (cb) {
+    return this.aggregate([
+        {$match: {"tags": {$exists: true}}},
+        {$project: {_id: 0, tags: 1}},
+        {$unwind: "$tags"},
+        {$group: {_id: "$tags", count: {$sum: 1}}}
+    ], cb);
+};
+
+
 var Webm = mongoose.model('Webm', webmSchema);
 
 

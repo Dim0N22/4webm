@@ -11,12 +11,7 @@ var log = require('../libs/log');
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    Webm.aggregate([
-        {$match: {"tags": {$exists: true}}},
-        {$project: {_id: 0, tags: 1}},
-        {$unwind: "$tags"},
-        {$group: {_id: "$tags", count: {$sum: 1}}}
-    ], function (err, tags) {
+    Webm.countByTags(function (err, tags) {
         if (err) {
             log.error(err);
             res.status(500).end();
