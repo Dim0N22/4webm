@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
     } else {
         var app = require('../app');
         app.listen(config.get('port'), function () {
-            log.info('Worker ' + cluster.worker.id + ' running!');
+            console.log('Worker ' + cluster.worker.id + ' running!');
         });
     }
 
