@@ -11,13 +11,14 @@ var webmSchema = new Schema({
     create_date: Date,
     file_info: Object,
     seqid: Number,
-    tags: [String]
+    tags: [String],
+    time_wasted: Number
 });
 
 
 /**
  * Get webms by criteria
- * @param {Object} params - tags, lastSeqid, hideDanger
+ * @param {Object} params - tags, lastSeqid, hideDanger, page
  * @param {Function} done
  */
 webmSchema.statics.getWebms = function (params, done) {
@@ -35,8 +36,13 @@ webmSchema.statics.getWebms = function (params, done) {
         conditions.push({tags: {$nin: ['danger']}});
     }
 
-    this.find({$and: conditions}, 'seqid file_info.path').sort({seqid: -1})
-        .limit(config.get('webmsPerPage'))
+    var query = this.find({$and: conditions}, 'seqid file_info.path').sort({seqid: -1});
+
+    if (params && params.page) {
+        query = query.skip(config.get('webmsPerPage') * (params.page - 1));
+    }
+
+    query.limit(config.get('webmsPerPage'))
         .exec(function (err, webmsdb) {
             if (err) {
                 done(err);
