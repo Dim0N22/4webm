@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var config = require('../libs/config');
+var config = require('./config');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.get('mongoose:uri'));
@@ -15,4 +15,4 @@ db.once('open', function callback() {
 });
 
 
-module.exports.db = db;
+module.exports = mongoose;

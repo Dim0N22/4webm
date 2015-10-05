@@ -1,5 +1,5 @@
 var url = require('url');
-var mongoose = require('mongoose');
+var mongoose = require('../libs/mongoose');
 var config = require('../libs/config');
 
 var Schema = mongoose.Schema;
