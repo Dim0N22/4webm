@@ -26,8 +26,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use(auth.setUserFromToken); // authorization mechanism
-//app.use(auth.isAuthenticated().unless({path: ['/login']})); // authorization mechanism
+// authorization mechanism
+app.use(auth.setUserFromToken);
+app.use(['/edit', '/api/tags'], auth.isAuthenticated());
+app.put('/api/webm', auth.isAuthenticated());
 app.use('/invite', auth.isAuthenticated('admin'));
 
 app.use(parseTagsFromCookies);

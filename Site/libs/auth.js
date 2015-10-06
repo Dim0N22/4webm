@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 var unless = require('express-unless');
 var User = require('../models/user');
 var log = require('./log');
@@ -31,6 +32,12 @@ function setUserFromToken(req, res, next) {
     });
 }
 
+
+/**
+ * middleware for checking roles
+ * @param role
+ * @returns {auth}
+ */
 function isAuthenticated(role) {
     function auth(req, res, next) {
         if (!req.user) {
@@ -59,6 +66,41 @@ function isAuthenticated(role) {
     return auth;
 }
 
+/** hash password */
+function getHash(password) {
+    return crypto.createHash('sha512').update(password).digest('hex');
+}
+
+
+/**
+ * generate token
+ * @param {number} [size=32]
+ * @return {string}
+ */
+function token(size) {
+    if (!size) {
+        size = 32;
+    }
+
+    return crypto.randomBytes(size).toString('hex');
+}
+
+
+/**
+ * generate secret
+ * @param {number} [size=6]
+ * @returns {string|*}
+ */
+function secret(size) {
+    if (!size) {
+        size = 6;
+    }
+
+    return crypto.randomBytes(size).toString('hex');
+}
 
 module.exports.isAuthenticated = isAuthenticated;
 module.exports.setUserFromToken = setUserFromToken;
+module.exports.getHash = getHash;
+module.exports.token = token;
+module.exports.secret = secret;

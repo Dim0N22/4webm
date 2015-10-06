@@ -1,9 +1,9 @@
-var crypto = require('crypto');
 var express = require('express');
 var mail = require('../libs/mail');
 var User = require('../models/user');
 var config = require('../libs/config');
 var log = require('../libs/log');
+var auth = require('../libs/auth');
 
 var router = express.Router();
 
@@ -23,13 +23,10 @@ router.post('/', function (req, res) {
         return;
     }
 
-    var secret = crypto.randomBytes(8).toString('hex');
-    var token = crypto.randomBytes(64).toString('base64');
-
+    var secret = auth.secret();
     User.create({
         login: req.body.email,
-        secret: secret,
-        token: token
+        secret: auth.getHash(secret)
     }, function (err) {
         if (err) {
             log.error(err);
