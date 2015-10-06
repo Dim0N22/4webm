@@ -53,7 +53,7 @@ func main() {
 	check(err)
 
 	processingQueue, err := channel.QueueDeclare(
-		"webmProcess",
+		"webmThumbnailer",
 		true,
 		false,
 		false,
