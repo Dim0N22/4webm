@@ -28,8 +28,8 @@ func main() {
 	check(err)
 	defer channel.Close()
 
-	queue, err := channel.QueueDeclare(
-		"webmProcess",
+	thumbnailQueue, err := channel.QueueDeclare(
+		"webmThumbnailer",
 		true,
 		false,
 		false,
@@ -38,10 +38,19 @@ func main() {
 	)
 	check(err)
 
+	pHashQueue, err := channel.QueueDeclare(
+		"webmPhashCalculator",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+
 	err = channel.Qos(1, 0, false)
 
-	msgs, err := channel.Consume(
-		queue.Name,
+	thumbnailMsgs, err := channel.Consume(
+		thumbnailQueue.Name,
 		"WebmProcessor",
 		false,
 		false,
@@ -54,7 +63,7 @@ func main() {
 	forever := make(chan bool)
 
 	go func() {
-		for msg := range msgs {
+		for msg := range thumbnailMsgs {
 			webm := &Webm{}
 			objId := bson.ObjectId(msg.Body)
 			webmCollection.FindId(objId).One(&webm)
@@ -63,6 +72,17 @@ func main() {
 			err := exec.Command("D://PROJECTS/Go/src/4webm/ffmpeg.exe", "-i", webm.FileInfo.Path, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webm.FileInfo.Path+".300x300.jpg").Run()
 			fmt.Println(err)
 			fmt.Println("End processing: " + webm.FileInfo.Path)
+
+			channel.Publish(
+				"",
+				pHashQueue.Name,
+				false,
+				false,
+				amqp.Publishing{
+					DeliveryMode: amqp.Persistent,
+					ContentType:  "text/plain",
+					Body:         []byte(objId),
+				})
 
 			msg.Ack(false)
 		}
