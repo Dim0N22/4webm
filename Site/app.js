@@ -7,7 +7,7 @@ var compression = require('compression');
 var auth = require('./libs/auth');
 var log = require('./libs/log');
 var parseTagsFromCookies = require('./libs/parseTagsFromCookies');
-require('./models'); // init mongoose
+var mongoose = require('./libs/mongoose'); // init mongoose
 
 var app = express();
 

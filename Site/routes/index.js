@@ -26,6 +26,53 @@ router.get('/', function (req, res) {
             return;
         }
 
+        if (req.query.lastSeqid) {
+            params.lastSeqid = req.query.lastSeqid;
+        }
+
+        Webm.getWebms(params, function (err, result) {
+            if (err) {
+                log.error(err);
+                res.status(500).end();
+                return;
+            }
+
+            res.render('index', {
+                title: config.get('projectName'),
+                tags: tags,
+                webms: result.webms,
+                lastSeqid: result.lastSeqid,
+                authorized: Boolean(req.user),
+                projectName: config.get('projectName')
+            });
+        });
+    });
+});
+
+
+router.get('/page/:page([0-9]+)', function (req, res) {
+    var page = Number(req.params.page);
+    if (page < 2) {
+        res.redirect('/');
+        return;
+    }
+
+    var params = {};
+    if (req.tags) {
+        params.tags = req.tags;
+    }
+
+    params.hideDanger = !req.user;
+
+    Webm.countByTags(params, function (err, tags) {
+        if (err) {
+            log.error(err);
+            res.status(500).end();
+            return;
+        }
+
+        params.page = page;
+
         Webm.getWebms(params, function (err, result) {
             if (err) {
                 log.error(err);
@@ -47,6 +94,7 @@ router.get('/', function (req, res) {
 
 
 router.get('/:id([0-9]+)', function (req, res) {
+    console.log('req.params.id', req.params.id);
     var id = Number(req.params.id);
 
     var conditions = {};

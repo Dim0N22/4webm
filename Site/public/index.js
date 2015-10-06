@@ -88,6 +88,9 @@ window.onscroll = function () {
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
         if (data) {
+            var page = (Number(window.location.pathname.slice(6)) || 1) + 1;
+            window.history.pushState(null, null, '/page/' + page); // TODO don't save scroll state and save page number correctly
+
             document.getElementById('webmsGrid').innerHTML += generateWebmsGridHtml(data.webms, data.authorized);
             lastSeqid = data.lastSeqid;
         }
