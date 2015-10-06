@@ -94,7 +94,6 @@ router.get('/page/:page([0-9]+)', function (req, res) {
 
 
 router.get('/:id([0-9]+)', function (req, res) {
-    console.log('req.params.id', req.params.id);
     var id = Number(req.params.id);
 
     var conditions = {};
