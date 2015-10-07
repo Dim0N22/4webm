@@ -56,7 +56,11 @@ func main() {
 	webmCollection := mongoSession.DB("4webm").C("webms")
 	seqIdCollection := mongoSession.DB("4webm").C("maxwebmid")
 	var webms []Webm
-	webmCollection.Find(bson.M{"hasharr.0": bson.M{"$exists": true}}).All(&webms)
+	webmCollection.Find(bson.M{"$and": []interface{}{
+		bson.M{"seqid": bson.M{"$exists": false}},
+		bson.M{"doubles": bson.M{"$exists": false}},
+		bson.M{"hasharr.0": bson.M{"$exists": true}},
+	}}).All(&webms)
 
 	// Convert slice of strings to slice of uint64
 	for i, webm := range webms {
