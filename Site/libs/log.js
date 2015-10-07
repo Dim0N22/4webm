@@ -16,7 +16,7 @@ module.exports.error = function (err, message, data) {
     if (err instanceof Error) {
         var properties = Object.getOwnPropertyNames(err);
         for (var property, i = 0, len = properties.length; i < len; ++i) {
-            error[properties[i]] = err[properties[i]]
+            error[properties[i]] = err[properties[i]];
         }
     }
 
