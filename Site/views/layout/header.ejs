@@ -14,6 +14,17 @@
     <div class="container">
         <div class="navbar-header">
             <a class="navbar-brand" href="/"><%= projectName %></a>
+
+
         </div>
+        <% if (authorized) { %>
+        <span class="navbar-right text-nowrap" style="margin-right: 25px">
+            <p class="navbar-text"><%= user && user.login %></p>
+
+            <form class="navbar-form" role="search" action="logout" method="post">
+                <button type="submit" class="btn btn-default">Log out</button>
+            </form>
+        </span>
+        <% } %>
     </div>
 </nav>

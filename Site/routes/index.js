@@ -9,6 +9,7 @@ var router = express.Router();
 router.use('/random', require('./random'));
 router.use('/login', require('./login'));
 router.use('/invite', require('./invite'));
+router.use('/logout', require('./logout'));
 
 
 router.get('/', function (req, res) {
@@ -42,7 +43,6 @@ router.get('/', function (req, res) {
                 tags: tags,
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
-                authorized: Boolean(req.user),
                 projectName: config.get('projectName')
             });
         });
@@ -84,9 +84,7 @@ router.get('/page/:page([0-9]+)', function (req, res) {
                 title: config.get('projectName'),
                 tags: tags,
                 webms: result.webms,
-                lastSeqid: result.lastSeqid,
-                authorized: Boolean(req.user),
-                projectName: config.get('projectName')
+                lastSeqid: result.lastSeqid
             });
         });
     });
@@ -118,9 +116,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                     videoSrc: url.resolve(config.get('videoServer'), String(webm.file_info.path).slice(2)),
                     tags: webm.tags,
                     prevHref: '/' + prevId,
-                    nextHref: '/' + nextId,
-                    authorized: Boolean(req.user),
-                    projectName: config.get('projectName')
+                    nextHref: '/' + nextId
                 });
             }
 
@@ -194,8 +190,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     tags: tags,
                     prevHref: '/edit/' + prevId,
                     nextHref: '/edit/' + nextId,
-                    danger: danger,
-                    projectName: config.get('projectName')
+                    danger: danger
                 });
             }
 

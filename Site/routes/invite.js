@@ -11,8 +11,7 @@ router.get('/', function (req, res) {
     res.render('invite', {
         title: config.get('projectName') + ' invite',
         error: req.query.error,
-        success: req.query.success,
-        projectName: config.get('projectName')
+        success: req.query.success
     });
 });
 

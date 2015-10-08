@@ -6,7 +6,8 @@ var cookieParser = require('cookie-parser');
 var compression = require('compression');
 var auth = require('./libs/auth');
 var log = require('./libs/log');
-var parseTagsFromCookies = require('./libs/parseTagsFromCookies');
+var parseTagsFromCookies = require('./middleware/parseTagsFromCookies');
+var setLocals = require('./middleware/setLocals');
 var mongoose = require('./libs/mongoose'); // init mongoose
 
 var app = express();
@@ -33,6 +34,7 @@ app.put('/api/webm', auth.isAuthenticated());
 app.use('/invite', auth.isAuthenticated('admin'));
 
 app.use(parseTagsFromCookies);
+app.use(setLocals);
 
 
 app.get('/api', function (req, res) {
