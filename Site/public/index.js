@@ -1,4 +1,6 @@
 var loading = false;
+var loadedSeqIdSet = new Set();
+var prevSeqid = lastSeqid; // prevSeqid use in onscroll event and lastSeqid at this time can be changed (if new page loaded but page/number not yet changed)
 
 function clickTag(tag) {
     var tagName = tag.id;
@@ -29,7 +31,7 @@ function generateWebmsGridHtml(webms, authorized) {
     for (var i = 0; i < webms.length; i = i + 4) {
         html += '<div class="row">';
         for (var j = 0; j < 4 && i + j < webms.length; j++) {
-            html += '<div class="col-xs-12 col-sm-6 col-md-3">';
+            html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
             html += '#' + webms[i + j].seqid;
             if (authorized) {
                 html += '<a href="/edit/' + webms[i + j].seqid + '" type="button" class="btn btn-link btn-xs" title="Редактировать"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
@@ -77,20 +79,9 @@ function getWebmsFromServer(params, done) {
     });
 }
 
-window.onscroll = function () {
-    var totalHeight = $(document).height() - $(window).height();
-    var currentHeight = $(window).scrollTop();
-    if ((totalHeight - currentHeight) < 300) {
-        moarWebms(); // TODO throttling
-    }
-};
-
 function moarWebms() {
     getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
         if (data) {
-            var page = (Number(window.location.pathname.slice(6)) || 1) + 1;
-            window.history.pushState(null, null, '/page/' + page); // TODO don't save scroll state and save page number correctly
-
             document.getElementById('webmsGrid').innerHTML += generateWebmsGridHtml(data.webms, data.authorized);
             lastSeqid = data.lastSeqid;
         }
@@ -105,9 +96,48 @@ function refreshVideos() {
     });
 }
 
+window.onscroll = function () {
+    // automate moar button
+    var totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
+    var currentHeight = window.pageYOffset;
+    if ((totalHeight - currentHeight) < 300) {
+        moarWebms(); // TODO throttling
+    }
+
+
+    // set page number to window.history
+    // change page number when video with lastSeqid becomes visible
+    if (loadedSeqIdSet.has(Number(prevSeqid))) { // page change once for one seqid
+        console.log("return");
+        return;
+    }
+
+    var el = document.getElementById('div' + prevSeqid);
+
+    var docViewTop = window.pageYOffset; // current scroll top
+    var docViewBottom = docViewTop + document.documentElement.clientHeight /* visible height*/;
+
+    var elemTop = el.offsetTop; //$elem.offset().top;
+    var elemBottom = elemTop + el.offsetHeight;
+    if ((elemBottom <= docViewBottom) && (elemTop >= docViewTop)) {
+
+        var page = (Number(window.location.pathname.slice(6)) || 1) + 1;
+        window.history.pushState(null, null, '/page/' + page);
+        loadedSeqIdSet.add(Number(prevSeqid));
+        prevSeqid = lastSeqid;
+    }
+};
+
 
 var selectedTags;
+
 document.addEventListener("DOMContentLoaded", function () {
+    document.body.scrollTop = 0;
+
+    if (!lastSeqid) {
+
+    }
+
     selectedTags = Cookies.getJSON('tags') || [];
 
     for (var i = 0; i < selectedTags.length; i++) {
