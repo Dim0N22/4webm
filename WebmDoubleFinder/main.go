@@ -53,6 +53,7 @@ func main() {
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 	seqIdCollection := mongoSession.DB("4webm").C("maxwebmid")
+	mongoSession.SetBatch(1000)
 
 	amqpConnection, err := amqp.Dial("amqp://linux:123@192.168.1.47:5672/")
 	check(err)
@@ -106,7 +107,10 @@ func main() {
 
 			doubles := []bson.ObjectId{}
 
-			iter := webmCollection.Find(bson.M{"hasharr.0": bson.M{"$exists": true}}).Iter()
+			iter := webmCollection.Find(bson.M{"$and": []interface{}{
+				bson.M{"hasharr.0": bson.M{"$exists": true}},
+				bson.M{"_id": bson.M{"$ne": objId}},
+			}}).Iter()
 			dWebm := &Webm{}
 			for iter.Next(&dWebm) {
 				dHash := getHashForWebm(dWebm)
