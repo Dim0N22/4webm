@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // authorization mechanism
 app.use(auth.setUserFromToken);
-app.use(['/edit', '/api/tags'], auth.isAuthenticated());
+app.use(['/edit', '/api/tags', '/logout'], auth.isAuthenticated());
 app.put('/api/webm', auth.isAuthenticated());
 app.use('/invite', auth.isAuthenticated('admin'));
 
