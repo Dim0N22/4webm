@@ -1,6 +1,7 @@
 var url = require('url');
 var mongoose = require('../libs/mongoose');
 var config = require('../libs/config');
+var cache = require('memory-cache');
 
 var Schema = mongoose.Schema;
 
@@ -85,12 +86,26 @@ webmSchema.statics.countByTags = function (params, cb) {
         conditions.push({tags: {$nin: ['danger']}});
     }
 
-    return this.aggregate([
+    var operators = [
         {$match: {$and: conditions}},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
         {$group: {_id: "$tags", count: {$sum: 1}}}
-    ], cb);
+    ];
+
+    var cachedData = cache.get(operators);
+    if (cachedData) {
+        cb(null, cachedData);
+        return;
+    }
+
+    return this.aggregate(operators).exec(function (err, data) {
+        if (!err) {
+            cache.put(operators, data, 1000*60*2);
+        }
+
+        cb(err, data);
+    });
 };
 
 
