@@ -101,7 +101,7 @@ webmSchema.statics.countByTags = function (params, cb) {
 
     return this.aggregate(operators).exec(function (err, data) {
         if (!err) {
-            cache.put(operators, data, 1000*60*2);
+            cache.put(operators, data, 1000*60);
         }
 
         cb(err, data);
