@@ -108,7 +108,6 @@ window.onscroll = function () {
     // set page number to window.history
     // change page number when video with lastSeqid becomes visible
     if (loadedSeqIdSet.has(Number(prevSeqid))) { // page change once for one seqid
-        console.log("return");
         return;
     }
 

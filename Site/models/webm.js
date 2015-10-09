@@ -24,6 +24,7 @@ var webmSchema = new Schema({
 webmSchema.statics.getWebms = function (params, done) {
     var conditions = [];
     conditions.push({seqid: {$exists: true}});
+
     if (params && params.lastSeqid) {
         conditions.push({seqid: {$lt: params.lastSeqid}});
     }
@@ -74,6 +75,7 @@ webmSchema.statics.getWebms = function (params, done) {
 webmSchema.statics.countByTags = function (params, cb) {
     var conditions = [];
     conditions.push({"tags": {$exists: true}});
+    conditions.push({seqid: {$exists: true}});
 
     if (params && params.tags) {
         conditions.push({tags: {$all: params.tags}});
