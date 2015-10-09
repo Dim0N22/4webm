@@ -6,7 +6,7 @@ var log = require('../../libs/log');
 var router = express.Router();
 
 /**
- * Get webms for index page with tags or get moar webms
+ * Get webms for index page with tags
  *
  * @param tags, lastSeqid
  */
@@ -45,6 +45,41 @@ router.get('/', function (req, res) {
                 authorized: Boolean(req.user),
                 tags: tags
             });
+        });
+    });
+});
+
+
+/**
+ * Get moar webms
+ *
+ * @param tags, lastSeqid
+ */
+router.get('/moar', function (req, res) {
+    var params = {};
+    if (req.tags) {
+        params.tags = req.tags;
+    }
+
+    params.hideDanger = !req.user;
+    params.lastSeqid = req.query.lastSeqid;
+
+    Webm.getWebms(params, function (err, result) {
+        if (err) {
+            log.error(err);
+            res.status(500).end();
+            return;
+        }
+
+        if (!result || !result.webms || result.webms.length === 0) {
+            res.status(404).end();
+            return;
+        }
+
+        res.json({
+            webms: result.webms,
+            lastSeqid: result.lastSeqid,
+            authorized: Boolean(req.user)
         });
     });
 });

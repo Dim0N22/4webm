@@ -1,6 +1,8 @@
 var loading = false;
 var loadedSeqIdSet = new Set();
 var prevSeqid = lastSeqid; // prevSeqid use in onscroll event and lastSeqid at this time can be changed (if new page loaded but page/number not yet changed)
+var selectedTags;
+
 
 function clickTag(tag) {
     var tagName = tag.id;
@@ -21,6 +23,7 @@ function clickTag(tag) {
     Cookies.set('tags', selectedTags, {expires: 365});
     refreshVideos();
 }
+
 
 function generateWebmsGridHtml(webms, authorized) {
     if (!webms) {
@@ -47,6 +50,7 @@ function generateWebmsGridHtml(webms, authorized) {
     return html;
 }
 
+
 function generateTagsHtml(tags) {
     if (!tags) {
         return '';
@@ -68,33 +72,41 @@ function generateTagsHtml(tags) {
     return html;
 }
 
-function getWebmsFromServer(params, done) {
+
+function moarWebms() {
     if (loading) {
         return;
     }
 
     loading = true;
-    $.get('/api/webm', params).done(done).always(function () {
-        loading = false;
-    });
-}
 
-function moarWebms() {
-    getWebmsFromServer({lastSeqid: lastSeqid}, function (data) {
+    $.get('/api/webm/moar', {lastSeqid: lastSeqid}).done(function (data) {
         if (data) {
             document.getElementById('webmsGrid').innerHTML += generateWebmsGridHtml(data.webms, data.authorized);
             lastSeqid = data.lastSeqid;
         }
+    }).always(function () {
+        loading = false;
     });
 }
 
+
 function refreshVideos() {
-    getWebmsFromServer(null, function (data) {
+    if (loading) {
+        return;
+    }
+
+    loading = true;
+
+    $.get('/api/webm').done(function (data) {
         document.getElementById('tags').innerHTML = generateTagsHtml(data.tags);
         document.getElementById('webmsGrid').innerHTML = generateWebmsGridHtml(data.webms, data.authorized);
         lastSeqid = data.lastSeqid;
+    }).always(function () {
+        loading = false;
     });
 }
+
 
 window.onscroll = function () {
     // automate moar button
@@ -128,14 +140,8 @@ window.onscroll = function () {
 };
 
 
-var selectedTags;
-
 document.addEventListener("DOMContentLoaded", function () {
     document.body.scrollTop = 0;
-
-    if (!lastSeqid) {
-
-    }
 
     selectedTags = Cookies.getJSON('tags') || [];
 
