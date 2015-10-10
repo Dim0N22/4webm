@@ -20,7 +20,7 @@ function clickTag(tag) {
         }
     }
 
-    Cookies.set('tags', selectedTags, {expires: 365});
+    Cookies.set('tags', selectedTags);
     refreshVideos();
 }
 
