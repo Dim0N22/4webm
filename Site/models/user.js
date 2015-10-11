@@ -2,7 +2,7 @@ var mongoose = require('../libs/mongoose');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-    login: String,
+    login: { type: String, unique: true },
     secret: String,
     token: String,
     roles: [String]
