@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"sort"
 
+	"4webm/cloudflare-bypasser"
 	"fmt"
 	"github.com/streadway/amqp"
 	"gopkg.in/mgo.v2"
@@ -66,46 +67,51 @@ func main() {
 	req.Header.Set("Referer", "http://2ch.hk/b/threads.json")
 	resp, err := client.Do(req)
 
+	if resp.StatusCode == *ERROR_CODE {
+		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL)
+		check(err)
+
+		fmt.Println(cookie)
+
+		req.AddCookie(cookie)
+		resp, err = client.Do(req)
+		check(err)
+	}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
-
-	if resp.StatusCode == *ERROR_CODE {
-		//cloudflarebypasser.GetCloudflareClearanceCookie(url)
-		panic("Cloudflare protection!")
-	}
 
 	var threads topThreads
 	err = json.Unmarshal(body, &threads)
 	check(err)
-	if len(threads.Threads) > 21 {
-		fmt.Println("Парсим json")
-		fmt.Println("Количество тредов: " + strconv.Itoa(len(threads.Threads)))
-		sort.Sort(byViews(threads.Threads))
 
-		total := len(threads.Threads)
-		for i, thread := range threads.Threads {
-			fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
+	fmt.Println("Парсим json")
+	fmt.Println("Количество тредов: " + strconv.Itoa(len(threads.Threads)))
+	sort.Sort(byViews(threads.Threads))
 
-			thread.GetWebmLinks()
-		}
-	} else {
-		fmt.Println("Парсим главную")
-		req.URL, _ = url.Parse("http://2ch.hk/b/")
-		resp, err = client.Do(req)
-		check(err)
+	total := len(threads.Threads)
+	for i, thread := range threads.Threads {
+		fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
 
-		body, err = ioutil.ReadAll(resp.Body)
-		check(err)
-		defer resp.Body.Close()
+		thread.GetWebmLinks(*req, *client)
+	}
 
-		re := regexp.MustCompile("<a class=\"orange\" href=\"\\/b\\/res\\/([0-9]+).html\">Ответ<\\/a>")
-		threadNums := re.FindAllStringSubmatch(string(body), -1)
-		total := len(threadNums)
-		for i, match := range threadNums {
-			fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
-			thread := thread{Num: match[1]}
-			thread.GetWebmLinks()
-			fmt.Println()
-		}
+	fmt.Println("Парсим главную")
+	req.URL, _ = url.Parse("http://2ch.hk/b/")
+	resp, err = client.Do(req)
+	check(err)
+
+	body, err = ioutil.ReadAll(resp.Body)
+	check(err)
+	defer resp.Body.Close()
+
+	re := regexp.MustCompile("<a class=\"orange\" href=\"\\/b\\/res\\/([0-9]+).html\">Ответ<\\/a>")
+	threadNums := re.FindAllStringSubmatch(string(body), -1)
+	total = len(threadNums)
+	for i, match := range threadNums {
+		fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
+		thread := thread{Num: match[1]}
+		thread.GetWebmLinks(*req, *client)
+		fmt.Println()
 	}
 }
