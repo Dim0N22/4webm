@@ -26,7 +26,7 @@ router.post('/', function (req, res) {
     User.create({
         login: req.body.email,
         secret: auth.getHash(secret)
-    }, function (err) {
+    }, function (err, user) {
         if (err) {
             log.error(err);
             res.redirect('/invite?error=' + 500);
@@ -37,6 +37,14 @@ router.post('/', function (req, res) {
             if (err) {
                 log.error(err);
                 res.redirect('/invite?error=' + 500);
+
+                // remove new user from db if invite not send
+                User.findByIdAndRemove({_id: user._id}, function (err) {
+                    if (err) {
+                        log.error(err);
+                        return;
+                    }
+                });
                 return;
             }
 
