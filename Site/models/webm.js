@@ -13,7 +13,8 @@ var webmSchema = new Schema({
     file_info: Object,
     seqid: Number,
     tags: [String],
-    time_wasted: Number
+    time_wasted: Number,
+    doubles: [Schema.Types.ObjectId]
 });
 
 

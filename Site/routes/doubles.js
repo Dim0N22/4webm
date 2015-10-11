@@ -33,64 +33,82 @@ router.get(['/', '/page/:page([0-9]+)'], function (req, res) {
 });
 
 
-router.get('/:id([0-9]+)', function (req, res) {
-    var id = Number(req.params.id);
-    var conditions = [];
-    conditions.push({doubles: {$exists: true, $not: {$size: 0}}});
-    var prevIdPromise = Webm.findOne({$and: [conditions, {_id: {$lt: id}}]}, {_id: 1}, {sort: {_id: -1}}).exec();
-    var nextIdPromise = Webm.findOne({$and: [conditions, {_id: {$gt: id}}]}, {_id: 1}, {sort: {_id: 1}}).exec();
-    var curWebmPromise = Webm.findOne({$and: [conditions, {_id: id}]}, null, {sort: {_id: 1}}).exec();
+router.get('/:id', function (req, res) {
+    var id = req.params.id;
 
-    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise])
-        .then(function (values) {
-            function response(prevId, nextId) {
-                res.render('doubles/view', {
-                    title: config.get('projectName') + ' #' + id,
-                    id: id,
-                    videoSrc: url.resolve(config.get('videoServer'), String(webm.file_info.path).slice(2)),
-                    prevHref: '/' + prevId,
-                    nextHref: '/' + nextId
-                });
-            }
 
-            var webm = values[2];
-            if (!webm) {
-                res.redirect('/');
-                return;
-            }
-
-            if (!values[0] && !values[1]) { // one webm on this criteria
-                response(id, id);
-                return;
-            } else if (!values[0]) { // if prev not found (actually for first webm)
-                Webm.findOne(conditions, {_id: 1}, {sort: {_id: -1}}).exec(function (err, prevId) {
-                    if (err) {
-                        log.error(err);
-                        res.status(500).end();
-                        return;
-                    }
-
-                    response(prevId._id, values[1]._id);
-                });
-                return;
-            } else if (!values[1]) { // if next not found (actually for last webm)
-                Webm.findOne(conditions, {_id: 1}, {sort: {_id: 1}}).exec(function (err, nextId) {
-                    if (err) {
-                        log.error(err);
-                        res.status(500).end();
-                        return;
-                    }
-
-                    response(values[0]._id, nextId._id);
-                });
-                return;
-            }
-
-            response(values[0]._id, values[1]._id);
-        }).catch(function (err) {
+    Webm.findOne({_id: id}, 'doubles file_info.path').exec(function (err, main) {
+        if (err) {
             log.error(err);
             res.status(500).end();
-        });
+            return;
+        }
+
+
+        var condition = {doubles: {$exists: true, $not: {$size: 0}}};
+        var prevIdPromise = Webm.findOne({$and: [condition, {_id: {$lt: id}}]}, {_id: 1}, {sort: {_id: -1}}).exec();
+        var nextIdPromise = Webm.findOne({$and: [condition, {_id: {$gt: id}}]}, {_id: 1}, {sort: {_id: 1}}).exec();
+        var doublesPromise = Webm.find({_id: {$in: main.doubles}}, '_id file_info.path').exec();
+
+
+        Promise.all([prevIdPromise, nextIdPromise, doublesPromise])
+            .then(function (values) {
+                function response(prevId, nextId) {
+                    res.render('doubles/view', {
+                        title: config.get('projectName') + ' #' + id,
+                        id: id,
+                        doubles: doubles,
+                        videoSrc: url.resolve(config.get('videoServer'), String(main.file_info.path).slice(2)),
+                        prevHref: '/' + prevId,
+                        nextHref: '/' + nextId
+                    });
+                }
+
+                var doubles = [];
+                for (var i = 0; i < values[2].length; i++) {
+                    doubles.push({
+                        _id: values[2][i]._id,
+                        videoSrc: url.resolve(config.get('videoServer'), String(values[2][i].file_info.path).slice(2))
+                    });
+                }
+
+
+                if (!values[0] && !values[1]) { // one webm on this criteria
+                    response(id, id);
+                    return;
+                } else if (!values[0]) { // if prev not found (actually for first webm)
+                    Webm.findOne(condition, {_id: 1}, {sort: {_id: -1}}).exec(function (err, prevId) {
+                        if (err) {
+                            log.error(err);
+                            res.status(500).end();
+                            return;
+                        }
+
+                        response(prevId._id, values[1]._id);
+                    });
+                    return;
+                } else if (!values[1]) { // if next not found (actually for last webm)
+                    Webm.findOne(condition, {_id: 1}, {sort: {_id: 1}}).exec(function (err, nextId) {
+                        if (err) {
+                            log.error(err);
+                            res.status(500).end();
+                            return;
+                        }
+
+                        response(values[0]._id, nextId._id);
+                    });
+                    return;
+                }
+
+                response(values[0]._id, values[1]._id);
+            }).catch(function (err) {
+                log.error(err);
+                res.status(500).end();
+            });
+
+    });
+
+
 });
 
 
