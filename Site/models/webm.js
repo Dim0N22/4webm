@@ -70,10 +70,10 @@ webmSchema.statics.getWebms = function (params, done) {
 /**
  *
  * @param {Object} params - tags hideDanger
- * @param {Function} cb
+ * @param {Function} done
  * @return {Aggregate|Promise}
  */
-webmSchema.statics.countByTags = function (params, cb) {
+webmSchema.statics.countByTags = function (params, done) {
     var conditions = [];
     conditions.push({"tags": {$exists: true}});
     conditions.push({seqid: {$exists: true}});
@@ -95,17 +95,59 @@ webmSchema.statics.countByTags = function (params, cb) {
 
     var cachedData = cache.get(JSON.stringify(operators));
     if (cachedData) {
-        cb(null, cachedData);
+        done(null, cachedData);
         return;
     }
 
     return this.aggregate(operators).exec(function (err, data) {
         if (!err) {
-            cache.put(JSON.stringify(operators), data, 1000*60);
+            cache.put(JSON.stringify(operators), data, 1000 * 60);
         }
 
-        cb(err, data);
+        done(err, data);
     });
+};
+
+/**
+ * Get doubles by criteria
+ * @param {Object} params - lastSeqid, page
+ * @param {Function} done
+ */
+webmSchema.statics.getDoubles = function (params, done) {
+    var conditions = [];
+    conditions.push({doubles: {$exists: true, $not: {$size: 0}}});
+
+    if (params && params.lastSeqid) {
+        conditions.push({_id: {$lt: params.lastSeqid}});
+    }
+
+    var query = this.find({$and: conditions}, '_id file_info.path doubles').sort({_id: -1});
+
+    if (params && params.page) {
+        query = query.skip(config.get('webmsPerPage') * (params.page - 1));
+    }
+
+    query.limit(config.get('webmsPerPage'))
+        .exec(function (err, webmsdb) {
+            if (err) {
+                done(err);
+                return;
+            }
+
+            var webms = [];
+            for (var i = 0; i < webmsdb.length; i++) {
+                webms.push({
+                    seqid: webmsdb[i]._id,
+                    doubles: webmsdb[i].doubles,
+                    previewSrc: url.resolve(config.get('videoServer'), String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg')
+                });
+            }
+
+            done(null, {
+                webms: webms,
+                lastSeqid: webms.length > 0 ? webms[webms.length - 1].seqid : params.lastSeqid
+            });
+        });
 };
 
 

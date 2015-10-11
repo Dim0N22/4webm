@@ -1,1 +1,12 @@
-<%- include('layout/header', {title: title}) -%>
+<%- include('../layout/header', {title: title}) -%>
+
+<div class="container">
+    <%- include('../partials/webmsGrid', {webms: webms, viewPath: viewPath}) -%>
+</div>
+
+<script>
+    var lastSeqid = '<%= lastSeqid %>';
+</script>
+
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="/vendors/js.cookie-2.0.3.min.js"></script>
