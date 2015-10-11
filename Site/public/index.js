@@ -29,10 +29,11 @@ function generateWebmsGridHtml(webms, authorized) {
     if (!webms) {
         return '';
     }
-
-    var html = '';
+    var docfrag = document.createDocumentFragment();
     for (var i = 0; i < webms.length; i = i + 4) {
-        html += '<div class="row">';
+        var div = document.createElement("div");
+        div.className = "row";
+        var html = '';
         for (var j = 0; j < 4 && i + j < webms.length; j++) {
             html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
             html += '#' + webms[i + j].seqid;
@@ -42,10 +43,11 @@ function generateWebmsGridHtml(webms, authorized) {
             html += '</a>';
             html += '</div>';
         }
-        html += '</div>';
+        div.innerHTML = html;
+        docfrag.appendChild(div);
     }
 
-    return html;
+    return docfrag;
 }
 
 
@@ -80,7 +82,7 @@ function moarWebms() {
 
     $.get('/api/webm/moar', {lastSeqid: lastSeqid}).done(function (data) {
         if (data) {
-            document.getElementById('webmsGrid').innerHTML += generateWebmsGridHtml(data.webms, data.authorized);
+            document.getElementById('webmsGrid').appendChild(generateWebmsGridHtml(data.webms, data.authorized));
             lastSeqid = data.lastSeqid;
         }
     }).always(function () {
@@ -98,8 +100,14 @@ function refreshVideos() {
 
     $.get('/api/webm').done(function (data) {
         document.getElementById('tags').innerHTML = generateTagsHtml(data.tags);
-        document.getElementById('webmsGrid').innerHTML = generateWebmsGridHtml(data.webms, data.authorized);
+        var webmsGrid = document.getElementById('webmsGrid');
+        webmsGrid.innerHTML = '';
+        webmsGrid.appendChild(generateWebmsGridHtml(data.webms, data.authorized));
         lastSeqid = data.lastSeqid;
+
+        // paging
+        prevSeqid = lastSeqid;
+        window.history.pushState(null, null, '/');
     }).always(function () {
         loading = false;
     });
@@ -117,7 +125,7 @@ window.onscroll = function () {
 
     // set page number to window.history
     // change page number when video with lastSeqid becomes visible
-    if (loadedSeqIdSet.has(Number(prevSeqid))) { // page change once for one seqid
+    if (loadedSeqIdSet.has(Number(lastSeqid))) { // page change once for one seqid
         return;
     }
 
@@ -126,13 +134,13 @@ window.onscroll = function () {
     var docViewTop = window.pageYOffset; // current scroll top
     var docViewBottom = docViewTop + document.documentElement.clientHeight /* visible height*/;
 
-    var elemTop = el.offsetTop; //$elem.offset().top;
+    var elemTop = el.offsetTop;
     var elemBottom = elemTop + el.offsetHeight;
-    if ((elemBottom <= docViewBottom) && (elemTop >= docViewTop)) {
+    if ((elemTop <= docViewBottom) /*&& (elemTop >= docViewTop)*/) {
 
         var page = (Number(window.location.pathname.slice(6)) || 1) + 1;
         window.history.pushState(null, null, '/page/' + page);
-        loadedSeqIdSet.add(Number(prevSeqid));
+        loadedSeqIdSet.add(Number(lastSeqid));
         prevSeqid = lastSeqid;
     }
 };
