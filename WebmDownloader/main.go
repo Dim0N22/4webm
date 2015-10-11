@@ -1,6 +1,7 @@
 package main
 
 import (
+	"4webm/cloudflare-bypasser"
 	"fmt"
 	"github.com/streadway/amqp"
 	"gopkg.in/mgo.v2"
@@ -9,6 +10,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
@@ -76,24 +78,44 @@ func main() {
 
 	client := &http.Client{}
 
+	req, err := http.NewRequest("GET", "http://2ch.hk/b/", nil)
+
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
+	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+	req.Header.Set("Accept-Language", "ru,en-US;q=0.8,en;q=0.6")
+	req.Header.Set("Cache-Control", "no-cache")
+	req.Header.Set("Referer", "http://2ch.hk/b/")
+
+	resp, err := client.Do(req)
+
+	if resp.StatusCode == 503 {
+		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL)
+		check(err)
+
+		fmt.Println(cookie)
+
+		req.AddCookie(cookie)
+	}
+
 	forever := make(chan bool)
 
 	go func() {
 		for msg := range msgs {
 			webm := &Webm{}
 			objId := bson.ObjectId(msg.Body)
-			webmCollection.FindId(objId).One(&webm)
+			err = webmCollection.FindId(objId).One(&webm)
 
-			req, err := http.NewRequest("GET", "http://2ch.hk/"+strings.TrimLeft(webm.Url, "/"), nil)
-			check(err)
+			// webm удалена из БД
+			if err != nil {
+				msg.Ack(false)
+				continue
+			}
+
+			urlString := "http://2ch.hk/" + strings.TrimLeft(webm.Url, "/")
+			req.URL, _ = url.Parse(urlString)
 
 			fmt.Println(req.URL)
 
-			req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
-			req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-			req.Header.Set("Accept-Language", "ru,en-US;q=0.8,en;q=0.6")
-			req.Header.Set("Cache-Control", "no-cache")
-			req.Header.Set("Referer", "http://2ch.hk/b/")
 			resp, err := client.Do(req)
 			check(err)
 
