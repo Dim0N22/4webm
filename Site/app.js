@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // authorization mechanism
 app.use(auth.setUserFromToken);
-app.use(['/edit', '/api/tags', '/logout'], auth.isAuthenticated());
+app.use(['/edit', '/api/tags', '/logout', '/doubles', '/api/doubles'], auth.isAuthenticated());
 app.put('/api/webm', auth.isAuthenticated());
 app.use('/invite', auth.isAuthenticated('admin'));
 
@@ -45,6 +45,7 @@ app.get('/api', function (req, res) {
 app.use('/', require('./routes/index'));
 app.use('/api/webm', require('./routes/api/webm'));
 app.use('/api/tags', require('./routes/api/tags'));
+app.use('/api/doubles', require('./routes/api/doubles'));
 
 
 // catch 404 and forward to error handler

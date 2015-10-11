@@ -93,7 +93,7 @@ webmSchema.statics.countByTags = function (params, cb) {
         {$group: {_id: "$tags", count: {$sum: 1}}}
     ];
 
-    var cachedData = cache.get(operators);
+    var cachedData = cache.get(JSON.stringify(operators));
     if (cachedData) {
         cb(null, cachedData);
         return;
@@ -101,7 +101,7 @@ webmSchema.statics.countByTags = function (params, cb) {
 
     return this.aggregate(operators).exec(function (err, data) {
         if (!err) {
-            cache.put(operators, data, 1000*60*2);
+            cache.put(JSON.stringify(operators), data, 1000*60);
         }
 
         cb(err, data);
