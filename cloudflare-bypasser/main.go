@@ -2,7 +2,6 @@ package cloudflarebypasser
 
 import (
 	"errors"
-	"fmt" // TODO DELETE
 	"net/http"
 	"net/url"
 	"regexp"
@@ -30,7 +29,7 @@ func GetCloudflareClearanceCookie(url *url.URL) (*http.Cookie, error) {
 	req.Header.Set("Accept", Accept)
 	req.Header.Set("Accept-Language", AcceptLanguage)
 	req.Header.Set("Accept-Encoding", AcceptEncoding)
-	fmt.Print(req)
+
 	resp, err := client.Do(req)
 
 	cookie := resp.Cookies()[0]
