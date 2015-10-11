@@ -114,6 +114,10 @@ document.getElementById('webm').addEventListener('ended', function () {
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('webm').volume = localStorage.volume || 1;
 
+    if (window.history.length > 1 && document.referrer === window.location.origin + '/') {
+        document.getElementById('webm').play();
+    }
+
     var navigation = localStorage.getItem("navigation");
 
     if (navigation === 'autoNext' || navigation === 'autoPrev') {
