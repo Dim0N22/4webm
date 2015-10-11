@@ -95,7 +95,12 @@ func main() {
 
 			objId := bson.ObjectId(msg.Body)
 			err := webmCollection.FindId(objId).One(&webm)
-			check(err)
+
+			// webm удалена из БД
+			if err != nil {
+				msg.Ack(false)
+				continue
+			}
 
 			if len(webm.HashesString) == 0 {
 				fmt.Println(webm)
