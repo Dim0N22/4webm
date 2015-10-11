@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
 	"net/http"
-	"encoding/json"
-	"gopkg.in/mgo.v2/bson"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -45,9 +46,10 @@ func (slice byViews) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
-func (th thread) GetWebmLinks() {
+func (th thread) GetWebmLinks(req http.Request, client http.Client) {
 	link := "https://2ch.hk/b/res/" + th.Num + ".json"
-	resp, err := http.Get(link)
+	req.URL, _ = url.Parse(link)
+	resp, err := client.Do(&req)
 	check(err)
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
