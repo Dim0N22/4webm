@@ -119,6 +119,10 @@ func main() {
 			resp, err := client.Do(req)
 			check(err)
 
+			if resp.StatusCode == 503 {
+				panic("Can't bypass cloudflare!")
+			}
+
 			bytes, err := ioutil.ReadAll(resp.Body)
 			check(err)
 
