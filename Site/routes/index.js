@@ -44,7 +44,7 @@ router.get('/', function (req, res) {
                 tags: tags,
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
-                projectName: config.get('projectName')
+                viewPath: '/' + (req.user ? 'edit/' : '')
             });
         });
     });
@@ -85,7 +85,8 @@ router.get('/page/:page([0-9]+)', function (req, res) {
                 title: config.get('projectName'),
                 tags: tags,
                 webms: result.webms,
-                lastSeqid: result.lastSeqid
+                lastSeqid: result.lastSeqid,
+                viewPath: '/' + (req.user ? 'edit/' : '')
             });
         });
     });

@@ -25,7 +25,7 @@ function clickTag(tag) {
 }
 
 
-function generateWebmsGridHtml(webms, authorized) {
+function generateWebmsGridHtml(webms, viewPath) {
     if (!webms) {
         return '';
     }
@@ -38,7 +38,7 @@ function generateWebmsGridHtml(webms, authorized) {
             html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
             html += '#' + webms[i + j].seqid;
 
-            html += '<a href="/' + (authorized ? 'edit/' : '') + webms[i + j].seqid + '" class="thumbnail">';
+            html += '<a href="' + viewPath + webms[i + j].seqid + '" class="thumbnail">';
             html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';
             html += '</a>';
             html += '</div>';
@@ -82,7 +82,7 @@ function moarWebms() {
 
     $.get('/api/webm/moar', {lastSeqid: lastSeqid}).done(function (data) {
         if (data) {
-            document.getElementById('webmsGrid').appendChild(generateWebmsGridHtml(data.webms, data.authorized));
+            document.getElementById('webmsGrid').appendChild(generateWebmsGridHtml(data.webms, data.viewPath));
             lastSeqid = data.lastSeqid;
         }
     }).always(function () {
@@ -102,7 +102,7 @@ function refreshVideos() {
         document.getElementById('tags').innerHTML = generateTagsHtml(data.tags);
         var webmsGrid = document.getElementById('webmsGrid');
         webmsGrid.innerHTML = '';
-        webmsGrid.appendChild(generateWebmsGridHtml(data.webms, data.authorized));
+        webmsGrid.appendChild(generateWebmsGridHtml(data.webms, data.viewPath));
         lastSeqid = data.lastSeqid;
 
         // paging

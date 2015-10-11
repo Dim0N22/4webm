@@ -20,29 +20,7 @@
 
     <br>
 
-    <div id="webmsGrid">
-        <% for(var i = 0; i < webms.length; i = i + 4) { %>
-        <div class="row">
-            <% for(var j = 0; j < 4 && i + j < webms.length; j++) { %>
-            <div class="col-xs-12 col-sm-6 col-md-3" id="div<%= webms[i + j].seqid %>">
-                #<%= webms[i + j].seqid %>
-
-                <a href="/<%= (authorized ? 'edit/' : '') + webms[i + j].seqid %>" class="thumbnail">
-                    <div class="thumbnail inner-thumbnail" style="background-image: url(<%= webms[i + j].previewSrc %>)"></div>
-                </a>
-            </div>
-            <% } %>
-        </div>
-        <% } %>
-    </div>
-
-    <br>
-
-    <div class="row">
-        <div class="col-xs-12">
-            <a class="btn btn-default center-block" role="button" onclick="moarWebms()">MOAR</a>
-        </div>
-    </div>
+    <%- include('partials/webmsGrid', {webms: webms, viewPath: viewPath}) -%>
 </div>
 
 

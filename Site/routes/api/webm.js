@@ -42,7 +42,7 @@ router.get('/', function (req, res) {
             res.json({
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
-                authorized: Boolean(req.user),
+                viewPath: '/' + (req.user ? 'edit/' : ''),
                 tags: tags
             });
         });
@@ -79,7 +79,7 @@ router.get('/moar', function (req, res) {
         res.json({
             webms: result.webms,
             lastSeqid: result.lastSeqid,
-            authorized: Boolean(req.user)
+            viewPath: '/' + (req.user ? 'edit/' : '')
         });
     });
 });
