@@ -10,6 +10,7 @@ router.use('/random', require('./random'));
 router.use('/login', require('./login'));
 router.use('/invite', require('./invite'));
 router.use('/logout', require('./logout'));
+router.use('/doubles', require('./doubles'));
 
 
 router.get('/', function (req, res) {
