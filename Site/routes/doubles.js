@@ -59,8 +59,8 @@ router.get('/:id', function (req, res) {
                         id: id,
                         doubles: doubles,
                         videoSrc: url.resolve(config.get('videoServer'), String(main.file_info.path).slice(2)),
-                        prevHref: '/' + prevId,
-                        nextHref: '/' + nextId
+                        prevHref: '/doubles/' + prevId,
+                        nextHref: '/doubles/' + nextId
                     });
                 }
 
