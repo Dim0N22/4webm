@@ -14,7 +14,8 @@ var webmSchema = new Schema({
     seqid: Number,
     tags: [String],
     time_wasted: Number,
-    doubles: [Schema.Types.ObjectId]
+    doubles: [Schema.Types.ObjectId],
+    isDouble: Boolean
 });
 
 
