@@ -115,6 +115,7 @@ func main() {
 			iter := webmCollection.Find(bson.M{"$and": []interface{}{
 				bson.M{"hasharr.0": bson.M{"$exists": true}},
 				bson.M{"_id": bson.M{"$ne": objId}},
+				bson.M{"seqid": bson.M{"$exists": true}},
 			}}).Iter()
 			dWebm := &Webm{}
 			for iter.Next(&dWebm) {
