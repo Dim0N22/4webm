@@ -48,33 +48,18 @@ router.get('/:id', function (req, res) {
         var condition = {doubles: {$exists: true, $not: {$size: 0}}};
         var prevIdPromise = Webm.findOne({$and: [condition, {_id: {$lt: id}}]}, {_id: 1}, {sort: {_id: -1}}).exec();
         var nextIdPromise = Webm.findOne({$and: [condition, {_id: {$gt: id}}]}, {_id: 1}, {sort: {_id: 1}}).exec();
-        var doublesPromise = Webm.find({_id: {$in: main.doubles}}, '_id seqid file_info.path isDouble').exec();
+        var originalsPromise = Webm.find({_id: {$in: main.doubles}}, '_id seqid file_info.path isDouble').exec();
 
-
-        Promise.all([prevIdPromise, nextIdPromise, doublesPromise])
+        Promise.all([prevIdPromise, nextIdPromise, originalsPromise])
             .then(function (values) {
-                function response(prevId, nextId) {
-                    res.render('doubles/view', {
-                        title: config.get('projectName') + ' #' + id,
-                        id: id,
-                        doubles: doubles,
-                        prevHref: '/doubles/' + prevId,
-                        nextHref: '/doubles/' + nextId
-                    });
-                }
-
-
-                // collect doubles to array
-                var doubles = [];
-                doubles.push({
-                    _id: main._id,
-                    seqid: main.seqid,
-                    videoSrc: url.resolve(config.get('videoServer'), String(main.file_info.path).slice(2)),
-                    isDouble: main.isDouble
-                });
+                var originalIds = [];
+                var doubleWebms = [];
 
                 for (var i = 0; i < values[2].length; i++) {
-                    doubles.push({
+                    originalIds.push(values[2][i]._id);
+
+                    // collect doubles to array
+                    doubleWebms.push({
                         _id: values[2][i]._id,
                         seqid: values[2][i].seqid,
                         videoSrc: url.resolve(config.get('videoServer'), String(values[2][i].file_info.path).slice(2)),
@@ -82,44 +67,71 @@ router.get('/:id', function (req, res) {
                     });
                 }
 
-                // sort doubles for bubbling item with seqid
-                doubles.sort(function compare(a, b) {
-                    if (b.seqid) {
-                        return 1;
-                    } else {
-                        return -1;
+                Webm.find({doubles: {$in: originalIds}}, '_id seqid file_info.path isDouble').exec(function (err, doubles) {
+                    if (err) {
+                        log.error(err);
+                        res.status(500).end();
+                        return;
                     }
-                });
 
+                    function response(prevId, nextId) {
+                        res.render('doubles/view', {
+                            title: config.get('projectName') + ' #' + id,
+                            id: id,
+                            doubles: doubleWebms,
+                            prevHref: '/doubles/' + prevId,
+                            nextHref: '/doubles/' + nextId
+                        });
+                    }
 
-                if (!values[0] && !values[1]) { // one webm on this criteria
-                    response(id, id);
-                    return;
-                } else if (!values[0]) { // if prev not found (actually for first webm)
-                    Webm.findOne(condition, {_id: 1}, {sort: {_id: -1}}).exec(function (err, prevId) {
-                        if (err) {
-                            log.error(err);
-                            res.status(500).end();
-                            return;
+                    for (var i = 0; i < doubles.length; i++) {
+                        doubleWebms.push({
+                            _id: doubles[i]._id,
+                            seqid: doubles[i].seqid,
+                            videoSrc: url.resolve(config.get('videoServer'), String(doubles[i].file_info.path).slice(2)),
+                            isDouble: doubles[i].isDouble
+                        });
+                    }
+
+                    // sort doubles for bubbling item with seqid
+                    doubleWebms.sort(function compare(a, b) {
+                        if (b.seqid) {
+                            return 1;
+                        } else {
+                            return -1;
                         }
-
-                        response(prevId._id, values[1]._id);
                     });
-                    return;
-                } else if (!values[1]) { // if next not found (actually for last webm)
-                    Webm.findOne(condition, {_id: 1}, {sort: {_id: 1}}).exec(function (err, nextId) {
-                        if (err) {
-                            log.error(err);
-                            res.status(500).end();
-                            return;
-                        }
 
-                        response(values[0]._id, nextId._id);
-                    });
-                    return;
-                }
 
-                response(values[0]._id, values[1]._id);
+                    if (!values[0] && !values[1]) { // one webm on this criteria
+                        response(id, id);
+                        return;
+                    } else if (!values[0]) { // if prev not found (actually for first webm)
+                        Webm.findOne(condition, {_id: 1}, {sort: {_id: -1}}).exec(function (err, prevId) {
+                            if (err) {
+                                log.error(err);
+                                res.status(500).end();
+                                return;
+                            }
+
+                            response(prevId._id, values[1]._id);
+                        });
+                        return;
+                    } else if (!values[1]) { // if next not found (actually for last webm)
+                        Webm.findOne(condition, {_id: 1}, {sort: {_id: 1}}).exec(function (err, nextId) {
+                            if (err) {
+                                log.error(err);
+                                res.status(500).end();
+                                return;
+                            }
+
+                            response(values[0]._id, nextId._id);
+                        });
+                        return;
+                    }
+
+                    response(values[0]._id, values[1]._id);
+                })
             }).catch(function (err) {
                 log.error(err);
                 res.status(500).end();
