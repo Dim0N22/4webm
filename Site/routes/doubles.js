@@ -37,7 +37,7 @@ router.get('/:id', function (req, res) {
     var id = req.params.id;
 
 
-    Webm.findOne({_id: id}, 'doubles file_info.path').exec(function (err, main) {
+    Webm.findOne({_id: id}, '_id seqid doubles file_info.path isDouble').exec(function (err, main) {
         if (err) {
             log.error(err);
             res.status(500).end();
@@ -48,7 +48,7 @@ router.get('/:id', function (req, res) {
         var condition = {doubles: {$exists: true, $not: {$size: 0}}};
         var prevIdPromise = Webm.findOne({$and: [condition, {_id: {$lt: id}}]}, {_id: 1}, {sort: {_id: -1}}).exec();
         var nextIdPromise = Webm.findOne({$and: [condition, {_id: {$gt: id}}]}, {_id: 1}, {sort: {_id: 1}}).exec();
-        var doublesPromise = Webm.find({_id: {$in: main.doubles}}, '_id file_info.path').exec();
+        var doublesPromise = Webm.find({_id: {$in: main.doubles}}, '_id seqid file_info.path isDouble').exec();
 
 
         Promise.all([prevIdPromise, nextIdPromise, doublesPromise])
@@ -58,19 +58,38 @@ router.get('/:id', function (req, res) {
                         title: config.get('projectName') + ' #' + id,
                         id: id,
                         doubles: doubles,
-                        videoSrc: url.resolve(config.get('videoServer'), String(main.file_info.path).slice(2)),
                         prevHref: '/doubles/' + prevId,
                         nextHref: '/doubles/' + nextId
                     });
                 }
 
+
+                // collect doubles to array
                 var doubles = [];
+                doubles.push({
+                    _id: main._id,
+                    seqid: main.seqid,
+                    videoSrc: url.resolve(config.get('videoServer'), String(main.file_info.path).slice(2)),
+                    isDouble: main.isDouble
+                });
+
                 for (var i = 0; i < values[2].length; i++) {
                     doubles.push({
                         _id: values[2][i]._id,
-                        videoSrc: url.resolve(config.get('videoServer'), String(values[2][i].file_info.path).slice(2))
+                        seqid: values[2][i].seqid,
+                        videoSrc: url.resolve(config.get('videoServer'), String(values[2][i].file_info.path).slice(2)),
+                        isDouble: values[2][i].isDouble
                     });
                 }
+
+                // sort doubles for bubbling item with seqid
+                doubles.sort(function compare(a, b) {
+                    if (b.seqid) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
 
 
                 if (!values[0] && !values[1]) { // one webm on this criteria

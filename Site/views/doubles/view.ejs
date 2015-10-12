@@ -2,23 +2,6 @@
 
 <div class="container container-margin-top">
     <div class="row">
-        <div class="col-md-2 hidden-xs hidden-sm"></div>
-        <div class="col-md-4 col-xs-6 col-sm-6">
-            <em>#<%= id %></em>
-        </div>
-        <div class="col-md-4 col-xs-6 col-sm-6">
-            <!--<div class="pull-right">-->
-                <!--<div id="navigation" class="btn-group" role="group" aria-label="...">-->
-                    <!--<a type="button" id="autoPrev" data-navigation="autoPrev" class="btn btn-link btn-xs" title="Автопереход назад"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span></a>-->
-                    <!--<a type="button" id="autoCycle" data-navigation="autoCycle" class="btn btn-link btn-xs" title="Зациклить"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span></a>-->
-                    <!--<a type="button" id="likeABoss" data-navigation="likeABoss" class="btn btn-link btn-xs" title="LIKE A BOSS"><span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span></a>-->
-                    <!--<a type="button" id="autoNext" data-navigation="autoNext" class="btn btn-link btn-xs" title="Автопереход вперед"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span></a>-->
-                <!--</div>-->
-            <!--</div>-->
-        </div>
-        <div class="col-md-2 hidden-xs hidden-sm"></div>
-    </div>
-    <div class="row">
         <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
             <a id="prev" href="<%= prevHref %>">
                 <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
@@ -26,24 +9,31 @@
         </div>
         <div class="col-md-8">
 
-            <div class="embed-responsive embed-responsive-16by9">
-                <video id="webm" class="embed-responsive-item" controls>
-                    <source src="<%= videoSrc %>" type="video/webm">
-                    Your browser does not support HTML5 video.
-                </video>
-            </div>
 
-            <br><br>
 
-            <!--doubles.forEach-->
             <% doubles.forEach(function(double){ %>
-            <div class="embed-responsive embed-responsive-16by9">
-                <video id="webm" class="embed-responsive-item" controls>
-                    <source src="<%= double.videoSrc %>" type="video/webm">
-                    Your browser does not support HTML5 video.
-                </video>
 
+            <div class="panel <% if (double.seqid) { %> panel-success <% } else{ %> panel-danger <% } %>">
+                <div class="panel-heading">
+                    <em>#<%= double.seqid || double._id %></em>
+                </div>
+                <div class="panel-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <video id="<%= double._id %>" class="embed-responsive-item" controls>
+                            <source src="<%= double.videoSrc %>" type="video/webm">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                </div>
 
+                <% if (!double.seqid) { %>
+                <div class="panel-footer">
+
+                    <button type="button" data-action="delete" class="btn btn-default <% if (double.isDouble) { %> hidden <% } %>" onclick="double(true, '<%= double._id %>', this)">Удалить дубликат</button>
+                    <button type="button" data-action="cancel" class="btn btn-link <% if (!double.isDouble) { %> hidden <% } %>" onclick="double(false, '<%= double._id %>', this)">Отменить</button>
+
+                </div>
+                <% } %>
             </div>
 
             <br>
@@ -65,4 +55,4 @@
 
 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="/vendors/mousetrap.min.js"></script>
-<script src="/view.js"></script>
+<script src="/doubles/view.js"></script>

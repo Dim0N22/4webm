@@ -33,8 +33,16 @@ router.get('/moar', function (req, res) {
 });
 
 
-router.put('/:id([0-9]+)', function (req, res) {
-    res.status(200).end();
+router.put('/:id', function (req, res) {
+    Webm.update({_id: req.params.id}, {$set: {isDouble: req.body.value}}, function (err) {
+        if (err) {
+            log.error(err);
+            res.status(500).end();
+            return;
+        }
+
+        res.status(200).end();
+    });
 });
 
 
