@@ -117,7 +117,7 @@ webmSchema.statics.countByTags = function (params, done) {
  */
 webmSchema.statics.getDoubles = function (params, done) {
     var conditions = [];
-    conditions.push({doubles: {$exists: true, $not: {$size: 0}}});
+    conditions.push({$and: [{doubles: {$exists: true, $not: {$size: 0}}}, {isDouble: {$exists: false}}]});
 
     if (params && params.lastSeqid) {
         conditions.push({_id: {$lt: params.lastSeqid}});
