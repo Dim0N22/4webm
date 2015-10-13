@@ -24,6 +24,8 @@ func check(e error) {
 
 var (
 	ERROR_CODE     = flag.Int("e", 503, "Cloudflare error code")
+	MongodbUrl     = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
+	RabbitMqUrl    = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
 	webmCollection *mgo.Collection
 	channel        *amqp.Channel
 	queue          amqp.Queue
@@ -32,12 +34,12 @@ var (
 func main() {
 	flag.Parse()
 
-	mongoSession, err := mgo.Dial("mongodb://localhost")
+	mongoSession, err := mgo.Dial(MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection = mongoSession.DB("4webm").C("webms")
 
-	amqpConnection, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	amqpConnection, err := amqp.Dial(RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 

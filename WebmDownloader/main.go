@@ -2,6 +2,7 @@ package main
 
 import (
 	"4webm/cloudflare-bypasser"
+	"flag"
 	"fmt"
 	"github.com/streadway/amqp"
 	"gopkg.in/mgo.v2"
@@ -29,13 +30,20 @@ type MaxWebmId struct {
 	CurrentId int           `json:"currentId" bson:"currentId"`
 }
 
+var (
+	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
+	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
+)
+
 func main() {
-	mongoSession, err := mgo.Dial("mongodb://localhost")
+	flag.Parse()
+
+	mongoSession, err := mgo.Dial(MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 
-	amqpConnection, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	amqpConnection, err := amqp.Dial(RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 

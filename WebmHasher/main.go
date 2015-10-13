@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/Dim0N22/go-phash"
 	"github.com/streadway/amqp"
@@ -23,13 +24,20 @@ func check(e error) {
 	}
 }
 
+var (
+	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
+	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
+)
+
 func main() {
-	mongoSession, err := mgo.Dial("mongodb://192.168.1.47")
+	flag.Parse()
+
+	mongoSession, err := mgo.Dial(MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 
-	amqpConnection, err := amqp.Dial("amqp://linux:123@192.168.1.47:5672/")
+	amqpConnection, err := amqp.Dial(RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/Dim0N22/go-phash"
 	"github.com/streadway/amqp"
@@ -43,19 +44,22 @@ func getHashForWebm(webm *Webm) []uint64 {
 	return uintHash
 }
 
-func main() {
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+var (
+	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
+	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
+)
 
-	mongoSession, err := mgo.Dial("mongodb://192.168.1.47")
+func main() {
+	flag.Parse()
+
+	mongoSession, err := mgo.Dial(MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 	seqIdCollection := mongoSession.DB("4webm").C("maxwebmid")
 	mongoSession.SetBatch(1000)
 
-	amqpConnection, err := amqp.Dial("amqp://linux:123@192.168.1.47:5672/")
+	amqpConnection, err := amqp.Dial(RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 
