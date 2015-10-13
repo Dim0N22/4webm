@@ -51,7 +51,6 @@ function handleTouchStart(evt) {
 }
 
 function handleTouchEnd(evt) {
-    console.log("2", evt);
     if (!xDown || !yDown) {
         return;
     }
