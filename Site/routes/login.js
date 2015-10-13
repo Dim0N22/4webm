@@ -36,7 +36,7 @@ router.post('/', function (req, res) {
         }
 
         var token = auth.token();
-        User.update({_id: user._id}, {$set: {token: token}}, function (err) {
+        User.update({_id: user._id}, {$push: {tokens: token}}, function (err) {
             if (err) {
                 log.error(err);
                 res.redirect('/login?error=' + 500);

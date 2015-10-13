@@ -8,16 +8,15 @@ var auth = require('../libs/auth');
 var router = express.Router();
 
 router.post('/', function (req, res) {
-    res.clearCookie('token');
-
-    User.update({_id: req.user._id}, {$unset: {token: ""}}, function (err) {
+    User.update({_id: req.user._id}, {$pull: {tokens: req.cookies.token}}, function (err) {
         if (err) {
             log.error(err);
             return;
         }
-    });
 
-    res.redirect('/');
+        res.clearCookie('token');
+        res.redirect('/');
+    });
 });
 
 module.exports = router;

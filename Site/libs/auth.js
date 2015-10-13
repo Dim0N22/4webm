@@ -16,15 +16,13 @@ function setUserFromToken(req, res, next) {
         return next();
     }
 
-    User.findOne({
-        token: req.cookies.token
-    }, function (err, user) {
+    User.findOne({tokens: req.cookies.token}, function (err, user) {
         if (err) {
             log.error(err);
             return next();
         }
 
-        if (user && user.token) {
+        if (user) {
             req.user = user;
         }
 
