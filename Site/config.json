@@ -3,6 +3,7 @@
   "mongoose": {
     "uri": "mongodb://localhost/4webm"
   },
+  "videoServer": "http://localhost/webms",
   "staticFolder": "/home/dim0n/webms",
   "webmsPerPage": 40,
   "projectName": "webm4",

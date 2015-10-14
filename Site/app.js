@@ -26,7 +26,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.raw());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/webms', express.static(config.get('staticFolder')));
+
+if (process.env.NODE_ENV === 'production') {
+    app.use('/webms', express.static(config.get('staticFolder')));
+}
 
 
 // authorization mechanism
