@@ -3,9 +3,9 @@
   "mongoose": {
     "uri": "mongodb://localhost/4webm"
   },
-  "videoServer": "http://localhost/webms",
+  "staticFolder": "/home/dim0n/webms",
   "webmsPerPage": 40,
-  "projectName": "4webm",
+  "projectName": "webm4",
   "email": {
     "transport": {
       "service": "Gmail",

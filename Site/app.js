@@ -9,6 +9,7 @@ var log = require('./libs/log');
 var parseTagsFromCookies = require('./middleware/parseTagsFromCookies');
 var setLocals = require('./middleware/setLocals');
 var mongoose = require('./libs/mongoose'); // init mongoose
+var config = require('./libs/config');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.raw());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/webms', express.static(config.get('staticFolder')));
 
 
 // authorization mechanism
