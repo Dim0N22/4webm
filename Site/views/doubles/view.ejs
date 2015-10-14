@@ -29,7 +29,7 @@
                 <% if (!double.seqid) { %>
                 <div class="panel-footer">
 
-                    <div class="btn-group" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
                         <button type="button" data-action="delete" class="btn btn-default <% if (double.isDouble === true) { %> active <% } %>" onclick="double(true, '<%= double._id %>', this)">Дубликат</button>
                         <button type="button" data-action="cancel" class="btn btn-default <% if (double.isDouble === false) { %> active <% } %>" onclick="double(false, '<%= double._id %>', this)">Не Дубликат</button>
                     </div>
