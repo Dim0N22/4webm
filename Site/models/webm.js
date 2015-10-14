@@ -57,7 +57,7 @@ webmSchema.statics.getWebms = function (params, done) {
             for (var i = 0; i < webmsdb.length; i++) {
                 webms.push({
                     seqid: webmsdb[i].seqid,
-                    previewSrc: url.resolve(String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg')
+                    previewSrc: String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg'
                 });
             }
 
@@ -142,7 +142,7 @@ webmSchema.statics.getDoubles = function (params, done) {
                 webms.push({
                     seqid: webmsdb[i]._id,
                     doubles: webmsdb[i].doubles,
-                    previewSrc: url.resolve(String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg')
+                    previewSrc: String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg'
                 });
             }
 

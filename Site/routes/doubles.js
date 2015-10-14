@@ -62,7 +62,7 @@ router.get('/:id', function (req, res) {
                     doubleWebms.push({
                         _id: values[2][i]._id,
                         seqid: values[2][i].seqid,
-                        videoSrc: url.resolve(String(values[2][i].file_info.path).slice(2)),
+                        videoSrc: String(values[2][i].file_info.path).slice(2),
                         isDouble: values[2][i].isDouble
                     });
                 }
@@ -88,7 +88,7 @@ router.get('/:id', function (req, res) {
                         doubleWebms.push({
                             _id: doubles[i]._id,
                             seqid: doubles[i].seqid,
-                            videoSrc: url.resolve(String(doubles[i].file_info.path).slice(2)),
+                            videoSrc: String(doubles[i].file_info.path).slice(2),
                             isDouble: doubles[i].isDouble
                         });
                     }
