@@ -33,7 +33,7 @@ router.post('/', function (req, res) {
             return;
         }
 
-        mail.sendInvite(req.body.email, secret, function (err) {
+        mail.sendInvite(req.body.email, secret, req.protocol + '://' + req.get('host') + '/login', function (err) {
             if (err) {
                 log.error(err);
                 res.redirect('/invite?error=' + 500);

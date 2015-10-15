@@ -12,14 +12,14 @@ var transporter = nodemailer.createTransport(config.get('email:transport'));
  * @param {String} secret
  * @param {Function} done
  */
-function sendInvite(email, secret, done) {
+function sendInvite(email, secret, loginUrl, done) {
     "use strict";
 
     var mailOptions = {
         from: config.get('email:from'),
         to: email,
         subject: config.get('email:subject'),
-        text: util.format(config.get('email:text'), email, secret)
+        text: util.format(config.get('email:text'), email, secret, loginUrl)
         //html: util.format(config.get('email:html'), email, secret)
     };
 

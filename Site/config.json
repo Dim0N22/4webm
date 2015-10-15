@@ -17,7 +17,7 @@
     },
     "from": "webm4team@gmail.com",
     "subject": "Добро пожаловать!",
-    "text": "login: %s\r\nsecret: %s",
+    "text": "login: %s\r\nsecret: %s\r\n%s",
     "html": ""
   }
 }
