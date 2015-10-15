@@ -1,7 +1,8 @@
 var url = require('url');
+var cache = require('memory-cache');
 var mongoose = require('../libs/mongoose');
 var config = require('../libs/config');
-var cache = require('memory-cache');
+var staticPathUtils = require('../libs/staticPathUtils');
 
 var Schema = mongoose.Schema;
 
@@ -57,7 +58,7 @@ webmSchema.statics.getWebms = function (params, done) {
             for (var i = 0; i < webmsdb.length; i++) {
                 webms.push({
                     seqid: webmsdb[i].seqid,
-                    previewSrc: String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg'
+                    previewSrc: staticPathUtils.resolvePreviewSrc(webmsdb[i].file_info.path)
                 });
             }
 
@@ -142,7 +143,7 @@ webmSchema.statics.getDoubles = function (params, done) {
                 webms.push({
                     seqid: webmsdb[i]._id,
                     doubles: webmsdb[i].doubles,
-                    previewSrc: String(webmsdb[i].file_info.path).slice(2) + '.300x300.jpg'
+                    previewSrc: staticPathUtils.resolvePreviewSrc(webmsdb[i].file_info.path)
                 });
             }
 

@@ -4,6 +4,7 @@ var Webm = require('../models/webm');
 var Tag = require('../models/tag');
 var config = require('../libs/config');
 var log = require('../libs/log');
+var staticPathUtils = require('../libs/staticPathUtils');
 
 var router = express.Router();
 router.use('/random', require('./random'));
@@ -115,7 +116,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 res.render('view', {
                     title: config.get('projectName') + ' #' + id,
                     id: id,
-                    videoSrc: String(webm.file_info.path).slice(2),
+                    videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     tags: webm.tags,
                     prevHref: '/' + prevId,
                     nextHref: '/' + nextId
@@ -188,7 +189,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 res.render('edit', {
                     title: config.get('projectName') + ' edit #' + id,
                     id: id,
-                    videoSrc: String(webm.file_info.path).slice(2),
+                    videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     tags: tags,
                     prevHref: '/edit/' + prevId,
                     nextHref: '/edit/' + nextId,

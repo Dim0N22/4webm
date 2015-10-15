@@ -3,6 +3,7 @@ var express = require('express');
 var Webm = require('../models/webm');
 var log = require('../libs/log');
 var config = require('../libs/config');
+var staticPathUtils = require('../libs/staticPathUtils');
 
 var router = express.Router();
 
@@ -62,7 +63,7 @@ router.get('/:id', function (req, res) {
                     doubleWebms.push({
                         _id: values[2][i]._id,
                         seqid: values[2][i].seqid,
-                        videoSrc: String(values[2][i].file_info.path).slice(2),
+                        videoSrc: staticPathUtils.resolveVideoSrc(values[2][i].file_info.path),
                         isDouble: values[2][i].isDouble
                     });
                 }
@@ -88,7 +89,7 @@ router.get('/:id', function (req, res) {
                         doubleWebms.push({
                             _id: doubles[i]._id,
                             seqid: doubles[i].seqid,
-                            videoSrc: String(doubles[i].file_info.path).slice(2),
+                            videoSrc: staticPathUtils.resolveVideoSrc(doubles[i].file_info.path),
                             isDouble: doubles[i].isDouble
                         });
                     }
@@ -131,7 +132,7 @@ router.get('/:id', function (req, res) {
                     }
 
                     response(values[0]._id, values[1]._id);
-                })
+                });
             }).catch(function (err) {
                 log.error(err);
                 res.status(500).end();

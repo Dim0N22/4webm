@@ -29,9 +29,10 @@
                 <% if (!double.seqid) { %>
                 <div class="panel-footer">
 
-                    <button type="button" data-action="delete" class="btn btn-default <% if (double.isDouble) { %> hidden <% } %>" onclick="double(true, '<%= double._id %>', this)">Удалить дубликат</button>
-                    <button type="button" data-action="cancel" class="btn btn-link <% if (!double.isDouble) { %> hidden <% } %>" onclick="double(false, '<%= double._id %>', this)">Отменить</button>
-
+                    <div class="btn-group" role="group">
+                        <button type="button" data-action="delete" class="btn btn-default <% if (double.isDouble === true) { %> active <% } %>" onclick="double(true, '<%= double._id %>', this)">Дубликат</button>
+                        <button type="button" data-action="cancel" class="btn btn-default <% if (double.isDouble === false) { %> active <% } %>" onclick="double(false, '<%= double._id %>', this)">Не Дубликат</button>
+                    </div>
                 </div>
                 <% } %>
             </div>
