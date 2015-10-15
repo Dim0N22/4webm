@@ -26,6 +26,7 @@ var (
 	ERROR_CODE     = flag.Int("e", 503, "Cloudflare error code")
 	MongodbUrl     = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
 	RabbitMqUrl    = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
+	ProxyUrl       = flag.String("x", "http://127.0.0.1:8888", "Proxy url")
 	webmCollection *mgo.Collection
 	channel        *amqp.Channel
 	queue          amqp.Queue
@@ -57,7 +58,9 @@ func main() {
 	)
 	check(err)
 
-	client := &http.Client{}
+	proxyUrl, err := url.Parse(*ProxyUrl)
+	check(err)
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
 
 	req, err := http.NewRequest("GET", "http://2ch.hk/b/threads.json", nil)
 	check(err)
@@ -70,7 +73,7 @@ func main() {
 	resp, err := client.Do(req)
 
 	if resp.StatusCode == *ERROR_CODE {
-		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL)
+		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL, proxyUrl)
 		check(err)
 
 		fmt.Println(cookie)

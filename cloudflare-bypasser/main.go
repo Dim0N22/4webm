@@ -20,8 +20,8 @@ const (
 	AcceptEncoding = "gzip, deflate, sdch"
 )
 
-func GetCloudflareClearanceCookie(url *url.URL) (*http.Cookie, error) {
-	client := &http.Client{}
+func GetCloudflareClearanceCookie(url *url.URL, proxyUrl *url.URL) (*http.Cookie, error) {
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
 
 	req, err := http.NewRequest("GET", url.String(), nil)
 	req.Header.Set("User-Agent", UserAgent)

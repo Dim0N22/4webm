@@ -34,6 +34,7 @@ var (
 	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
 	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
 	WebmsPath   = flag.String("w", "/home/dim0n/webms", "Webms store directory")
+	ProxyUrl    = flag.String("x", "http://127.0.0.1:8888", "Proxy url")
 )
 
 func main() {
@@ -85,7 +86,9 @@ func main() {
 	)
 	check(err)
 
-	client := &http.Client{}
+	proxyUrl, err := url.Parse(*ProxyUrl)
+	check(err)
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
 
 	req, err := http.NewRequest("GET", "http://2ch.hk/b/", nil)
 
@@ -98,7 +101,7 @@ func main() {
 	resp, err := client.Do(req)
 
 	if resp.StatusCode == 503 {
-		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL)
+		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL, proxyUrl)
 		check(err)
 
 		fmt.Println(cookie)
