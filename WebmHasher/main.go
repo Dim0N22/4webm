@@ -32,12 +32,12 @@ var (
 func main() {
 	flag.Parse()
 
-	mongoSession, err := mgo.Dial(MongodbUrl)
+	mongoSession, err := mgo.Dial(*MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 
-	amqpConnection, err := amqp.Dial(RabbitMqUrl)
+	amqpConnection, err := amqp.Dial(*RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 
@@ -89,8 +89,7 @@ func main() {
 
 			fmt.Println(webm)
 
-			path := strings.Replace(webm.FileInfo.Path, "G:/webms/", "/mnt/hgfs/webms/", -1)
-			hash, err := phash.VideoHashDCT(path)
+			hash, err := phash.VideoHashDCT(webm.FileInfo.Path)
 			check(err)
 
 			var shash []string

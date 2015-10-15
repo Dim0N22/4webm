@@ -52,14 +52,14 @@ var (
 func main() {
 	flag.Parse()
 
-	mongoSession, err := mgo.Dial(MongodbUrl)
+	mongoSession, err := mgo.Dial(*MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 	seqIdCollection := mongoSession.DB("4webm").C("maxwebmid")
 	mongoSession.SetBatch(1000)
 
-	amqpConnection, err := amqp.Dial(RabbitMqUrl)
+	amqpConnection, err := amqp.Dial(*RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 

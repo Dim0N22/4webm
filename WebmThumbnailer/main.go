@@ -23,12 +23,12 @@ var (
 func main() {
 	flag.Parse()
 
-	mongoSession, err := mgo.Dial(MongodbUrl)
+	mongoSession, err := mgo.Dial(*MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 
-	amqpConnection, err := amqp.Dial(RabbitMqUrl)
+	amqpConnection, err := amqp.Dial(*RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 
@@ -77,7 +77,7 @@ func main() {
 			webmCollection.FindId(objId).One(&webm)
 
 			fmt.Println("processing: " + webm.FileInfo.Path)
-			err := exec.Command("D://PROJECTS/Go/src/4webm/ffmpeg.exe", "-i", webm.FileInfo.Path, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webm.FileInfo.Path+".300x300.jpg").Run()
+			err := exec.Command("ffmpeg", "-i", webm.FileInfo.Path, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webm.FileInfo.Path+".300x300.jpg").Run()
 			fmt.Println(err)
 			fmt.Println("End processing: " + webm.FileInfo.Path)
 

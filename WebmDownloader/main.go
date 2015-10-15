@@ -33,17 +33,18 @@ type MaxWebmId struct {
 var (
 	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
 	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
+	WebmsPath   = flag.String("w", "/home/dim0n/webms", "Webms store directory")
 )
 
 func main() {
 	flag.Parse()
 
-	mongoSession, err := mgo.Dial(MongodbUrl)
+	mongoSession, err := mgo.Dial(*MongodbUrl)
 	check(err)
 	defer mongoSession.Close()
 	webmCollection := mongoSession.DB("4webm").C("webms")
 
-	amqpConnection, err := amqp.Dial(RabbitMqUrl)
+	amqpConnection, err := amqp.Dial(*RabbitMqUrl)
 	check(err)
 	defer amqpConnection.Close()
 
@@ -143,14 +144,14 @@ func main() {
 			if err != nil {
 				fmt.Println(len(bytes), checksum)
 
-				directoryPath := path.Join("G:/webms", strconv.Itoa(webm.ThreadId))
+				directoryPath := path.Join(*WebmsPath, strconv.Itoa(webm.ThreadId))
 				os.MkdirAll(directoryPath, 0644)
 				filePath := path.Join(directoryPath, objId.Hex()+".webm")
 
 				err = ioutil.WriteFile(filePath, bytes, 0644)
 				check(err)
 
-				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"tags": []string{}, "file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": filePath}})
+				err = webmCollection.UpdateId(objId, bson.M{"$set": bson.M{"tags": []string{}, "file_info.size": len(bytes), "file_info.checksum": checksum, "file_info.path": "  " + filePath}})
 				check(err)
 
 				err = channel.Publish(
