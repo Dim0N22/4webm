@@ -7,6 +7,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"os/exec"
+	"strings"
 )
 
 func check(e error) {
@@ -18,6 +19,7 @@ func check(e error) {
 var (
 	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
 	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
+	WebmsPath   = flag.String("w", "/home/dim0n/", "Path to webms directory")
 )
 
 func main() {
@@ -77,7 +79,8 @@ func main() {
 			webmCollection.FindId(objId).One(&webm)
 
 			fmt.Println("processing: " + webm.FileInfo.Path)
-			err := exec.Command("ffmpeg", "-i", webm.FileInfo.Path, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webm.FileInfo.Path+".300x300.jpg").Run()
+			webmPath := *WebmsPath + strings.TrimSpace(webm.FileInfo.Path)
+			err := exec.Command("ffmpeg", "-i", webmPath, "-deinterlace", "-vframes", "1", "-vf", "scale='if(gte(iw,ih),300,-1)':'if(gt(ih,iw),300,-1)'", "-y", webmPath+".300x300.jpg").Run()
 			fmt.Println(err)
 			fmt.Println("End processing: " + webm.FileInfo.Path)
 
