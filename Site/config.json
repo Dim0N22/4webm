@@ -5,6 +5,7 @@
   },
   "videoServer": "http://localhost/webms",
   "staticFolder": "/home/dim0n/webms",
+  "homePath": "/home/dim0n",
   "webmsPerPage": 40,
   "projectName": "webm4",
   "email": {
