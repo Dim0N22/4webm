@@ -19,7 +19,7 @@ func check(e error) {
 var (
 	MongodbUrl  = flag.String("m", "mongodb://127.0.0.1", "MongoDb url")
 	RabbitMqUrl = flag.String("p", "amqp://linux:123@127.0.0.1:5672/", "RabbitMQ url and port")
-	WebmsPath   = flag.String("w", "/home/dim0n/", "Path to webms directory")
+	WebmsPath   = flag.String("w", "", "Path to webms directory")
 )
 
 func main() {
