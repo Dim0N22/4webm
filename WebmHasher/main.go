@@ -89,7 +89,7 @@ func main() {
 
 			fmt.Println(webm)
 
-			hash, err := phash.VideoHashDCT(webm.FileInfo.Path)
+			hash, err := phash.VideoHashDCT(strings.TrimSpace(webm.FileInfo.Path))
 			check(err)
 
 			var shash []string
