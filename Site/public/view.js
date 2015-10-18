@@ -95,12 +95,12 @@ function addToStore(item, property, url, opposite) {
         store[property] = [];
     }
 
-    if (opposite && store[opposite].indexOf(_id) !== -1) { // for like/dislike
+    if (opposite && store[opposite] && store[opposite].indexOf(webmId) !== -1) { // for like/dislike
         return;
     }
 
     var add;
-    var indexItem = store[property].indexOf(_id);
+    var indexItem = store[property].indexOf(webmId);
     if (indexItem === -1) {
         add = true;
     } else {
@@ -109,7 +109,7 @@ function addToStore(item, property, url, opposite) {
 
 
     if (add) {
-        store[property].push(_id);
+        store[property].push(webmId);
         item.classList.add('enabled');
     } else {
         store[property].splice(indexItem, 1);
@@ -220,15 +220,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    if (store && store.favorites && store.favorites.indexOf(_id) !== -1) {
+    if (store && store.favorites && store.favorites.indexOf(webmId) !== -1) {
         document.getElementById("favorite").classList.add('enabled');
     }
 
-    if (store && store.likes && store.likes.indexOf(_id) !== -1) {
+    if (store && store.likes && store.likes.indexOf(webmId) !== -1) {
         document.getElementById("like").classList.add('enabled');
     }
 
-    if (store && store.dislikes && store.dislikes.indexOf(_id) !== -1) {
+    if (store && store.dislikes && store.dislikes.indexOf(webmId) !== -1) {
         document.getElementById("dislike").classList.add('enabled');
     }
 });

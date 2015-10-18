@@ -51,6 +51,7 @@ app.use('/', require('./routes/index'));
 app.use('/api/webm', require('./routes/api/webm'));
 app.use('/api/tags', require('./routes/api/tags'));
 app.use('/api/doubles', require('./routes/api/doubles'));
+app.use('/api/favorites', require('./routes/api/favorites'));
 
 
 // catch 404 and forward to error handler
