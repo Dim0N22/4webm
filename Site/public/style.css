@@ -91,3 +91,31 @@
         position: relative;
     }
 }
+
+.index-tags > a {
+    width: 100%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding-top: 2px;
+    padding-left: 10px;
+    border: none;
+    background-color: #e7e7e7;
+    font-size: 15px;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+.index-tags > a > span.badge {
+    color: black;
+    font-size: 15px;
+    background-color: #e7e7e7;
+    width: 25%;
+    text-align: right;
+}
+
+.index-tags > a > span.tag-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 70%;
+}
