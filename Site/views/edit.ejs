@@ -65,7 +65,9 @@
         </div>
 
         <div class="col-xs-1">
-            <div class="share-init pull-right" data-image="<%= previewSrc %>"></div>
+            <div class="share-init pull-right" data-image="<%= previewSrc %>"
+                 data-description="#webm #<%= id %>. <% tags.forEach(function(tag){ if (tag.enable) { %> #<%= tag.name.toString() %> <% }}); %>">
+            </div>
         </div>
     </div>
     <div class="row">
