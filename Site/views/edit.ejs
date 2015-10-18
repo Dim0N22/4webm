@@ -3,9 +3,22 @@
 <div class="container container-margin-top">
     <div class="row">
         <div class="col-md-2 hidden-xs hidden-sm"></div>
-        <div class="col-md-4 col-xs-6 col-sm-6"><em>#<%= id %></em></div>
-        <div class="col-md-4 col-xs-6 col-sm-6">
+        <div class="col-md-8 col-xs-12 col-sm-12">
+            <div class="pull-left">
+                <em>#<%= id %></em>
+            </div>
             <div class="pull-right">
+                <div id="likeGroup" class="btn-group" role="group">
+                    <a type="button" id="favorite" class="btn btn-link btn-xs" title="Добавить в избранное">
+                        <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                    </a>
+                    <a type="button" id="like" class="btn btn-link btn-xs" title="Нравится">
+                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span><span id="likeCount" class="badge"><%= webm.likeCount || 0 %></span>
+                    </a>
+                    <a type="button" id="dislike" class="btn btn-link btn-xs" title="Не нравится">
+                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> <span id="dislikeCount" class="badge"><%= webm.dislikeCount || 0 %></span>
+                    </a>
+                </div>
                 <div id="navigation" class="btn-group" role="group" aria-label="...">
                     <a type="button" id="autoPrev" data-navigation="autoPrev" class="btn btn-link btn-xs" title="Автопереход назад"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span></a>
                     <a type="button" id="autoCycle" data-navigation="autoCycle" class="btn btn-link btn-xs" title="Зациклить"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span></a>
@@ -83,6 +96,7 @@
 
 <script>
     var webmId = '<%= id %>';
+    var _id = '<%= webm._id %>';
 </script>
 
 <script src="/vendors/mousetrap.min.js"></script>
