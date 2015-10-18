@@ -1,26 +1,23 @@
-<%- include('layout/header', {title: title}) -%>
+<%- include('layout/headerWithRandom', {title: title}) -%>
 
 <div class="container">
     <div class="row">
-        <div id="tags" class="col-md-10 well">
-
+        <div id="tags" class="col-md-2">
+            <div class="well hidden-print" data-spy="affix" role="complementary" data-offset-top="0">
             <% tags.forEach(function(tag){ %>
-            <a id="<%= tag._id %>" class="btn btn-default btn-xs tag-radius" type="button" style="margin-top: 3px; margin-bottom: 3px;" onclick="clickTag(this);">
-                <%= tag._id %> <span class="badge"><%= tag.count %></span>
-            </a>
+                <a id="<%= tag._id %>" class="btn btn-default btn-xs tag-radius" type="button" style="margin-top: 3px; margin-bottom: 3px;" onclick="clickTag(this);">
+                    <%= tag._id %> <span class="badge"><%= tag.count %></span>
+                </a>
+                <div class="visible-md-block visible-lg-block">
+                    <!-- for new line-->
+                </div>
             <% }); %>
-
+            </div>
         </div>
-        <div class="col-md-2" style="vertical-align: middle">
-            <a href="/random" type="button" class="btn btn-default btn-lg center-block">
-                <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Random
-            </a>
+        <div class="col-md-10">
+            <%- include('partials/webmsGrid', {webms: webms, viewPath: viewPath}) -%>
         </div>
     </div>
-
-    <br>
-
-    <%- include('partials/webmsGrid', {webms: webms, viewPath: viewPath}) -%>
 </div>
 
 

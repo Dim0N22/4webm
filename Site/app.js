@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 // authorization mechanism
 app.use(auth.setUserFromToken);
 app.use(['/edit', '/api/tags', '/logout', '/doubles', '/api/doubles'], auth.isAuthenticated());
-app.put('/api/webm', auth.isAuthenticated());
+app.put('/api/webm/:id([0-9]+)/tags', auth.isAuthenticated());
 app.use('/invite', auth.isAuthenticated('admin'));
 
 app.use(parseTagsFromCookies);

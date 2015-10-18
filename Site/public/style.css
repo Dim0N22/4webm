@@ -12,12 +12,26 @@
     border-radius: 30px;
 }
 
-#navigation>.enabled {
+#navigation > .enabled, #likeGroup > .enabled{
     color: green;
 }
 
 #likeABoss.enabled {
     color: black;
+}
+
+#favorite.enabled {
+    color: red;
+}
+
+@media screen and (min-width: 768px) {
+    #likeGroup {
+        margin-right: 15px;
+    }
+
+    #favorite {
+        margin-right: 5px;
+    }
 }
 
 .inner-thumbnail {
@@ -44,4 +58,19 @@
 
 #tags > a {
     margin-bottom: 5px;
+
+/*.affix {
+  margin-top: 30px;
+  position: fixed;
+}
+.affix-top {
+}
+.affix-bottom {
+  position: absolute;
+}*/
+
+@media screen and (max-width: 768px) {
+    .affix {
+        position: relative;
+    }
 }

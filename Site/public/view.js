@@ -25,10 +25,9 @@ function clickTag(tag) {
     }
 
     $.ajax({
-        url: '/api/webm/' + webmId,
+        url: '/api/webm/' + webmId + '/tags',
         type: 'PUT',
         data: {
-            property: 'tags',
             action: action,
             value: tag.dataset.tag
         }
@@ -54,10 +53,9 @@ function addNewTag() {
     document.getElementById('tags').innerHTML += tagHtml;
 
     $.ajax({
-        url: '/api/webm/' + webmId,
+        url: '/api/webm/' + webmId + '/tags',
         type: 'PUT',
         data: {
-            property: 'tags',
             action: 'add',
             value: tag
         }
@@ -71,6 +69,89 @@ document.getElementById('webm').addEventListener('volumechange', function () {
     localStorage.volume = this.volume;
 });
 
+
+// ------------------------------------------------------------------------------
+// likeGroup events
+
+/**
+ * Save property in localStorage and send to server
+ * @param item
+ * @param property
+ * @param url
+ * @param opposite
+ * @returns {Boolean|undefined} - if undefined property is set return undefined
+ */
+function addToStore(item, property, url, opposite) {
+    var store;
+    try {
+        store = JSON.parse(localStorage.getItem("store")); //json
+    } catch (ex) {
+    }
+
+    if (!store) {
+        store = {};
+    }
+    if (!store[property]) {
+        store[property] = [];
+    }
+
+    if (opposite && store[opposite].indexOf(_id) !== -1) { // for like/dislike
+        return;
+    }
+
+    var add;
+    var indexItem = store[property].indexOf(_id);
+    if (indexItem === -1) {
+        add = true;
+    } else {
+        add = false;
+    }
+
+
+    if (add) {
+        store[property].push(_id);
+        item.classList.add('enabled');
+    } else {
+        store[property].splice(indexItem, 1);
+        item.classList.remove('enabled');
+    }
+
+    localStorage.store = JSON.stringify(store);
+
+    $.ajax({
+        url: '/api/webm/' + webmId + '/' + url,
+        type: 'PUT',
+        data: {
+            increment: add
+        }
+    });
+
+    return add;
+}
+
+document.getElementById('favorite').addEventListener('click', function (event) {
+    addToStore(this, 'favorites', 'favoriteCount');
+});
+
+document.getElementById('like').addEventListener('click', function (event) {
+    var add = addToStore(this, 'likes', 'likeCount', 'dislikes');
+    if (add === undefined) {
+        return;
+    }
+
+    var el = document.getElementById('likeCount');
+    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
+});
+
+document.getElementById('dislike').addEventListener('click', function (event) {
+    var add = addToStore(this, 'dislikes', 'dislikeCount', 'likes');
+    if (add === undefined) {
+        return;
+    }
+
+    var el = document.getElementById('dislikeCount');
+    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
+});
 
 // ------------------------------------------------------------------------------
 // navigation events
@@ -128,6 +209,27 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById(navigation).classList.add('enabled');
     } else {
         document.getElementById('likeABoss').classList.add('enabled');
+    }
+
+
+    // set favorite from localStorage
+    var store = {};
+    try {
+        store = JSON.parse(localStorage.getItem("store")); //json
+    } catch (ex) {
+        return;
+    }
+
+    if (store && store.favorites && store.favorites.indexOf(_id) !== -1) {
+        document.getElementById("favorite").classList.add('enabled');
+    }
+
+    if (store && store.likes && store.likes.indexOf(_id) !== -1) {
+        document.getElementById("like").classList.add('enabled');
+    }
+
+    if (store && store.dislikes && store.dislikes.indexOf(_id) !== -1) {
+        document.getElementById("dislike").classList.add('enabled');
     }
 });
 

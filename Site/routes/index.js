@@ -116,6 +116,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 res.render('view', {
                     title: config.get('projectName') + ' #' + id,
                     id: id,
+                    webm: webm,
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     tags: webm.tags,
@@ -190,6 +191,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                 res.render('edit', {
                     title: config.get('projectName') + ' edit #' + id,
                     id: id,
+                    webm: webm,
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     tags: tags,
