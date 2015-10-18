@@ -25,7 +25,7 @@ function clickTag(tag) {
     }
 
     $.ajax({
-        url: '/api/webm/' + webmId,
+        url: '/api/webm/' + webmId + '/tags',
         type: 'PUT',
         data: {
             property: 'tags',
@@ -54,7 +54,7 @@ function addNewTag() {
     document.getElementById('tags').innerHTML += tagHtml;
 
     $.ajax({
-        url: '/api/webm/' + webmId,
+        url: '/api/webm/' + webmId + '/tags',
         type: 'PUT',
         data: {
             property: 'tags',

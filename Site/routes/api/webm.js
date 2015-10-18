@@ -90,35 +90,36 @@ router.get('/moar', function (req, res) {
  *
  * @params property, action, value
  */
-router.put('/:id([0-9]+)', function (req, res) {
-    if (req.body.property === "tags" && (req.body.action === 'add' || req.body.action === 'remove') && req.body.value) {
-        log.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
-            login: req.user ? req.user.login : null,
-            seqid: req.params.id,
-            property: req.body.property,
-            action: req.body.action,
-            value: req.body.value
-        });
+router.put('/:id([0-9]+)/tags', function (req, res) {
+    if (!(req.body.action === 'add' || req.body.action === 'remove') || !req.body.value) {
+        res.status(400).end();
+        return;
+    }
 
-        var action;
-        if (req.body.action === 'add') {
-            action = {$addToSet: {tags: req.body.value}};
-        } else {
-            action = {$pull: {tags: req.body.value}};
+    log.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
+        login: req.user ? req.user.login : null,
+        seqid: req.params.id,
+        property: req.body.property,
+        action: req.body.action,
+        value: req.body.value
+    });
+
+    var action;
+    if (req.body.action === 'add') {
+        action = {$addToSet: {tags: req.body.value}};
+    } else {
+        action = {$pull: {tags: req.body.value}};
+    }
+
+    Webm.update({seqid: req.params.id}, action, function (err) {
+        if (err) {
+            log.error(err);
+            res.status(500).end();
+            return;
         }
 
-        Webm.update({seqid: req.params.id}, action, function (err) {
-            if (err) {
-                log.error(err);
-                res.status(500).end();
-                return;
-            }
-
-            res.status(200).end();
-        });
-    } else {
-        res.status(400).end();
-    }
+        res.status(200).end();
+    });
 });
 
 
