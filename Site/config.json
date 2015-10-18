@@ -20,5 +20,6 @@
     "subject": "Добро пожаловать!",
     "text": "login: %s\r\nsecret: %s\r\n%s",
     "html": ""
-  }
+  },
+  "tagsLimitOnIndex": 20
 }

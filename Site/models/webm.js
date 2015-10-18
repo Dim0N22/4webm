@@ -93,7 +93,9 @@ webmSchema.statics.countByTags = function (params, done) {
         {$match: {$and: conditions}},
         {$project: {_id: 0, tags: 1}},
         {$unwind: "$tags"},
-        {$group: {_id: "$tags", count: {$sum: 1}}}
+        {$group: {_id: "$tags", count: {$sum: 1}}},
+        {$sort: {count: -1}},
+        {$limit: config.get('tagsLimitOnIndex')}
     ];
 
     var cachedData = cache.get(JSON.stringify(operators));
