@@ -126,7 +126,12 @@ function addToStore(item, property, url, opposite) {
         }
     });
 
-    return add;
+    if (add === undefined) {
+        return;
+    }
+
+    var el = document.getElementById(url);
+    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
 }
 
 document.getElementById('favorite').addEventListener('click', function (event) {
@@ -134,23 +139,11 @@ document.getElementById('favorite').addEventListener('click', function (event) {
 });
 
 document.getElementById('like').addEventListener('click', function (event) {
-    var add = addToStore(this, 'likes', 'likeCount', 'dislikes');
-    if (add === undefined) {
-        return;
-    }
-
-    var el = document.getElementById('likeCount');
-    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
+    addToStore(this, 'likes', 'likeCount', 'dislikes');
 });
 
 document.getElementById('dislike').addEventListener('click', function (event) {
-    var add = addToStore(this, 'dislikes', 'dislikeCount', 'likes');
-    if (add === undefined) {
-        return;
-    }
-
-    var el = document.getElementById('dislikeCount');
-    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
+    addToStore(this, 'dislikes', 'dislikeCount', 'likes');
 });
 
 // ------------------------------------------------------------------------------

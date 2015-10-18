@@ -10,13 +10,16 @@
             <div class="pull-right">
                 <div id="likeGroup" class="btn-group" role="group">
                     <a type="button" id="favorite" class="btn btn-link btn-xs" title="Добавить в избранное">
-                        <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                        <span id="favoriteCount"><%= webm.favoriteCount || 0 %></span>
                     </a>
                     <a type="button" id="like" class="btn btn-link btn-xs" title="Нравится">
-                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span><span id="likeCount" class="badge"><%= webm.likeCount || 0 %></span>
+                        <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                        <span id="likeCount"><%= webm.likeCount || 0 %></span>
                     </a>
                     <a type="button" id="dislike" class="btn btn-link btn-xs" title="Не нравится">
-                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> <span id="dislikeCount" class="badge"><%= webm.dislikeCount || 0 %></span>
+                        <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                        <span id="dislikeCount"><%= webm.dislikeCount || 0 %></span>
                     </a>
                 </div>
                 <div id="navigation" class="btn-group" role="group" aria-label="...">

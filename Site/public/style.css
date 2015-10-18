@@ -12,7 +12,7 @@
     border-radius: 30px;
 }
 
-#navigation > .enabled, #likeGroup > .enabled{
+#navigation > .enabled, #likeGroup > .enabled {
     color: green;
 }
 
@@ -20,17 +20,25 @@
     color: black;
 }
 
-#favorite.enabled {
-    color: red;
+#favorite.enabled .glyphicon {
+    color: yellow;
+
+    /*border for star icon*/
+    text-shadow: -1.1px 0 black, 0 1.1px black, 1.1px 0 black, 0 -1.1px black;
+}
+
+/*remove underline*/
+#likeGroup a:hover {
+    text-decoration: none !important
+}
+
+.enabled > #favoriteCount {
+    color: black;
 }
 
 @media screen and (min-width: 768px) {
     #likeGroup {
         margin-right: 15px;
-    }
-
-    #favorite {
-        margin-right: 5px;
     }
 }
 
@@ -52,7 +60,7 @@
     white-space: pre;
 }
 
-.share-init a{
+.share-init a {
     opacity: 0.5;
 }
 
