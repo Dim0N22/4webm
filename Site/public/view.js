@@ -73,6 +73,50 @@ document.getElementById('webm').addEventListener('volumechange', function () {
 
 
 // ------------------------------------------------------------------------------
+// likeGroup events
+document.getElementById('favorite').addEventListener('click', function (event) {
+    var store;
+    try {
+        store = JSON.parse(localStorage.getItem("store")); //json
+    } catch (ex) {
+    }
+
+    if (!store) {
+        store = {};
+    }
+    if (!store.favorites) {
+        store.favorites = [];
+    }
+
+    var addToFavorite;
+    var indexItem = store.favorites.indexOf(_id);
+    if (indexItem === -1) {
+        addToFavorite = true;
+    } else {
+        addToFavorite = false;
+    }
+
+
+    if (addToFavorite) {
+        store.favorites.push(_id);
+        this.classList.add('enabled');
+    } else {
+        store.favorites.splice(indexItem, 1);
+        this.classList.remove('enabled');
+    }
+
+    localStorage.store = JSON.stringify(store);
+});
+
+document.getElementById('like').addEventListener('click', function (event) {
+
+});
+
+document.getElementById('dislike').addEventListener('click', function (event) {
+
+});
+
+// ------------------------------------------------------------------------------
 // navigation events
 
 document.getElementById('navigation').addEventListener('click', function (event) {
@@ -128,6 +172,19 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById(navigation).classList.add('enabled');
     } else {
         document.getElementById('likeABoss').classList.add('enabled');
+    }
+
+
+    // set favorite from localStorage
+    var store = {};
+    try {
+        store = JSON.parse(localStorage.getItem("store")); //json
+    } catch (ex) {
+        return;
+    }
+
+    if (store && store.favorites && store.favorites.indexOf(_id) !== -1) {
+        document.getElementById("favorite").classList.add('enabled');
     }
 });
 

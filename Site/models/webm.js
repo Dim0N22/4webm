@@ -16,7 +16,10 @@ var webmSchema = new Schema({
     tags: [String],
     time_wasted: Number,
     doubles: [Schema.Types.ObjectId],
-    isDouble: Boolean
+    isDouble: Boolean,
+    likeCount: Number,
+    dislikeCount: Number,
+    favoriteCount: Number
 });
 
 
