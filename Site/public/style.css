@@ -12,7 +12,7 @@
     border-radius: 30px;
 }
 
-#navigation > .enabled {
+#navigation > .enabled, #likeGroup > .enabled{
     color: green;
 }
 

@@ -72,7 +72,16 @@ document.getElementById('webm').addEventListener('volumechange', function () {
 
 // ------------------------------------------------------------------------------
 // likeGroup events
-document.getElementById('favorite').addEventListener('click', function (event) {
+
+/**
+ * Save property in localStorage and send to server
+ * @param item
+ * @param property
+ * @param url
+ * @param opposite
+ * @returns {Boolean|undefined} - if undefined property is set return undefined
+ */
+function addToStore(item, property, url, opposite) {
     var store;
     try {
         store = JSON.parse(localStorage.getItem("store")); //json
@@ -82,44 +91,66 @@ document.getElementById('favorite').addEventListener('click', function (event) {
     if (!store) {
         store = {};
     }
-    if (!store.favorites) {
-        store.favorites = [];
+    if (!store[property]) {
+        store[property] = [];
     }
 
-    var addToFavorite;
-    var indexItem = store.favorites.indexOf(_id);
+    if (opposite && store[opposite].indexOf(_id) !== -1) { // for like/dislike
+        return;
+    }
+
+    var add;
+    var indexItem = store[property].indexOf(_id);
     if (indexItem === -1) {
-        addToFavorite = true;
+        add = true;
     } else {
-        addToFavorite = false;
+        add = false;
     }
 
 
-    if (addToFavorite) {
-        store.favorites.push(_id);
-        this.classList.add('enabled');
+    if (add) {
+        store[property].push(_id);
+        item.classList.add('enabled');
     } else {
-        store.favorites.splice(indexItem, 1);
-        this.classList.remove('enabled');
+        store[property].splice(indexItem, 1);
+        item.classList.remove('enabled');
     }
 
     localStorage.store = JSON.stringify(store);
 
     $.ajax({
-        url: '/api/webm/' + webmId + '/favoriteCount',
+        url: '/api/webm/' + webmId + '/' + url,
         type: 'PUT',
         data: {
-            increment : addToFavorite
+            increment: add
         }
     });
+
+    return add;
+}
+
+document.getElementById('favorite').addEventListener('click', function (event) {
+    addToStore(this, 'favorites', 'favoriteCount');
 });
 
 document.getElementById('like').addEventListener('click', function (event) {
+    var add = addToStore(this, 'likes', 'likeCount', 'dislikes');
+    if (add === undefined) {
+        return;
+    }
 
+    var el = document.getElementById('likeCount');
+    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
 });
 
 document.getElementById('dislike').addEventListener('click', function (event) {
+    var add = addToStore(this, 'dislikes', 'dislikeCount', 'likes');
+    if (add === undefined) {
+        return;
+    }
 
+    var el = document.getElementById('dislikeCount');
+    el.innerHTML = Number(el.innerHTML) + (add ? 1 : -1);
 });
 
 // ------------------------------------------------------------------------------
@@ -191,6 +222,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (store && store.favorites && store.favorites.indexOf(_id) !== -1) {
         document.getElementById("favorite").classList.add('enabled');
+    }
+
+    if (store && store.likes && store.likes.indexOf(_id) !== -1) {
+        document.getElementById("like").classList.add('enabled');
+    }
+
+    if (store && store.dislikes && store.dislikes.indexOf(_id) !== -1) {
+        document.getElementById("dislike").classList.add('enabled');
     }
 });
 
