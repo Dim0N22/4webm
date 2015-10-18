@@ -28,7 +28,6 @@ function clickTag(tag) {
         url: '/api/webm/' + webmId + '/tags',
         type: 'PUT',
         data: {
-            property: 'tags',
             action: action,
             value: tag.dataset.tag
         }
@@ -57,7 +56,6 @@ function addNewTag() {
         url: '/api/webm/' + webmId + '/tags',
         type: 'PUT',
         data: {
-            property: 'tags',
             action: 'add',
             value: tag
         }
@@ -106,6 +104,14 @@ document.getElementById('favorite').addEventListener('click', function (event) {
     }
 
     localStorage.store = JSON.stringify(store);
+
+    $.ajax({
+        url: '/api/webm/' + webmId + '/favoriteCount',
+        type: 'PUT',
+        data: {
+            increment : addToFavorite
+        }
+    });
 });
 
 document.getElementById('like').addEventListener('click', function (event) {
