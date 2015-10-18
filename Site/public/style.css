@@ -33,3 +33,15 @@
 .container-margin-top {
     margin-top: 4%
 }
+
+.share-init {
+    white-space: pre;
+}
+
+.row-tags {
+    margin-top: 5px
+}
+
+#tags > a {
+    margin-bottom: 5px;
+}

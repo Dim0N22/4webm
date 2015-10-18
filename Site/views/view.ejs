@@ -28,26 +28,31 @@
                 <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
             </a>
         </div>
-        <div class="col-md-8">
 
+        <div class="col-md-8">
             <div class="embed-responsive embed-responsive-16by9">
                 <video id="webm" class="embed-responsive-item" controls>
                     <source src="<%= videoSrc %>" type="video/webm">
                     Your browser does not support HTML5 video.
                 </video>
             </div>
-
-            <br>
-
-            <% tags.forEach(function(tag){ %>
-            <span class="label label-default"><%= tag.toString() %></span>
-            <% }); %>
-
         </div>
+
         <div class="col-md-2 hidden-xs hidden-sm navigate-arrow">
             <a id="next" href="<%= nextHref %>">
                 <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
             </a>
+        </div>
+    </div>
+
+    <div class="row row-tags">
+        <div class="col-md-offset-2 col-xs-11 col-md-7">
+            <% tags.forEach(function(tag){ %>
+            <span class="label label-default"><%= tag.toString() %></span>
+            <% }); %>
+        </div>
+        <div class="col-xs-1">
+            <div class="share-init pull-right" data-image="<%= previewSrc %>"></div>
         </div>
     </div>
 </div>
@@ -59,3 +64,4 @@
 
 <script src="/vendors/mousetrap.min.js"></script>
 <script src="/view.js"></script>
+<script src="/vendors/share/s.js"></script>

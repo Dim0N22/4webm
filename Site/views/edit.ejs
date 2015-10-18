@@ -39,20 +39,21 @@
         </div>
     </div>
 
-    <div class="row" style="margin-top: 10px">
-        <div class="col-md-2 hidden-xs hidden-sm"></div>
-        <div class="col-md-8">
+    <div class="row row-tags">
+        <div class="col-md-7 col-xs-11 col-md-offset-2">
             <div id="tags">
                 <% tags.forEach(function(tag){ %>
                 <a type="button"
-                   class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %>"
-                   style="margin-top: 5px"
+                   class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %> btn-tag"
                    data-tag="<%= tag.name %>"
                    onclick="clickTag(this);"><%= tag.name %></a>
                 <% }); %>
             </div>
         </div>
-        <div class="col-md-2 hidden-xs hidden-sm"></div>
+
+        <div class="col-xs-1">
+            <div class="share-init pull-right" data-image="<%= previewSrc %>"></div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-2 hidden-xs hidden-sm"></div>
@@ -84,3 +85,4 @@
 
 <script src="/vendors/mousetrap.min.js"></script>
 <script src="/view.js"></script>
+<script src="/vendors/share/s.js"></script>
