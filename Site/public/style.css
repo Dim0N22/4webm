@@ -33,3 +33,19 @@
 .container-margin-top {
     margin-top: 4%
 }
+
+/*.affix {
+  margin-top: 30px;
+  position: fixed;
+}
+.affix-top {
+}
+.affix-bottom {
+  position: absolute;
+}*/
+
+@media screen and (max-width: 768px) {
+    .affix{
+        position: relative;
+    }
+}
