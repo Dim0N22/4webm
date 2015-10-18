@@ -95,7 +95,7 @@ function addToStore(item, property, url, opposite) {
         store[property] = [];
     }
 
-    if (opposite && store[opposite].indexOf(webmId) !== -1) { // for like/dislike
+    if (opposite && store[opposite] && store[opposite].indexOf(webmId) !== -1) { // for like/dislike
         return;
     }
 
