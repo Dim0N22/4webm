@@ -52,6 +52,14 @@
     white-space: pre;
 }
 
+.share-init a{
+    opacity: 0.5;
+}
+
+.share-init a:hover {
+    opacity: 1;
+}
+
 .row-tags {
     margin-top: 5px
 }
