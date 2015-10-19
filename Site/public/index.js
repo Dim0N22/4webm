@@ -36,7 +36,7 @@ function generateWebmsGridHtml(webms, viewPath) {
         var html = '';
         for (var j = 0; j < 4 && i + j < webms.length; j++) {
             html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
-            html += '#' + webms[i + j].seqid;
+            html += '<em>#' + webms[i + j].seqid + '</em>';
 
             html += '<a href="' + viewPath + webms[i + j].seqid + '" class="thumbnail">';
             html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';

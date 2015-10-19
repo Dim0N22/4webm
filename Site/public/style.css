@@ -74,6 +74,7 @@
 
 #tags > a {
     margin-bottom: 5px;
+    font-size: 11px;
 }
 
 /*.affix {
@@ -145,3 +146,21 @@
     font-weight: normal
 }
 
+.btn-success > .tag-name {
+    color: #fff;
+}
+
+/*danger tag*/
+#danger.btn-success {
+    background-color: #d43f3a;
+}
+
+/*color for badge in selected tag*/
+.btn-success .badge {
+    background-color: inherit!important;
+    color: #fff!important;
+}
+
+em {
+    font-size: 12px;
+}
