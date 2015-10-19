@@ -5,15 +5,14 @@ import (
 	"flag"
 	"io/ioutil"
 	"net/http"
-	"sort"
 
 	"4webm/cloudflare-bypasser"
 	"fmt"
 	"github.com/streadway/amqp"
 	"gopkg.in/mgo.v2"
 	"net/url"
-	"regexp"
 	"strconv"
+	"time"
 )
 
 func check(e error) {
@@ -61,62 +60,53 @@ func main() {
 	proxyUrl, err := url.Parse(*ProxyUrl)
 	check(err)
 	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
-
-	req, err := http.NewRequest("GET", "http://2ch.hk/b/threads.json", nil)
+	req, err := http.NewRequest("GET", "", nil)
 	check(err)
 
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36")
 	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
 	req.Header.Set("Accept-Language", "ru,en-US;q=0.8,en;q=0.6")
 	req.Header.Set("Cache-Control", "no-cache")
-	req.Header.Set("Referer", "http://2ch.hk/b/threads.json")
-	resp, err := client.Do(req)
+	req.Header.Set("Referer", "http://2ch.hk/b/")
 
-	if resp.StatusCode == *ERROR_CODE {
-		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL, proxyUrl)
+	pages := []string{"index", "1", "2", "3", "4", "5"}
+	var resultPages []topThreads
+	for i, page := range pages {
+		fmt.Println("Парсим страницу №: " + strconv.Itoa(i))
+
+		req.URL, err = url.Parse("http://2ch.hk/b/" + page + ".json")
+		check(err)
+		resp, err := client.Do(req)
+
+		if resp.StatusCode == *ERROR_CODE {
+			cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL, proxyUrl)
+			check(err)
+
+			fmt.Println(cookie)
+
+			req.AddCookie(cookie)
+			resp, err = client.Do(req)
+			check(err)
+		}
+
+		body, err := ioutil.ReadAll(resp.Body)
+		check(err)
+		defer resp.Body.Close()
+
+		var threads topThreads
+		err = json.Unmarshal(body, &threads)
 		check(err)
 
-		fmt.Println(cookie)
+		fmt.Println("Получили " + strconv.Itoa(len(threads.Threads)) + " тредов")
 
-		req.AddCookie(cookie)
-		resp, err = client.Do(req)
-		check(err)
+		resultPages = append(resultPages, threads)
+		time.Sleep(1 * time.Second)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-
-	var threads topThreads
-	err = json.Unmarshal(body, &threads)
-	check(err)
-
-	fmt.Println("Парсим json")
-	fmt.Println("Количество тредов: " + strconv.Itoa(len(threads.Threads)))
-	sort.Sort(byViews(threads.Threads))
-
-	total := len(threads.Threads)
-	for i, thread := range threads.Threads {
-		fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
-
-		thread.GetWebmLinks(*req, *client)
-	}
-
-	fmt.Println("Парсим главную")
-	req.URL, _ = url.Parse("http://2ch.hk/b/")
-	resp, err = client.Do(req)
-	check(err)
-
-	body, err = ioutil.ReadAll(resp.Body)
-	check(err)
-	defer resp.Body.Close()
-
-	re := regexp.MustCompile("<a class=\"orange\" href=\"\\/b\\/res\\/([0-9]+).html\">Ответ<\\/a>")
-	threadNums := re.FindAllStringSubmatch(string(body), -1)
-	total = len(threadNums)
-	for i, match := range threadNums {
-		fmt.Println("Процессим тред № " + strconv.Itoa(i+1) + " из " + strconv.Itoa(total))
-		thread := thread{Num: match[1]}
-		thread.GetWebmLinks(*req, *client)
-		fmt.Println()
+	for i, page := range resultPages {
+		for j, thread := range page.Threads {
+			fmt.Println("Парсим тред №: " + strconv.Itoa(j) + " со страницы №: " + strconv.Itoa(i))
+			thread.GetWebmLinks(*req, *client)
+		}
 	}
 }

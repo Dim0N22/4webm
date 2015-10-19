@@ -1,6 +1,6 @@
 package main
 
 type topThreads struct {
-	Board   string   `json:"board"`
+	Board   string   `json:"Board"`
 	Threads []thread `json:"threads"`
 }
