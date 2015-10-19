@@ -86,36 +86,66 @@
   position: absolute;
 }*/
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
     .affix {
         position: relative;
+    }
+
+    .index-tags {
+        text-align:center;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .index-tags > a {
+        width: 150px;
+    }
+
+
+
+    .index-tags > a > span.tag-name {
+        width: 75%;
+    }
+
+    .index-tags > a > span.tag-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+
+}
+
+@media screen and (min-width: 1200px) {
+    .index-tags > a {
+        width: 180px;
     }
 }
 
 .index-tags > a {
-    width: 100%;
     margin-top: 3px;
     margin-bottom: 3px;
     padding-top: 2px;
     padding-left: 10px;
     border: none;
-    background-color: #e7e7e7;
-    font-size: 15px;
+    color: #555;
+    font-size: 11px;
     text-align: left;
     text-transform: capitalize;
 }
 
-.index-tags > a > span.badge {
-    color: black;
-    font-size: 15px;
-    background-color: #e7e7e7;
-    width: 25%;
-    text-align: right;
+.index-tags > a .btn-success, .index-tags > a > span.badge .btn-success{
+    background-color: #5cb85c;
 }
 
-.index-tags > a > span.tag-name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    width: 70%;
+.index-tags > a .btn-default, .index-tags > a > span.badge .btn-default{
+    background-color: #e7e7e7;
 }
+
+.index-tags > a > span.badge {
+    font-size: 11px;
+    background-color: #e7e7e7;
+    color: #555;
+    text-align: right;
+    font-weight: normal
+}
+

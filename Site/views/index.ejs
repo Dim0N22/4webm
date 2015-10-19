@@ -2,16 +2,19 @@
 
 <div class="container">
     <div class="row">
-        <div id="tags" class="col-md-2 index-tags">
-            <% tags.forEach(function(tag){ %>
-            <a id="<%= tag._id %>" class="btn btn-default btn-xs tag-radius" type="button" onclick="clickTag(this);">
-                <span class="tag-name pull-left"> <%= tag._id %> </span> <span class="badge pull-right"
-                                                                               style="margin: 2px"><%= tag.count %></span>
+        <div id="tags" class="col-md-2">
+            <div class="index-tags hidden-print" data-spy="affix" role="complementary" data-offset-top="0">
+                <% tags.forEach(function(tag){ %>
+                <a id="<%= tag._id %>" class="btn btn-default btn-xs tag-radius" type="button" onclick="clickTag(this);" title="<%= tag._id %>">
+                    <span class="tag-name pull-left"> <%= tag._id %> </span>
+                    <span class="badge pull-right" style="margin: 2px"><%= tag.count %></span>
                 </a>
+
                 <div class="visible-md-block visible-lg-block">
                     <!-- for new line-->
                 </div>
-            <% }); %>
+                <% }); %>
+            </div>
         </div>
         <div class="col-md-10">
             <%- include('partials/webmsGrid', {webms: webms, viewPath: viewPath}) -%>

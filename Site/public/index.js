@@ -56,7 +56,7 @@ function generateTagsHtml(tags) {
         return '';
     }
 
-    var html = '<div class="well hidden-print" data-spy="affix" role="complementary" data-offset-top="0">';
+    var html = '<div class="index-tags hidden-print" data-spy="affix" role="complementary" data-offset-top="0">';
     for (var i = 0; i < tags.length; i++) {
         html += '<a id="' + tags[i]._id + '" class="btn ';
 
@@ -66,9 +66,12 @@ function generateTagsHtml(tags) {
             html += ' btn-default ';
         }
 
-        html += ' btn-xs tag-radius" type="button" style="margin-top: 3px; margin-bottom: 3px;" onclick="clickTag(this);">';
-        html += tags[i]._id.toString() + ' <span class="badge">' + tags[i].count + '</span></a> ';
-        html += '<div class="visible-md-block visible-lg-block"></div>';
+        html += ' btn-xs tag-radius" type="button" onclick="clickTag(this);" title="' + tags[i]._id.toString() + '">';
+
+        html += '<span class="tag-name pull-left">' + tags[i]._id.toString() + '</span>';
+        html += '<span class="badge pull-right" style="margin: 2px">' + tags[i].count + '</span>';
+
+        html += '</a><div class="visible-md-block visible-lg-block"></div>';
     }
     html += '</div>';
     return html;
