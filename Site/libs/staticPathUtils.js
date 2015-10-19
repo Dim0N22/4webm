@@ -2,9 +2,6 @@ var url = require('url');
 var config = require('./config');
 
 module.exports.resolvePreviewSrc = function (path) {
-    console.log(config.homePath);
-    console.log(config.get('homePath'));
-
     if (process.env.NODE_ENV === 'production') {
         return String(path).slice(2).replace(config.get('homePath'), '') + '.300x300.jpg';
     } else {
