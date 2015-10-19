@@ -12,13 +12,9 @@ import (
 )
 
 type thread struct {
-	Num       string  `json:"num"`
-	Score     float32 `json:"score"`
-	Subject   string  `json:"subject"`
-	Timestamp int     `json:"timestamp"`
-	Views     int     `json:"views"`
-	Board     string  `json:"Board"`
-	Threads   []struct {
+	Num     string `json:"thread_num"`
+	Board   string `json:"Board"`
+	Threads []struct {
 		Posts []struct {
 			Comment   string `json:"comment"`
 			Timestamp int64  `json:"timestamp"`
@@ -30,20 +26,6 @@ type thread struct {
 			} `json:"files"`
 		} `json:"posts"`
 	} `json:"threads" `
-}
-
-type byViews []thread
-
-func (slice byViews) Len() int {
-	return len(slice)
-}
-
-func (slice byViews) Less(i, j int) bool {
-	return slice[i].Views > slice[j].Views
-}
-
-func (slice byViews) Swap(i, j int) {
-	slice[i], slice[j] = slice[j], slice[i]
 }
 
 func (th thread) GetWebmLinks(req http.Request, client http.Client) {
