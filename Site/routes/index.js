@@ -195,6 +195,7 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     webm: webm,
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
+                    shareUrl: url.format({protocol: req.protocol, host: req.hostname, pathname: String(id)}),
                     tags: tags,
                     prevHref: '/edit/' + prevId,
                     nextHref: '/edit/' + nextId,
