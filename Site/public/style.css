@@ -92,7 +92,7 @@
     }
 
     .index-tags {
-        text-align:center;
+        text-align: center;
     }
 }
 
@@ -100,8 +100,6 @@
     .index-tags > a {
         width: 150px;
     }
-
-
 
     .index-tags > a > span.tag-name {
         width: 75%;
@@ -112,7 +110,6 @@
         text-overflow: ellipsis;
         display: inline-block;
     }
-
 }
 
 @media screen and (min-width: 1200px) {
@@ -130,14 +127,13 @@
     color: #555;
     font-size: 11px;
     text-align: left;
-    text-transform: capitalize;
 }
 
-.index-tags > a .btn-success, .index-tags > a > span.badge .btn-success{
+.index-tags > a .btn-success, .index-tags > a > span.badge .btn-success {
     background-color: #5cb85c;
 }
 
-.index-tags > a .btn-default, .index-tags > a > span.badge .btn-default{
+.index-tags > a .btn-default, .index-tags > a > span.badge .btn-default {
     background-color: #e7e7e7;
 }
 
