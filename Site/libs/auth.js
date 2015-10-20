@@ -64,6 +64,16 @@ function isAuthenticated(role) {
     return auth;
 }
 
+function isAuthenticatedForEditPage(req, res, next) {
+    if (!req.user) {
+        res.redirect(req.url);
+        return;
+    }
+
+    next();
+}
+
+
 /** hash password */
 function getHash(password) {
     return crypto.createHash('sha512').update(password).digest('hex');
@@ -98,6 +108,7 @@ function secret(size) {
 }
 
 module.exports.isAuthenticated = isAuthenticated;
+module.exports.isAuthenticatedForEditPage = isAuthenticatedForEditPage;
 module.exports.setUserFromToken = setUserFromToken;
 module.exports.getHash = getHash;
 module.exports.token = token;
