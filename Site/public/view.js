@@ -65,11 +65,6 @@ function addNewTag() {
 }
 
 
-document.getElementById('webm').addEventListener('volumechange', function () {
-    localStorage.volume = this.volume;
-});
-
-
 // ------------------------------------------------------------------------------
 // likeGroup events
 
@@ -147,7 +142,7 @@ document.getElementById('dislike').addEventListener('click', function (event) {
 });
 
 // ------------------------------------------------------------------------------
-// navigation events
+// navigation events and manage volume
 
 document.getElementById('navigation').addEventListener('click', function (event) {
     var navigation = event.target.dataset.navigation || event.target.parentNode.dataset.navigation;
@@ -172,10 +167,10 @@ document.getElementById('webm').addEventListener('ended', function () {
 
     switch (navigation) {
         case 'autoPrev':
-            prev();
+            viewHotkeysNextPrev.prev();
             break;
         case 'autoNext':
-            next();
+            viewHotkeysNextPrev.next();
             break;
         case 'autoCycle':
             var video = document.getElementById('webm');
@@ -183,6 +178,10 @@ document.getElementById('webm').addEventListener('ended', function () {
             video.play();
             break;
     }
+});
+
+document.getElementById('webm').addEventListener('volumechange', function () {
+    localStorage.volume = this.volume;
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -225,47 +224,3 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("dislike").classList.add('enabled');
     }
 });
-
-
-// ------------------------------------------------------------------------------
-// hotkeys
-Mousetrap.bind('right', next);
-Mousetrap.bind('left', prev);
-Mousetrap.bind('space', startStopVideo);
-Mousetrap.bind('up', upVolume);
-Mousetrap.bind('down', downVolume);
-Mousetrap.bind('ctrl+right', rewindForward);
-Mousetrap.bind('ctrl+left', rewindBack);
-
-function next() {
-    document.getElementById('next').click();
-}
-
-function prev() {
-    document.getElementById('prev').click();
-}
-
-function startStopVideo() {
-    var video = document.getElementById('webm');
-    video.paused ? video.play() : video.pause();
-}
-
-function upVolume() {
-    var video = document.getElementById('webm');
-    video.volume += 0.1;
-}
-
-function downVolume() {
-    var video = document.getElementById('webm');
-    video.volume -= 0.1;
-}
-
-function rewindForward() {
-    var video = document.getElementById('webm');
-    video.currentTime += 5;
-}
-
-function rewindBack() {
-    var video = document.getElementById('webm');
-    video.currentTime -= 5;
-}

@@ -1,14 +1,4 @@
-var doubleView = {
-    init: function () {
-        this.bindUIActions();
-    },
-
-    bindUIActions: function () {
-        //hotkeys
-        Mousetrap.bind('right', this.next);
-        Mousetrap.bind('left', this.prev);
-    },
-
+var doublesView = {
     double: function (isDouble, id, el) {
         $.ajax({
             url: '/api/doubles/' + id,
@@ -26,14 +16,5 @@ var doubleView = {
                 el.parentElement.children[1].classList.remove('active');
             }
         });
-    },
-
-    next: function () {
-        document.getElementById('next').click();
-    },
-
-    prev: function () {
-        document.getElementById('prev').click();
     }
-
 };

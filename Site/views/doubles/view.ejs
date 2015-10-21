@@ -30,8 +30,8 @@
                 <div class="panel-footer">
 
                     <div class="btn-group" role="group">
-                        <button type="button" data-action="delete" class="btn btn-default <% if (double.isDouble === true) { %> active <% } %>" onclick="doubleView.double(true, '<%= double._id %>', this)">Дубликат</button>
-                        <button type="button" data-action="cancel" class="btn btn-default <% if (double.isDouble === false) { %> active <% } %>" onclick="doubleView.double(false, '<%= double._id %>', this)">Не Дубликат</button>
+                        <button type="button" data-action="delete" class="btn btn-default <% if (double.isDouble === true) { %> active <% } %>" onclick="doublesView.double(true, '<%= double._id %>', this)">Дубликат</button>
+                        <button type="button" data-action="cancel" class="btn btn-default <% if (double.isDouble === false) { %> active <% } %>" onclick="doublesView.double(false, '<%= double._id %>', this)">Не Дубликат</button>
                     </div>
                 </div>
                 <% } %>
@@ -54,10 +54,11 @@
     var webmId = '<%= id %>';
     document.addEventListener("DOMContentLoaded", function () {
         swipe.init();
-        doubleView.init();
+        viewHotkeysNextPrev.init();
     });
 </script>
 
 <script src="/vendors/mousetrap.min.js"></script>
-<script src="/swipe.js"></script>
+<script src="/view/swipe.js"></script>
 <script src="/doubles/view.js"></script>
+<script src="/view/viewHotkeysNextPrev.js"></script>
