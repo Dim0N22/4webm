@@ -102,8 +102,12 @@
 
 <script>
     var webmId = '<%= id %>';
+    document.addEventListener("DOMContentLoaded", function () {
+        swipe.init();
+    });
 </script>
 
 <script src="/vendors/mousetrap.min.js"></script>
+<script src="/swipe.js"></script>
 <script src="/view.js"></script>
 <script data-cfasync="false" src="/vendors/share/s.js"></script>

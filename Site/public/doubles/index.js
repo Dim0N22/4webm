@@ -1,32 +1,7 @@
 var loading = false;
 var loadedSeqIdSet = new Set();
 var prevSeqid = lastSeqid; // prevSeqid use in onscroll event and lastSeqid at this time can be changed (if new page loaded but page/number not yet changed)
-var selectedTags;
 
-function generateWebmsGridHtml(webms, viewPath) {
-    if (!webms) {
-        return '';
-    }
-    var docfrag = document.createDocumentFragment();
-    for (var i = 0; i < webms.length; i = i + 4) {
-        var div = document.createElement("div");
-        div.className = "row";
-        var html = '';
-        for (var j = 0; j < 4 && i + j < webms.length; j++) {
-            html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
-            html += '<em>#' + webms[i + j].seqid + '</em>';
-
-            html += '<a href="' + viewPath + webms[i + j].seqid + '" class="thumbnail">';
-            html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';
-            html += '</a>';
-            html += '</div>';
-        }
-        div.innerHTML = html;
-        docfrag.appendChild(div);
-    }
-
-    return docfrag;
-}
 
 function moarWebms() {
     if (loading) {
