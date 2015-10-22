@@ -16,10 +16,6 @@
     color: green;
 }
 
-#likeABoss.enabled {
-    color: black;
-}
-
 #favorite.enabled .glyphicon {
     color: yellow;
 
