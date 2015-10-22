@@ -25,10 +25,7 @@ var viewActions = {
 
         if (navigation) {
             document.getElementById(navigation).classList.add('enabled');
-        } else {
-            document.getElementById('likeABoss').classList.add('enabled');
         }
-
 
         // set favorite from localStorage
         var store = {};
@@ -143,6 +140,16 @@ var viewActions = {
                 return;
             }
 
+
+            var el = event.target;
+            if (el.classList.contains('enabled')) {
+                // click on enable button means disable function
+                localStorage.navigation = null;
+                el.classList.remove('enabled');
+                return;
+            }
+
+            // set function
             localStorage.navigation = navigation;
 
             for (var i = 0; i < this.children.length; i++) {
