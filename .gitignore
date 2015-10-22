@@ -73,3 +73,4 @@ _testmain.go
 
 Site/.idea/
 Site/node_modules
+Site/public/build
