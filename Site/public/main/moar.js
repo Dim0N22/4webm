@@ -6,10 +6,15 @@ var moar = {
     loadedSeqIdSet: new Set(),
     prevSeqid: this.lastSeqid, // prevSeqid use in onscroll event and lastSeqid at this time can be changed (if new page loaded but page/number not yet changed)
     apiMoarUrl: null,
+    pagePrefixInUrl: '',
 
-    init: function (lastSeqid, apiMoarUrl) {
+    init: function (lastSeqid, apiMoarUrl, pagePrefixInUrl) {
         this.lastSeqid = lastSeqid;
         this.apiMoarUrl = apiMoarUrl;
+
+        if (pagePrefixInUrl) {
+            this.pagePrefixInUrl = pagePrefixInUrl;
+        }
 
         document.body.scrollTop = 0;
         this.bindUIActions();
@@ -61,7 +66,7 @@ var moar = {
         var elemBottom = elemTop + el.offsetHeight;
         if ((elemTop <= docViewBottom) /*&& (elemTop >= docViewTop)*/) {
             var page = (Number(window.location.pathname.slice(14)) || 1) + 1;
-            window.history.pushState(null, null, '/doubles/page/' + page);
+            window.history.pushState(null, null, this.pagePrefixInUrl + '/page/' + page);
             this.loadedSeqIdSet.add(String(this.lastSeqid));
             this.prevSeqid = this.lastSeqid;
         }
