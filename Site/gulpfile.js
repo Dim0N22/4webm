@@ -6,11 +6,17 @@ var filesize = require('gulp-size');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 
-
+var srcJs = ['./public/**/*.js', '!./public/vendors/**', '!./public/build/**'];
+var srcVendorJs = [
+    './public/vendors/js/jquery-2.1.4.min.js',
+    './public/vendors/js/bootstrap.min.js',
+    './public/vendors/js/js.cookie-2.0.3.min.js',
+    './public/vendors/js/mousetrap.min.js'
+];
 var destBuild = './public/build/';
 
 gulp.task('js', function () {
-    gulp.src(['./public/**/*.js', '!./public/vendors/**', '!./public/build/**'])
+    gulp.src(srcJs)
         .pipe(using({}))
         .pipe(sourcemaps.init())
         .pipe(concat('app.js'))
@@ -23,12 +29,7 @@ gulp.task('js', function () {
 });
 
 gulp.task('vendor_js', function () {
-    return gulp.src([
-        './public/vendors/js/jquery-2.1.4.min.js',
-        './public/vendors/js/bootstrap.min.js',
-        './public/vendors/js/js.cookie-2.0.3.min.js',
-        './public/vendors/js/mousetrap.min.js'
-    ]) // jquery must be first
+    return gulp.src(srcVendorJs) // jquery must be first
         .pipe(using({}))
         .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(concat('vendor.js'))
@@ -40,3 +41,7 @@ gulp.task('vendor_js', function () {
 });
 
 gulp.task('default', ['js', 'vendor_js']);
+
+gulp.task('watch', function(){
+    gulp.watch(srcJs, ['js']);
+});
