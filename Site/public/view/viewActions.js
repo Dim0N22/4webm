@@ -116,6 +116,7 @@ var viewActions = {
 
     bindUIActions: function () {
         var self = this;
+
         // ------------------------------------------------------------------------------
         // likeGroup events
 
@@ -173,11 +174,33 @@ var viewActions = {
                     viewHotkeysNextPrev.next();
                     break;
                 case 'autoCycle':
-                    var video = document.getElementById('webm');
-                    video.currentTime = 0;
-                    video.play();
+                    this.currentTime = 0;
+                    this.play();
                     break;
             }
+        });
+
+
+        // ------------------------------------------------------------------------------
+        // play by click
+        document.getElementById('webm').addEventListener('click', function (e) {
+            // check control section
+            var clickY = (e.pageY - this.getBoundingClientRect().top);
+            var height = parseFloat(this.clientHeight);
+
+            // avoids interference with controls
+            if (clickY > 0.82 * height) {
+                return;
+            }
+
+
+            if (this.paused === false) {
+                this.pause();
+            } else {
+                this.play();
+            }
+
+            return false;
         });
     }
 };
