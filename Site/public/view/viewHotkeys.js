@@ -13,7 +13,11 @@ var viewHotkeys = {
 
     startStopVideo: function () {
         var video = document.getElementById('webm');
-        video.paused ? video.play() : video.pause();
+        if (video.paused) {
+            video.play();
+        } else {
+            video.pause();
+        }
         return false;
     },
 

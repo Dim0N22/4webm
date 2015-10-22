@@ -1,9 +1,12 @@
+/*global generateWebmsGridHtml */
+
 var favorites = {
     init: function () {
         var store;
         try {
             store = JSON.parse(localStorage.getItem("store")); //json
         } catch (ex) {
+            console.log(ex);
         }
 
         if (!store || !store.favorites) {

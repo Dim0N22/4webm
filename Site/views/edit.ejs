@@ -62,7 +62,7 @@
                 <a type="button"
                    class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %> btn-tag"
                    data-tag="<%= tag.name %>"
-                   onclick="clickTag(this);"><%= tag.name %></a>
+                   onclick="editTags.clickTag(this);"><%= tag.name %></a>
                 <% }); %>
             </div>
         </div>
@@ -82,7 +82,7 @@
             <div class="input-group">
                 <input type="text" id="newTag" class="form-control" placeholder="Новый тег">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button" onclick="addNewTag()">Добавить</button>
+                <button class="btn btn-default" type="button" onclick="editTags.addNewTag()">Добавить</button>
               </span>
             </div>
         </div>
@@ -91,7 +91,7 @@
             <button type="button"
                     class="btn <% if (danger) { %> btn-danger <% } else{ %> btn-default <% } %> pull-right btn-block"
                     data-tag="danger"
-                    onclick="clickTag(this);">
+                    onclick="editTags.clickTag(this);">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Пожаловаться
             </button>
         </div>
@@ -106,6 +106,7 @@
         swipe.init();
         viewHotkeys.init();
         viewHotkeysNextPrev.init();
+        editTags.init(webmId);
     });
 </script>
 
@@ -114,4 +115,5 @@
 <script src="/view.js"></script>
 <script src="/view/viewHotkeys.js"></script>
 <script src="/view/viewHotkeysNextPrev.js"></script>
+<script src="/view/editTags.js"></script>
 <script data-cfasync="false" src="/vendors/share/s.js"></script>
