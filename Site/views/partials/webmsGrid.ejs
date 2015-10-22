@@ -5,7 +5,7 @@
         <div class="col-xs-12 col-sm-6 col-md-3" id="div<%= webms[i + j].seqid %>">
             <em>#<%= webms[i + j].seqid %></em>
 
-            <a href="<%= viewPath + webms[i + j].seqid %>" class="thumbnail">
+            <a href="<%= viewPath + webms[i + j].seqid %>" class="thumbnail" title="<%= webms[i + j].createDate %>">
                 <div class="thumbnail inner-thumbnail" style="background-image: url(<%= webms[i + j].previewSrc %>)"></div>
             </a>
         </div>

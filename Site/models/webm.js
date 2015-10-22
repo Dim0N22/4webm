@@ -23,6 +23,11 @@ var webmSchema = new Schema({
 });
 
 
+function formatDate(date) {
+    return date.toISOString().replace(/T/, ' ').slice(0,16);
+}
+
+
 /**
  * Get webms by criteria
  * @param {Object} params - tags, lastSeqid, hideDanger, page
@@ -44,7 +49,7 @@ webmSchema.statics.getWebms = function (params, done) {
         conditions.push({tags: {$nin: ['danger']}});
     }
 
-    var query = this.find({$and: conditions}, 'seqid file_info.path').sort({seqid: -1});
+    var query = this.find({$and: conditions}, 'seqid file_info.path create_date').sort({seqid: -1});
 
     if (params && params.page) {
         query = query.skip(config.get('webmsPerPage') * (params.page - 1));
@@ -61,6 +66,7 @@ webmSchema.statics.getWebms = function (params, done) {
             for (var i = 0; i < webmsdb.length; i++) {
                 webms.push({
                     seqid: webmsdb[i].seqid,
+                    createDate: formatDate(webmsdb[i].create_date),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webmsdb[i].file_info.path)
                 });
             }
@@ -130,7 +136,7 @@ webmSchema.statics.getDoubles = function (params, done) {
         conditions.push({_id: {$lt: params.lastSeqid}});
     }
 
-    var query = this.find({$and: conditions}, '_id file_info.path doubles').sort({_id: -1});
+    var query = this.find({$and: conditions}, '_id file_info.path doubles create_date').sort({_id: -1});
 
     if (params && params.page) {
         query = query.skip(config.get('webmsPerPage') * (params.page - 1));
@@ -148,6 +154,7 @@ webmSchema.statics.getDoubles = function (params, done) {
                 webms.push({
                     seqid: webmsdb[i]._id,
                     doubles: webmsdb[i].doubles,
+                    createDate: formatDate(webmsdb[i].create_date),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webmsdb[i].file_info.path)
                 });
             }

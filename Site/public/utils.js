@@ -12,7 +12,7 @@ var utils = {
                 html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
                 html += '<em>#' + webms[i + j].seqid + '</em>';
 
-                html += '<a href="' + viewPath + webms[i + j].seqid + '" class="thumbnail">';
+                html += '<a href="' + viewPath + webms[i + j].seqid + '" class="thumbnail" title="' + webms[i + j].createDate + '">';
                 html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';
                 html += '</a>';
                 html += '</div>';
