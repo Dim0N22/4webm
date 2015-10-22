@@ -143,7 +143,6 @@ router.put('/:id([0-9]+)/:property(favoriteCount|likeCount|dislikeCount)', funct
             break;
     }
 
-
     Webm.update({seqid: req.params.id}, action, function (err) {
         if (err) {
             log.error(err);
@@ -155,5 +154,29 @@ router.put('/:id([0-9]+)/:property(favoriteCount|likeCount|dislikeCount)', funct
     });
 });
 
+router.put('/:id([0-9]+)/view', function (req, res) {
+    if (!req.body.secondsViewed) {
+        res.status(400).end();
+        return;
+    }
+
+    var action = {$inc: {secondsViewed: req.body.secondsViewed, views: 1}};
+
+    log.info('view', {
+        login: req.user ? req.user.login : null,
+        seqid: req.params.id,
+        secondsViewed: req.body.secondsViewed
+    });
+
+    Webm.update({seqid: req.params.id}, action, function (err) {
+        if (err) {
+            log.error(err);
+            res.status(500).end();
+            return;
+        }
+
+        res.status(200).end();
+    });
+});
 
 module.exports = router;

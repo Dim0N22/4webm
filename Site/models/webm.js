@@ -19,7 +19,9 @@ var webmSchema = new Schema({
     isDouble: Boolean,
     likeCount: Number,
     dislikeCount: Number,
-    favoriteCount: Number
+    favoriteCount: Number,
+    secondsViewed: Number,
+    views: Number,
 });
 
 

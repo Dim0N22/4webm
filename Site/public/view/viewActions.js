@@ -116,6 +116,7 @@ var viewActions = {
 
     bindUIActions: function () {
         var self = this;
+        var webmElement = document.getElementById('webm');
 
         // ------------------------------------------------------------------------------
         // likeGroup events
@@ -156,14 +157,14 @@ var viewActions = {
 
         // ------------------------------------------------------------------------------
         // manage volume
-        document.getElementById('webm').addEventListener('volumechange', function () {
+        webmElement.addEventListener('volumechange', function () {
             localStorage.volume = this.volume;
         });
 
 
         // ------------------------------------------------------------------------------
         // action after video end
-        document.getElementById('webm').addEventListener('ended', function () {
+        webmElement.addEventListener('ended', function () {
             var navigation = localStorage.getItem("navigation");
 
             switch (navigation) {
@@ -183,7 +184,7 @@ var viewActions = {
 
         // ------------------------------------------------------------------------------
         // play by click
-        document.getElementById('webm').addEventListener('click', function (e) {
+        webmElement.addEventListener('click', function (e) {
             // check control section
             var clickY = (e.pageY - this.getBoundingClientRect().top);
             var height = parseFloat(this.clientHeight);
@@ -201,6 +202,44 @@ var viewActions = {
             }
 
             return false;
+        });
+
+        var timeTracker = (function (webmElement) {
+            var timePlayed = 0;
+            var lastTime = 0;
+
+            return {
+                tick: function () {
+                    var delta = Math.abs(webmElement.currentTime - lastTime);
+                    if (delta < 1) {
+                        timePlayed += delta;
+                    }
+                    lastTime = webmElement.currentTime;
+                },
+                getPlayingTime: function () {
+                    return timePlayed;
+                },
+                getPlayingPercent: function () {
+                    return timePlayed / webmElement.duration;
+                }
+            }
+        })(webmElement);
+
+        webmElement.addEventListener('timeupdate', function (e) {
+            timeTracker.tick();
+        });
+
+        window.addEventListener('beforeunload', function (e) {
+            var percenedPlayed = timeTracker.getPlayingPercent();
+            if (percenedPlayed >= 0.5) {
+                $.ajax({
+                    url: '/api/webm/' + self.webmId + '/view',
+                    type: 'PUT',
+                    data: {
+                        secondsViewed: timeTracker.getPlayingTime()
+                    }
+                });
+            }
         });
     }
 };
