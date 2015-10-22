@@ -1,4 +1,4 @@
-/*global generateWebmsGridHtml */
+/*global utils */
 
 var mainTags = {
     lastSeqid: null,
@@ -55,7 +55,7 @@ var mainTags = {
                 html += ' btn-default ';
             }
 
-            html += ' btn-xs tag-radius" type="button" onclick="clickTag(this);" title="' + tags[i]._id.toString() + '">';
+            html += ' btn-xs tag-radius" type="button" onclick="mainTags.clickTag(this);" title="' + tags[i]._id.toString() + '">';
 
             html += '<span class="tag-name pull-left">' + tags[i]._id.toString() + '</span>';
             html += '<span class="badge pull-right" style="margin: 2px">' + tags[i].count + '</span>';
@@ -79,7 +79,7 @@ var mainTags = {
             document.getElementById('tags').innerHTML = self.generateTagsHtml(data.tags);
             var webmsGrid = document.getElementById('webmsGrid');
             webmsGrid.innerHTML = '';
-            webmsGrid.appendChild(generateWebmsGridHtml(data.webms, data.viewPath));
+            webmsGrid.appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath));
             self.lastSeqid = data.lastSeqid;
 
             // paging

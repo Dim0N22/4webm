@@ -1,4 +1,4 @@
-/*global generateWebmsGridHtml */
+/*global utils */
 
 var moar = {
     lastSeqid: null,
@@ -29,7 +29,7 @@ var moar = {
 
         $.get(this.apiMoarUrl, {lastSeqid: self.lastSeqid}).done(function (data) {
             if (data) {
-                document.getElementById('webmsGrid').appendChild(generateWebmsGridHtml(data.webms, data.viewPath));
+                document.getElementById('webmsGrid').appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath));
                 self.lastSeqid = data.lastSeqid;
             }
         }).always(function () {

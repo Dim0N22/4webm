@@ -1,4 +1,4 @@
-/*global generateWebmsGridHtml */
+/*global utils */
 
 var favorites = {
     init: function () {
@@ -27,7 +27,7 @@ var favorites = {
                 webmsGrid.innerHTML = '';
 
                 if (data.webms.length > 0) {
-                    webmsGrid.appendChild(generateWebmsGridHtml(data.webms, data.viewPath));
+                    webmsGrid.appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath));
                 } else {
                     document.getElementById('message').classList.remove('hidden');
                 }
