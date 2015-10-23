@@ -141,7 +141,7 @@ var viewActions = {
             }
 
 
-            var el = event.target;
+            var el = document.getElementById(navigation);
             if (el.classList.contains('enabled')) {
                 // click on enable button means disable function
                 localStorage.navigation = null;
@@ -229,7 +229,7 @@ var viewActions = {
                 getPlayingPercent: function () {
                     return timePlayed / webmElement.duration;
                 }
-            }
+            };
         })(webmElement);
 
         webmElement.addEventListener('timeupdate', function (e) {
