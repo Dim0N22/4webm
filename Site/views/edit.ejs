@@ -8,9 +8,11 @@
                 <em>#<%= id %></em>
             </div>
             <div class="pull-right">
+                <span title="Просмотров" style="color: #337ab7">
+                    <span class="glyphicon glyphicon-eye-open btn-xs"></span>
+                    <span id="viewsCount"><%= webm.views || 0 %></span>
+                </span>
                 <div id="likeGroup" class="btn-group" role="group">
-                    <span title="Просмотров" style="color: #337ab7" class="pull-left"><span
-                                class="glyphicon glyphicon-eye-open btn-xs"></span><%= webm.views || 0 %></span>
                     <a type="button" id="favorite" class="btn btn-link btn-xs" title="Добавить в избранное">
                         <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                         <span id="favoriteCount"><%= webm.favoriteCount || 0 %></span>

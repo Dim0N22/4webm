@@ -153,10 +153,14 @@
 
 /*color for badge in selected tag*/
 .btn-success .badge {
-    background-color: inherit!important;
-    color: #fff!important;
+    background-color: inherit !important;
+    color: #fff !important;
 }
 
 em {
+    font-size: 12px;
+}
+
+#viewsCount {
     font-size: 12px;
 }
