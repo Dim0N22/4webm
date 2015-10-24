@@ -175,6 +175,33 @@ webmSchema.statics.getDoubles = function (params, done) {
         });
 };
 
+/**
+ * Get top by views
+ * @count count of webms
+ * @param {Function} done
+ */
+webmSchema.statics.getViewsTop = function (count, done) {
+    var query = this.find({seqid: {$exists: true}}, 'seqid file_info.path create_date').sort({viewsCount: -1});
+
+    query.limit(count)
+        .exec(function (err, webmsdb) {
+            if (err) {
+                done(err);
+                return;
+            }
+
+            var webms = [];
+            for (var i = 0; i < webmsdb.length; i++) {
+                webms.push({
+                    seqid: webmsdb[i].seqid,
+                    createDate: formatDate(webmsdb[i].create_date),
+                    previewSrc: staticPathUtils.resolvePreviewSrc(webmsdb[i].file_info.path)
+                });
+            }
+
+            done(null, webms);
+        });
+};
 
 var Webm = mongoose.model('Webm', webmSchema);
 
