@@ -164,3 +164,19 @@ em {
 #viewsCount {
     font-size: 12px;
 }
+
+/*comments*/
+#messages .panel-heading {
+    padding: 0px;
+    border-bottom: none;
+    padding-left: 3px;
+}
+
+#messages .panel-body {
+    padding: 10px;
+    white-space: pre-line;
+}
+
+#messages .panel {
+    margin-bottom: 5px;
+}

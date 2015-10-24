@@ -15,6 +15,7 @@ var comments = {
         self.elName.value = username;
 
         self.elComment = document.getElementById('comment');
+        self.elMessages = document.getElementById('messages');
 
         self.initSocket();
     },
@@ -41,7 +42,7 @@ var comments = {
         });
 
 
-        socket.on('connect', function(){
+        socket.on('connect', function () {
             socket.emit('join', self.webmId);
         });
 
@@ -50,7 +51,15 @@ var comments = {
         });
     },
 
-    printMessage : function (data) {
-        $('#messages').append($('<li>').text(data.msg));
+    printMessage: function (data) {
+        var self = this;
+
+        var item = '';
+        item += '<li><div class="panel panel-default panel-default">';
+        item += '<div class="panel-heading">' + data.name + ' ' + data.date.toLocaleString() + '</div>';
+        item += '<div class="panel-body">';
+        item += data.msg;
+        item += '</div></div></li>';
+        self.elMessages.innerHTML = item + self.elMessages.innerHTML;
     }
 };
