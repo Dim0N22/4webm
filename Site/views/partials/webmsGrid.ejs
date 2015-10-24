@@ -6,16 +6,14 @@
                     <h3 class="panel-title">Топ просмотров</h3>
                 </div>
                 <div class="panel-body">
-                    <% for (var i = 0; i < viewsTop.length; i++ ) { %>
-                    <div class="col-xs-6" id="div<%= viewsTop[i].seqid %>">
-                        <em>#<%= viewsTop[i].seqid %></em>
+                    <% for (var i = 0; i < viewsTop.length; i++ ) {%>
+                        <div class="col-xs-6" id="div<%= viewsTop[i].seqid %>">
+                            <em>#<%= viewsTop[i].seqid %></em>
 
-                        <a href="<%= viewPath + viewsTop[i].seqid %>" class="thumbnail"
-                           title="<%= viewsTop[i].createDate %>">
-                            <div class="thumbnail inner-thumbnail"
-                                 style="background-image: url(<%= viewsTop[i].previewSrc %>)"></div>
-                        </a>
-                    </div>
+                            <a href="<%= viewPath + viewsTop[i].seqid %>" class="thumbnail" title="<%= viewsTop[i].createDate %>">
+                                <div class="thumbnail inner-thumbnail" style="background-image: url(<%= viewsTop[i].previewSrc %>)"></div>
+                            </a>
+                        </div>
                     <% } %>
                 </div>
             </div>
