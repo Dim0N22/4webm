@@ -160,7 +160,7 @@ router.put('/:id([0-9]+)/view', function (req, res) {
         return;
     }
 
-    var action = {$inc: {secondsViewed: req.body.secondsViewed, views: 1}};
+    var action = {$inc: {secondsViewed: req.body.secondsViewed, viewsCount: 1}};
 
     log.info('view', {
         login: req.user ? req.user.login : null,

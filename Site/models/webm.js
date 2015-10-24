@@ -21,7 +21,7 @@ var webmSchema = new Schema({
     dislikeCount: Number,
     favoriteCount: Number,
     secondsViewed: Number,
-    views: Number,
+    viewsCount: Number
 });
 
 
