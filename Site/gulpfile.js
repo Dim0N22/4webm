@@ -40,8 +40,11 @@ gulp.task('vendor_js', function () {
         .on('error', gutil.log);
 });
 
-gulp.task('default', ['js', 'vendor_js']);
 
-gulp.task('watch', function(){
+gulp.task('watch', function () {
     gulp.watch(srcJs, ['js']);
 });
+
+gulp.task('default', ['js', 'vendor_js', 'watch']);
+
+gulp.task('build', ['js', 'vendor_js']);
