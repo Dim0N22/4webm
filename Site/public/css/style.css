@@ -180,3 +180,15 @@ em {
 #messages .panel {
     margin-bottom: 5px;
 }
+
+.tops .panel-title {
+    font-size: 13px;
+}
+
+.tops .panel-body {
+    padding: 5px;
+}
+
+.tops .panel-body a {
+    margin-bottom: 5px;
+}
