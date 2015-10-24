@@ -34,7 +34,7 @@ router.get('/', function (req, res) {
             params.lastSeqid = req.query.lastSeqid;
         }
 
-        Webm.getViewsTop(2, function (err, viewsTop) {
+        Webm.getViewsTop(2, function(err, viewsTop){
             Webm.getWebms(params, function (err, result) {
                 if (err) {
                     log.error(err);

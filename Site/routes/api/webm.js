@@ -155,12 +155,15 @@ router.put('/:id([0-9]+)/:property(favoriteCount|likeCount|dislikeCount)', funct
 });
 
 router.put('/:id([0-9]+)/view', function (req, res) {
-    if (!req.body.secondsViewed) {
+    if (!req.body.secondsViewed || !req.body.percentViewed) {
         res.status(400).end();
         return;
     }
 
-    var action = {$inc: {secondsViewed: req.body.secondsViewed, viewsCount: 1}};
+    var action = {$inc: {secondsViewed: req.body.secondsViewed}};
+    if (req.body.percentViewed > 0.5) {
+        action.$inc.viewsCount = 1;
+    }
 
     log.info('view', {
         login: req.user ? req.user.login : null,
