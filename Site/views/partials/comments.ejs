@@ -15,7 +15,7 @@
     </div>
     <div class="panel-body">
         <ul id="messages" class="list-unstyled">
-            <% webm.comments.forEach(function(comment){ %>
+            <% webm.comments && webm.comments.forEach(function(comment){ %>
             <li>
                 <div class="panel panel-default panel-default">
                     <div class="panel-heading"><%= comment.name + ' ' + new Date(comment.date).toLocaleString("ru-RU") %></div>
