@@ -22,7 +22,7 @@ module.exports = function (server) {
 
             process.nextTick(function () {
                 msg.ip = socket.handshake.address;
-                Webm.update({seqid: socket.room}, {$addToSet: {comments: msg}}, function (err) {
+                Webm.update({seqid: socket.room}, {$addToSet: {comments: msg}, $inc: {commentsCount: 1}}, function (err) {
                     if (err) {
                         log.error(err);
                         return;

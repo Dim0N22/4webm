@@ -22,6 +22,7 @@ var webmSchema = new Schema({
     favoriteCount: Number,
     secondsViewed: Number,
     viewsCount: Number,
+    commentsCount: Number,
     comments: [{
         name: String,
         msg: String,
