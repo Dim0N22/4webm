@@ -75,11 +75,11 @@
         </div>
     </div>
 
-
+    <br>
     <div class="row row-tags">
         <div class="col-md-2 hidden-xs hidden-sm"></div>
         <div class="col-md-8 col-xs-12 col-sm-12">
-            <!--<%- include('partials/comments') -%>-->
+            <%- include('partials/comments') -%>
         </div>
         <div class="col-md-2 hidden-xs hidden-sm"></div>
     </div>
@@ -88,10 +88,12 @@
 
 <script>
     var webmId = '<%= id %>';
+    var username = '<%= user && user.login %>';
     document.addEventListener("DOMContentLoaded", function () {
         swipe.init();
         viewHotkeys.init();
         viewHotkeysNextPrev.init();
         viewActions.init(webmId);
+        comments.init(webmId, username);
     });
 </script>

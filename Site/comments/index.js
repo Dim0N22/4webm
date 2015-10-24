@@ -10,14 +10,25 @@ module.exports = function (server) {
         io.adapter(redis(config.get('redis')));
     }
 
-    io.on('connection', function(socket){
-        console.log('a user connected');
-        socket.on('disconnect', function(){
-            console.log('user disconnected');
+    io.on('connection', function (socket) {
+        socket.on('join', function (room) {
+            socket.join(room);
+            socket.room = room;
         });
 
-        socket.on('chat message', function(msg){
-            io.emit('chat message', msg);
+        socket.on('message', function (msg, callback) {
+            socket.in(socket.room).emit('message', msg);
+            callback();
+
+            process.nextTick(function () {
+                msg.ip = socket.handshake.address;
+                Webm.update({seqid: socket.room}, {$addToSet: {comments: msg}}, function (err) {
+                    if (err) {
+                        log.error(err);
+                        return;
+                    }
+                });
+            });
         });
     });
 };

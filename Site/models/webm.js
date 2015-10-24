@@ -21,7 +21,13 @@ var webmSchema = new Schema({
     dislikeCount: Number,
     favoriteCount: Number,
     secondsViewed: Number,
-    viewsCount: Number
+    viewsCount: Number,
+    comments: [{
+        name: String,
+        msg: String,
+        date: Date,
+        ip: String
+    }]
 });
 
 

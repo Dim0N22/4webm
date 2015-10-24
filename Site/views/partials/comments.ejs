@@ -1,27 +1,19 @@
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
-    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
-</style>
-
-<ul id="messages"></ul>
-<form action="">
-    <input id="m" autocomplete="off" /><button>Send</button>
-</form>
-
-<script>
-    var socket = io();
-    $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-    });
-    socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-    });
-</script>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <form id="formComments" class="form-horizontal" role="form">
+            <div class="form-group row">
+                <div class="col-md-4 col-xs-8">
+                    <input id="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="Имя">
+                </div>
+                <div class="col-md-4 hidden-xs"></div>
+                <div class="col-md-4 col-xs-4 text-right">
+                    <button class="btn btn-default">Отправить</button>
+                </div>
+            </div>
+            <textarea id="comment" class="form-control" maxlength="140"></textarea>
+        </form>
+    </div>
+    <div class="panel-body">
+        <ul id="messages"></ul>
+    </div>
+</div>
