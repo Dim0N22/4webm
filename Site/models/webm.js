@@ -33,7 +33,7 @@ var webmSchema = new Schema({
 
 
 function formatDate(date) {
-    return date.toISOString().replace(/T/, ' ').slice(0,16);
+    return date.toLocaleString('ru-RU'); //date.toISOString().replace(/T/, ' ').slice(0,16);
 }
 
 
