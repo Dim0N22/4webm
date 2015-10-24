@@ -56,7 +56,7 @@ var comments = {
 
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
-        item += '<div class="panel-heading">' + data.name + ' ' + data.date.toLocaleString() + '</div>';
+        item += '<div class="panel-heading">' + data.name + ' ' + data.date.toLocaleString('ru-RU') + '</div>';
         item += '<div class="panel-body">';
         item += data.msg;
         item += '</div></div></li>';
