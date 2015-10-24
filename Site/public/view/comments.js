@@ -1,0 +1,5 @@
+var comments = {
+    init: function () {
+        //
+    }
+};

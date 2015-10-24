@@ -21,5 +21,9 @@
     "text": "login: %s\r\nsecret: %s\r\n%s",
     "html": ""
   },
-  "tagsLimitOnIndex": 20
+  "tagsLimitOnIndex": 20,
+  "redis": {
+    "host": "176.15.67.52",
+    "port": 6379
+  }
 }

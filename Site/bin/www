@@ -19,14 +19,19 @@ if (process.env.NODE_ENV === 'production') {
         console.log('Server running at http://localhost:' + config.get('port'));
     } else {
         var app = require('../app');
-        app.listen(config.get('port'), function () {
+        var server = app.listen(config.get('port'), function () {
             console.log('Worker ' + cluster.worker.id + ' running!');
         });
-    }
 
+        var io = require('../comments')(server);
+        app.set('io', io);
+    }
 } else {
     var app = require('../app');
-    app.listen(config.get('port'), function () {
+    var server = app.listen(config.get('port'), function () {
         console.log('Server running at http://localhost:' + config.get('port'));
     });
+
+    var io = require('../comments')(server);
+    app.set('io', io);
 }
