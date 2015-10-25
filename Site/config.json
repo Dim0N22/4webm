@@ -23,7 +23,7 @@
   },
   "tagsLimitOnIndex": 20,
   "redis": {
-    "host": "176.15.67.52",
+    "host": "localhost",
     "port": 6379
   }
 }
