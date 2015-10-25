@@ -33,7 +33,12 @@ var comments = {
             var name = self.elName.value || 'Аноним';
             localStorage.username = name; // set last name to localStorage
 
-            var data = {name: name, msg: self.elComment.value, date: new Date()};
+            var msg = self.elComment.value.trim();
+            if (!msg) {
+                return false;
+            }
+
+            var data = {name: name, msg: msg, when: new Date()};
             socket.emit('message', data, function () {
                 self.printMessage(data);
             });
@@ -56,10 +61,16 @@ var comments = {
 
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
-        item += '<div class="panel-heading">' + data.name + ' ' + data.date.toLocaleString('ru-RU') + '</div>';
+        item += '<div class="panel-heading">' + data.name + ' ' + data.when.toLocaleString('ru-RU') + '</div>';
         item += '<div class="panel-body">';
-        item += data.msg;
+        item += self.escapeHtml(data.msg);
         item += '</div></div></li>';
         self.elMessages.innerHTML = item + self.elMessages.innerHTML;
+    },
+
+    escapeHtml: function (str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
     }
 };
