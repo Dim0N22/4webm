@@ -61,7 +61,7 @@ var comments = {
 
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
-        item += '<div class="panel-heading">' + data.name + ' ' + data.when.toLocaleString('ru-RU') + '</div>';
+        item += '<div class="panel-heading">' + data.name + ' ' + new Date(data.when).toLocaleString('ru-RU') + '</div>';
         item += '<div class="panel-body">';
         item += self.escapeHtml(data.msg);
         item += '</div></div></li>';
