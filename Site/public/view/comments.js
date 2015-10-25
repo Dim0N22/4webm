@@ -63,8 +63,14 @@ var comments = {
         item += '<li><div class="panel panel-default panel-default">';
         item += '<div class="panel-heading">' + data.name + ' ' + data.when.toLocaleString('ru-RU') + '</div>';
         item += '<div class="panel-body">';
-        item += data.msg;
+        item += self.escapeHtml(data.msg);
         item += '</div></div></li>';
         self.elMessages.innerHTML = item + self.elMessages.innerHTML;
+    },
+
+    escapeHtml: function (str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
     }
 };
