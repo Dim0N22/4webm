@@ -24,6 +24,7 @@ var viewActions = {
         }
 
         if (navigation) {
+            console.log(navigation, typeof navigation);
             document.getElementById(navigation).classList.add('enabled');
         }
 
@@ -144,7 +145,7 @@ var viewActions = {
             var el = document.getElementById(navigation);
             if (el.classList.contains('enabled')) {
                 // click on enable button means disable function
-                localStorage.navigation = null;
+                localStorage.removeItem('navigation');
                 el.classList.remove('enabled');
                 return;
             }
