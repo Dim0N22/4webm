@@ -24,8 +24,12 @@ var viewActions = {
         }
 
         if (navigation) {
-            console.log(navigation, typeof navigation);
-            document.getElementById(navigation).classList.add('enabled');
+            var elNavigation = document.getElementById(navigation);
+            if (elNavigation === null) {
+                localStorage.removeItem('navigation');
+            } else {
+                elNavigation.classList.add('enabled');
+            }
         }
 
         // set favorite from localStorage
