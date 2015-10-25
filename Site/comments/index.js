@@ -18,7 +18,7 @@ module.exports = function (server) {
         });
 
         socket.on('message', function (msg, callback) {
-            socket.in(socket.room).emit('message', msg);
+            socket.broadcast.in(socket.room).emit('message', msg);
             callback();
 
             process.nextTick(function () {
