@@ -63,13 +63,16 @@
     </div>
 
     <div class="row row-tags">
-        <div class="col-md-offset-2 col-xs-11 col-md-7">
+        <div class="col-md-offset-2 col-xs-10 col-md-7">
             <% tags.forEach(function(tag){ %>
-            <span class="label label-default" style="font-weight: normal;"><%= tag.toString() %></span>
+                <span class="label label-default" style="font-weight: normal;"><%= tag.toString() %></span>
             <% }); %>
         </div>
-        <div class="col-xs-1">
-            <div class="share-init pull-right" data-image="<%= previewSrc %>"
+
+        <div class="col-xs-1 col-xs-offset-1 col-md-offset-0">
+            <div class="share-init pull-right"
+                 data-title="webm #<%= id %>"
+                 data-image="<%= previewSrc %>"
                  data-description="#webm #<%= id %>. <% tags.forEach(function(tag){ %> #<%= tag.toString() %> <% }); %>">
             </div>
         </div>

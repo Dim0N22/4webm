@@ -59,18 +59,18 @@
     </div>
 
     <div class="row row-tags">
-        <div class="col-md-7 col-xs-11 col-md-offset-2">
+        <div class="col-md-7 col-xs-10 col-md-offset-2">
             <div id="tags">
                 <% tags.forEach(function(tag){ %>
-                <a type="button"
-                   class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %> btn-tag"
-                   data-tag="<%= tag.name %>"
-                   onclick="editTags.clickTag(this);"><%= tag.name %></a>
+                    <a type="button"
+                       class="btn btn-xs tag-radius <% if (tag.enable) { %> btn-success <% } else{ %> btn-default <% } %> btn-tag"
+                       data-tag="<%= tag.name %>"
+                       onclick="editTags.clickTag(this);"><%= tag.name %></a>
                 <% }); %>
             </div>
         </div>
 
-        <div class="col-xs-1">
+        <div class="col-xs-1 col-xs-offset-1 col-sm-offset-0">
             <div class="share-init pull-right"
                  data-title="webm #<%= id %>"
                  data-url="<%= shareUrl %>"
