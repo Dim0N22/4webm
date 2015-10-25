@@ -1,6 +1,7 @@
 var url = require('url');
 var express = require('express');
 var Webm = require('../models/webm');
+var Comment = require('../models/comment');
 var Tag = require('../models/tag');
 var config = require('../libs/config');
 var log = require('../libs/log');
@@ -34,7 +35,7 @@ router.get('/', function (req, res) {
             params.lastSeqid = req.query.lastSeqid;
         }
 
-        Webm.getViewsTop(2, function(err, viewsTop){
+        Webm.getViewsTop(2, function (err, viewsTop) {
             Webm.getWebms(params, function (err, result) {
                 if (err) {
                     log.error(err);
@@ -112,20 +113,17 @@ router.get('/:id([0-9]+)', function (req, res) {
 
     var prevIdPromise = Webm.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
     var nextIdPromise = Webm.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
-    var curWebmPromise = Webm.findOne({$and: [conditions, {seqid: id}]}, {
-        comments: {
-            $slice: 100
-        },
-        hasharr: 0
-    }, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = Webm.findOne({$and: [conditions, {seqid: id}]}, {hasharr: 0}, {sort: {seqid: 1}}).exec();
+    var commentsPromise = Comment.find({seqid: id}, 'name msg when', {sort: {when: -1}}).exec();
 
-    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise])
+    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise, commentsPromise])
         .then(function (values) {
             function response(prevId, nextId) {
                 res.render('view', {
                     title: config.get('projectName') + ' #' + id,
                     id: id,
                     webm: webm,
+                    comments: comments,
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     tags: webm.tags,
@@ -140,11 +138,7 @@ router.get('/:id([0-9]+)', function (req, res) {
                 return;
             }
 
-            if (webm.comments) {
-                webm.comments.sort(function (a, b) {
-                    return b.date - a.date;
-                });
-            }
+            var comments = values[3];
 
             if (!values[0] && !values[1]) { // one webm on this criteria
                 response(id, id);
@@ -197,21 +191,18 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
 
     var prevIdPromise = Webm.findOne({$and: [conditions, {seqid: {$lt: id}}]}, {seqid: 1}, {sort: {seqid: -1}}).exec();
     var nextIdPromise = Webm.findOne({$and: [conditions, {seqid: {$gt: id}}]}, {seqid: 1}, {sort: {seqid: 1}}).exec();
-    var curWebmPromise = Webm.findOne({seqid: id}, {
-        comments: {
-            $slice: 100
-        },
-        hasharr: 0
-    }, {sort: {seqid: 1}}).exec();
+    var curWebmPromise = Webm.findOne({seqid: id}, {hasharr: 0}, {sort: {seqid: 1}}).exec();
     var tagsPromise = Tag.find().select('name').exec();
+    var commentsPromise = Comment.find({seqid: id}, 'name msg when', {sort: {when: -1}}).exec();
 
-    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise, tagsPromise])
+    Promise.all([prevIdPromise, nextIdPromise, curWebmPromise, tagsPromise, commentsPromise])
         .then(function (values) {
             function response(prevId, nextId) {
                 res.render('edit', {
                     title: config.get('projectName') + ' edit #' + id,
                     id: id,
                     webm: webm,
+                    comments: comments,
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     shareUrl: url.format({protocol: req.protocol, host: req.hostname, pathname: String(id)}),
@@ -224,17 +215,18 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
 
             var webm = values[2];
             var tags = values[3];
+            var comments = values[4];
 
             if (!webm) {
                 res.redirect('/');
                 return;
             }
 
-           if (webm.comments) {
-               webm.comments.sort(function (a, b) {
-                   return b.date - a.date;
-               });
-           }
+            if (webm.comments) {
+                webm.comments.sort(function (a, b) {
+                    return b.date - a.date;
+                });
+            }
 
             var danger = false;
             for (var k = 0; k < webm.tags.length; k++) {

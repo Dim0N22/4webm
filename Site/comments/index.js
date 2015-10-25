@@ -1,4 +1,5 @@
 var Webm = require('../models/webm');
+var Comment = require('../models/comment');
 var log = require('../libs/log');
 var config = require('../libs/config');
 
@@ -21,8 +22,16 @@ module.exports = function (server) {
             callback();
 
             process.nextTick(function () {
+                Webm.update({seqid: socket.room}, {$inc: {commentsCount: 1}}, function (err) {
+                    if (err) {
+                        log.error(err);
+                        return;
+                    }
+                });
+
                 msg.ip = socket.handshake.address;
-                Webm.update({seqid: socket.room}, {$addToSet: {comments: msg}, $inc: {commentsCount: 1}}, function (err) {
+                msg.seqid = socket.room;
+                Comment.create(msg, function (err) {
                     if (err) {
                         log.error(err);
                         return;
@@ -32,3 +41,5 @@ module.exports = function (server) {
         });
     });
 };
+
+Comment
