@@ -238,14 +238,16 @@ var viewActions = {
         });
 
         window.addEventListener('beforeunload', function (e) {
-            $.ajax({
-                url: '/api/webm/' + self.webmId + '/view',
-                type: 'PUT',
-                data: {
-                    secondsViewed: timeTracker.getPlayingTime(),
-                    percentViewed: timeTracker.getPlayingPercent()
-                }
-            });
+            if (timeTracker.getPlayingTime() > 0) {
+                $.ajax({
+                    url: '/api/webm/' + self.webmId + '/view',
+                    type: 'PUT',
+                    data: {
+                        secondsViewed: timeTracker.getPlayingTime(),
+                        percentViewed: timeTracker.getPlayingPercent()
+                    }
+                });
+            }
         });
     }
 };
