@@ -34,21 +34,24 @@ router.get('/', function (req, res) {
             params.lastSeqid = req.query.lastSeqid;
         }
 
-        Webm.getViewsTop(2, function(err, viewsTop){
-            Webm.getWebms(params, function (err, result) {
-                if (err) {
-                    log.error(err);
-                    res.status(500).end();
-                    return;
-                }
+        Webm.getTopByField({count: 2, field: 'viewsCount'}, function(err, viewsTop){
+            Webm.getTopByField({count: 2, field: 'commentsCount'}, function(err, commentsTop) {
+                Webm.getWebms(params, function (err, result) {
+                    if (err) {
+                        log.error(err);
+                        res.status(500).end();
+                        return;
+                    }
 
-                res.render('index', {
-                    title: config.get('projectName'),
-                    viewsTop: viewsTop,
-                    tags: tags,
-                    webms: result.webms,
-                    lastSeqid: result.lastSeqid,
-                    viewPath: '/' + (req.user ? 'edit/' : '')
+                    res.render('index', {
+                        title: config.get('projectName'),
+                        viewsTop: viewsTop,
+                        commentsTop: commentsTop,
+                        tags: tags,
+                        webms: result.webms,
+                        lastSeqid: result.lastSeqid,
+                        viewPath: '/' + (req.user ? 'edit/' : '')
+                    });
                 });
             });
         });

@@ -177,13 +177,13 @@ webmSchema.statics.getDoubles = function (params, done) {
 
 /**
  * Get top by views
- * @count count of webms
+ * @param {Object} params - count, field
  * @param {Function} done
  */
-webmSchema.statics.getViewsTop = function (count, done) {
-    var query = this.find({seqid: {$exists: true}}, 'seqid file_info.path create_date').sort({viewsCount: -1});
+webmSchema.statics.getTopByField = function (params, done) {
+    var query = this.find({seqid: {$exists: true}}, 'seqid file_info.path create_date').sort([[params.field, -1]]);
 
-    query.limit(count)
+    query.limit(params.count)
         .exec(function (err, webmsdb) {
             if (err) {
                 done(err);
