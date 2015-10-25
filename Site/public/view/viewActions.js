@@ -198,7 +198,7 @@ var viewActions = {
         // play by click
         webmElement.addEventListener('click', function (e) {
             // check control section
-            var clickY = (e.pageY - this.getBoundingClientRect().top);
+            var clickY = (e.pageY - this.getBoundingClientRect().top - this.scrollHeight);
             var height = parseFloat(this.clientHeight);
 
             // avoids interference with controls
