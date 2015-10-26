@@ -1,18 +1,19 @@
-/*global io */
+/*global io, utils*/
 
 var comments = {
     webmId: null,
     elName: null,
     elComment: null,
 
-    init: function (webmId, username) {
+    init: function (webmId) {
         var self = this;
         self.webmId = webmId;
 
         // set name
-        username = localStorage.username || username || 'Аноним';
         self.elName = document.getElementById('username');
-        self.elName.value = username;
+        if (localStorage.username) {
+            self.elName.value = localStorage.username;
+        }
 
         self.elComment = document.getElementById('comment');
         self.elMessages = document.getElementById('messages');
@@ -30,8 +31,13 @@ var comments = {
             event.preventDefault(); // don't submit form
 
             // last value of name
-            var name = self.elName.value || 'Аноним';
-            localStorage.username = name; // set last name to localStorage
+            var name = 'Аноним';
+            if (self.elName.value) {
+                name = self.elName.value;
+                localStorage.username = name; // set last name to localStorage
+            } else {
+                localStorage.removeItem('username');
+            }
 
             var msg = self.elComment.value.trim();
             if (!msg) {
@@ -61,7 +67,7 @@ var comments = {
 
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
-        item += '<div class="panel-heading">' + data.name + ' ' + (new Date(data.when)).toLocaleString('ru-RU') + '</div>';
+        item += '<div class="panel-heading">' + data.name + ' ' + utils.formatDate(new Date(data.when)) + '</div>';
         item += '<div class="panel-body">';
         item += self.escapeHtml(data.msg);
         item += '</div></div></li>';

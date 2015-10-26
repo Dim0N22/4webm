@@ -5,5 +5,7 @@ module.exports = function (req, res, next) {
     res.locals.user = req.user;
     res.locals.authorized = Boolean(req.user);
 
+    res.locals.formatDate = require('../libs/formatDate');
+
     next();
 };

@@ -114,13 +114,12 @@
 
 <script>
     var webmId = '<%= id %>';
-    var username = 'Аноним';
     document.addEventListener("DOMContentLoaded", function () {
         swipe.init();
         viewHotkeys.init();
         viewHotkeysNextPrev.init();
         editTags.init(webmId);
         viewActions.init(webmId);
-        comments.init(webmId, username);
+        comments.init(webmId);
     });
 </script>
