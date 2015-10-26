@@ -18,7 +18,7 @@
             <% comments.forEach(function(comment){ %>
             <li>
                 <div class="panel panel-default panel-default">
-                    <div class="panel-heading"><%= comment.name + ' ' + new Date(comment.when).toLocaleString("ru-RU") %></div>
+                    <div class="panel-heading"><%= comment.name + ' ' + (new Date(comment.when)).toLocaleString("ru-RU") %></div>
                     <div class="panel-body"><%= comment.msg %></div>
                 </div>
             </li>

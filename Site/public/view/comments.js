@@ -38,8 +38,8 @@ var comments = {
                 return false;
             }
 
-            var data = {name: name, msg: msg, when: new Date()};
-            socket.emit('message', data, function () {
+            var data = {name: name, msg: msg};
+            socket.emit('message', data, function (data) {
                 self.printMessage(data);
             });
             self.elComment.value = '';
@@ -61,7 +61,7 @@ var comments = {
 
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
-        item += '<div class="panel-heading">' + data.name + ' ' + new Date(data.when).toLocaleString('ru-RU') + '</div>';
+        item += '<div class="panel-heading">' + data.name + ' ' + (new Date(data.when)).toLocaleString('ru-RU') + '</div>';
         item += '<div class="panel-body">';
         item += self.escapeHtml(data.msg);
         item += '</div></div></li>';

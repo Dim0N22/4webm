@@ -20,7 +20,7 @@ module.exports = function (server) {
         socket.on('message', function (msg, callback) {
             msg.when = new Date();
             socket.broadcast.in(socket.room).emit('message', msg);
-            callback();
+            callback(msg);
 
             process.nextTick(function () {
                 Webm.update({seqid: socket.room}, {$inc: {commentsCount: 1}}, function (err) {
