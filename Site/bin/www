@@ -3,29 +3,23 @@
 var config = require('../libs/config');
 
 if (process.env.NODE_ENV === 'production') {
-    var cluster = require('cluster');
-    var numCPUs = require('os').cpus().length;
+    var sticky = require('sticky-cluster');
+    var options = {
+        concurrency: require('os').cpus().length,
+        port: config.get('port'),
+        debug: true
+    };
 
-    if (cluster.isMaster) {
-        for (var i = 0; i < numCPUs; i++) {
-            cluster.fork();
-        }
-
-        cluster.on('exit', function (worker) {
-            console.log('worker ' + worker.process.pid + ' died');
-            cluster.fork();
-        });
-
-        console.log('Server running at http://localhost:' + config.get('port'));
-    } else {
+    sticky(function (callback) {
+        var http = require('http');
         var app = require('../app');
-        var server = app.listen(config.get('port'), function () {
-            console.log('Worker ' + cluster.worker.id + ' running!');
-        });
+        var server = http.createServer(app);
 
         var io = require('../comments')(server);
         app.set('io', io);
-    }
+
+        callback(server);
+    }, options);
 } else {
     var app = require('../app');
     var server = app.listen(config.get('port'), function () {
