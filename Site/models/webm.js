@@ -4,6 +4,8 @@ var mongoose = require('../libs/mongoose');
 var config = require('../libs/config');
 var staticPathUtils = require('../libs/staticPathUtils');
 
+var formatDate = require('../libs/formatDate');
+
 var Schema = mongoose.Schema;
 
 var webmSchema = new Schema({
@@ -24,11 +26,6 @@ var webmSchema = new Schema({
     viewsCount: Number,
     commentsCount: Number
 });
-
-
-function formatDate(date) {
-    return date.toLocaleString('ru-RU'); //date.toISOString().replace(/T/, ' ').slice(0,16);
-}
 
 
 /**

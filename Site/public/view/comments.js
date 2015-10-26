@@ -1,4 +1,4 @@
-/*global io */
+/*global io, utils*/
 
 var comments = {
     webmId: null,
@@ -67,7 +67,7 @@ var comments = {
 
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
-        item += '<div class="panel-heading">' + data.name + ' ' + (new Date(data.when)).toLocaleString('ru-RU') + '</div>';
+        item += '<div class="panel-heading">' + data.name + ' ' + utils.formatDate(new Date(data.when)) + '</div>';
         item += '<div class="panel-body">';
         item += self.escapeHtml(data.msg);
         item += '</div></div></li>';
