@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
     var options = {
         concurrency: require('os').cpus().length,
         port: config.get('port'),
-        debug: true
+        debug: false
     };
 
     sticky(function (callback) {
