@@ -196,30 +196,27 @@ var viewActions = {
 
         // ------------------------------------------------------------------------------
         // play by click
-        webmElement.addEventListener('click', function (e) {
-            var isFirefox = typeof InstallTrigger !== 'undefined';
-            if (isFirefox) {
-                return;
-            }
+        if (typeof InstallTrigger === 'undefined') { // check browser not Firefox
+            webmElement.addEventListener('click', function (e) {
+                // check control section
+                var clickY = (e.pageY - this.getBoundingClientRect().top - this.scrollHeight);
+                var height = parseFloat(this.clientHeight);
 
-            // check control section
-            var clickY = (e.pageY - this.getBoundingClientRect().top - this.scrollHeight);
-            var height = parseFloat(this.clientHeight);
-
-            // avoids interference with controls
-            if (clickY > 0.82 * height) {
-                return;
-            }
+                // avoids interference with controls
+                if (clickY > 0.82 * height) {
+                    return;
+                }
 
 
-            if (this.paused === false) {
-                this.pause();
-            } else {
-                this.play();
-            }
+                if (this.paused === false) {
+                    this.pause();
+                } else {
+                    this.play();
+                }
 
-            return false;
-        });
+                return false;
+            });
+        }
 
         var timeTracker = (function (webmElement) {
             var timePlayed = 0;
