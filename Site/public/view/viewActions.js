@@ -197,6 +197,11 @@ var viewActions = {
         // ------------------------------------------------------------------------------
         // play by click
         webmElement.addEventListener('click', function (e) {
+            var isFirefox = typeof InstallTrigger !== 'undefined';
+            if (isFirefox) {
+                return;
+            }
+
             // check control section
             var clickY = (e.pageY - this.getBoundingClientRect().top - this.scrollHeight);
             var height = parseFloat(this.clientHeight);
