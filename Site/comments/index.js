@@ -18,6 +18,7 @@ module.exports = function (server) {
         });
 
         socket.on('message', function (msg, callback) {
+            msg.when = new Date();
             socket.broadcast.in(socket.room).emit('message', msg);
             callback();
 
