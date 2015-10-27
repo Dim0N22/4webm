@@ -9,6 +9,9 @@ var viewHotkeys = {
         Mousetrap.bind('down', this.downVolume);
         Mousetrap.bind('ctrl+right', this.rewindForward);
         Mousetrap.bind('ctrl+left', this.rewindBack);
+        Mousetrap.bind('r', this.random);
+        var form = document.getElementById('formComments');
+        Mousetrap(form).bind('ctrl+enter', this.sendComment)
     },
 
     startStopVideo: function () {
@@ -45,5 +48,13 @@ var viewHotkeys = {
     rewindBack: function () {
         var video = document.getElementById('webm');
         video.currentTime -= 5;
+    },
+
+    random: function () {
+        document.getElementById('random').click();
+    },
+
+    sendComment: function () {
+        document.getElementById('sendComment').click();
     }
 };
