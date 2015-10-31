@@ -52,7 +52,7 @@ router.get('/', function (req, res) {
                         webms: result.webms,
                         lastSeqid: result.lastSeqid,
                         viewPath: '/' + (req.user ? 'edit/' : ''),
-                        tagsQuery: req.query.tags ? '?tags=' + req.query.tags : ''
+                        tagsQuery: req.tagsQuery
                     });
                 });
             });
@@ -97,7 +97,7 @@ router.get('/page/:page([0-9]+)', function (req, res) {
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
                 viewPath: '/' + (req.user ? 'edit/' : ''),
-                tagsQuery: req.query.tags ? '?tags=' + req.query.tags : ''
+                tagsQuery: req.tagsQuery
             });
         });
     });
@@ -132,8 +132,8 @@ router.get('/:id([0-9]+)', function (req, res) {
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     tags: webm.tags,
-                    prevHref: '/' + prevId + (req.query.tags ? '?tags=' + req.query.tags : ''),
-                    nextHref: '/' + nextId + (req.query.tags ? '?tags=' + req.query.tags : '')
+                    prevHref: '/' + prevId + req.tagsQuery,
+                    nextHref: '/' + nextId + req.tagsQuery
                 });
             }
 
@@ -212,8 +212,8 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     shareUrl: url.format({protocol: req.protocol, host: req.hostname, pathname: String(id)}),
                     tags: tags,
-                    prevHref: '/edit/' + prevId + (req.query.tags ? '?tags=' + req.query.tags : ''),
-                    nextHref: '/edit/' + nextId + (req.query.tags ? '?tags=' + req.query.tags : ''),
+                    prevHref: '/edit/' + prevId + req.tagsQuery,
+                    nextHref: '/edit/' + nextId + req.tagsQuery,
                     danger: danger
                 });
             }

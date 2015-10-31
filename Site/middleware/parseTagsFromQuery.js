@@ -15,6 +15,7 @@ module.exports = function (req, res, next) {
 
         if (tags && tags.length > 0) {
             req.tags = tags;
+            req.tagsQuery = req.query.tags ? '?tags=' + req.query.tags : '';
         }
     }
 
