@@ -1,4 +1,4 @@
-/*global utils */
+/*global utils, mainTags */
 
 var moar = {
     lastSeqid: null,
@@ -24,6 +24,11 @@ var moar = {
         window.onscroll = this.onScroll.bind(this);
     },
 
+    updatePageIndexInUrl: function () {
+        var page = (Number(window.location.pathname.slice(6)) || 1) + 1;
+        window.history.pushState(null, null, this.pagePrefixInUrl + '/page/' + page + mainTags.getRawParamTags());
+    },
+
     moarWebms: function () {
         var self = this;
         if (self.loading) {
@@ -32,10 +37,11 @@ var moar = {
 
         self.loading = true;
 
-        $.get(this.apiMoarUrl, {lastSeqid: self.lastSeqid}).done(function (data) {
+        $.get(this.apiMoarUrl, {lastSeqid: self.lastSeqid, tags: mainTags.getParamTags()}).done(function (data) {
             if (data) {
-                document.getElementById('webmsGrid').appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath));
+                document.getElementById('webmsGrid').appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath, data.tagsQuery));
                 self.lastSeqid = data.lastSeqid;
+                self.updatePageIndexInUrl();
             }
         }).always(function () {
             self.loading = false;
@@ -47,28 +53,30 @@ var moar = {
         var totalHeight = document.body.scrollHeight - document.documentElement.clientHeight;
         var currentHeight = window.pageYOffset;
         if ((totalHeight - currentHeight) < 300) {
-            this.moarWebms(); // TODO throttling
+            this.moarWebms();
         }
 
-
-        // set page number to window.history
-        // change page number when video with lastSeqid becomes visible
-        if (this.loadedSeqIdSet.has(String(this.lastSeqid))) { // page change once for one seqid
-            return;
-        }
-
-        var el = document.getElementById('div' + this.prevSeqid);
-
-        var docViewTop = window.pageYOffset; // current scroll top
-        var docViewBottom = docViewTop + document.documentElement.clientHeight /* visible height*/;
-
-        var elemTop = el.offsetTop;
-        var elemBottom = elemTop + el.offsetHeight;
-        if ((elemTop <= docViewBottom) /*&& (elemTop >= docViewTop)*/) {
-            var page = (Number(window.location.pathname.slice(14)) || 1) + 1;
-            window.history.pushState(null, null, this.pagePrefixInUrl + '/page/' + page);
-            this.loadedSeqIdSet.add(String(this.lastSeqid));
-            this.prevSeqid = this.lastSeqid;
-        }
+        // TODO find solution for correct changing page index
+        //// set page number to window.history
+        //// change page number when video with lastSeqid becomes visible
+        //if (this.loadedSeqIdSet.has(String(this.lastSeqid))) { // page change once for one seqid
+        //    return;
+        //}
+        //
+        //var el = document.getElementById('div' + this.prevSeqid);
+        //
+        //var docViewTop = window.pageYOffset; // current scroll top
+        //var docViewBottom = docViewTop + document.documentElement.clientHeight /* visible height*/;
+        //
+        //if (!el.offsetTop) {
+        //    return;
+        //}
+        //var elemTop = el.offsetTop;
+        //var elemBottom = elemTop + el.offsetHeight;
+        //if ((elemTop <= docViewBottom) /*&& (elemTop >= docViewTop)*/) {
+        //    this.updatePageIndexInUrl();
+        //    this.loadedSeqIdSet.add(String(this.lastSeqid));
+        //    this.prevSeqid = this.lastSeqid;
+        //}
     }
 };

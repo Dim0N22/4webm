@@ -10,7 +10,7 @@ var mainTags = {
     init: function (lastSeqid) {
         this.lastSeqid = lastSeqid;
 
-        this.selectedTags = Cookies.getJSON('tags') || [];
+        this.selectedTags = this.getTagsFromUrl();
 
         for (var i = 0; i < this.selectedTags.length; i++) {
             var el = document.getElementById(this.selectedTags[i]);
@@ -19,6 +19,30 @@ var mainTags = {
         }
     },
 
+
+    getTagsFromUrl: function () {
+        var name = 'tags';
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(location.search);
+        return results === null ? [] : decodeURIComponent(results[1]).split('+');
+    },
+
+    /**
+     * join tags for query parameter
+     * @returns {string}
+     */
+    getParamTags: function () {
+        return this.selectedTags.join('+');
+    },
+
+    /**
+     * get tags from like url parameter with
+     * start with ?
+     * @returns {string|''}
+     */
+    getRawParamTags: function () {
+        return ((this.selectedTags && this.selectedTags.length > 0) ? '?tags=' + this.getParamTags() : '');
+    },
 
     clickTag: function (tag) {
         var tagName = tag.id;
@@ -36,7 +60,8 @@ var mainTags = {
             }
         }
 
-        Cookies.set('tags', this.selectedTags);
+        window.history.pushState(null, null, location.pathname + this.getRawParamTags());
+
         this.refreshVideos();
     },
 
@@ -75,16 +100,15 @@ var mainTags = {
 
         self.loading = true;
 
-        $.get('/api/webm').done(function (data) {
+        $.get('/api/webm', {tags: self.getParamTags()}).done(function (data) {
             document.getElementById('tags').innerHTML = self.generateTagsHtml(data.tags);
             var webmsGrid = document.getElementById('webmsGrid');
             webmsGrid.innerHTML = '';
-            webmsGrid.appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath));
+            webmsGrid.appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath, data.tagsQuery));
             self.lastSeqid = data.lastSeqid;
 
             // paging
             self.prevSeqid = self.lastSeqid;
-            window.history.pushState(null, null, '/');
         }).always(function () {
             self.loading = false;
         });

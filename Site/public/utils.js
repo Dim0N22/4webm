@@ -1,8 +1,14 @@
 var utils = {
-    generateWebmsGridHtml: function (webms, viewPath) {
+    generateWebmsGridHtml: function (webms, viewPath, tagsQuery) {
         if (!webms) {
             return '';
         }
+
+        if (!tagsQuery) {
+            tagsQuery = '';
+        }
+
+
         var docfrag = document.createDocumentFragment();
         for (var i = 0; i < webms.length; i = i + 4) {
             var div = document.createElement("div");
@@ -12,7 +18,7 @@ var utils = {
                 html += '<div class="col-xs-12 col-sm-6 col-md-3" id="div' + webms[i + j].seqid + '">';
                 html += '<em>#' + webms[i + j].seqid + '</em>';
 
-                html += '<a href="' + viewPath + webms[i + j].seqid + '" class="thumbnail" title="' + webms[i + j].createDate + '">';
+                html += '<a href="' + viewPath + webms[i + j].seqid + tagsQuery + '" class="thumbnail" title="' + webms[i + j].createDate + '">';
                 html += '<div class="thumbnail inner-thumbnail" style="background-image: url(' + webms[i + j].previewSrc + ')"></div>';
                 html += '</a>';
                 html += '</div>';

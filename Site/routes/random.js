@@ -37,7 +37,7 @@ router.get('/', function (req, res) {
                     return;
                 }
 
-                res.redirect('/' + (req.user ? 'edit/' : '') + webms[0].seqid);
+                res.redirect('/' + (req.user ? 'edit/' : '') + webms[0].seqid + (req.query.tags ? '?tags=' + req.query.tags : ''));
             });
     });
 });

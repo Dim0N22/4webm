@@ -10,7 +10,6 @@ var srcJs = ['./public/**/*.js', '!./public/vendors/**', '!./public/build/**'];
 var srcVendorJs = [
     './public/vendors/js/jquery-2.1.4.min.js',
     './public/vendors/js/bootstrap.min.js',
-    './public/vendors/js/js.cookie-2.0.3.min.js',
     './public/vendors/js/mousetrap.min.js',
     './public/vendors/js/socket.io-1.3.7.js'
 ];

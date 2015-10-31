@@ -35,8 +35,8 @@ router.get('/', function (req, res) {
             params.lastSeqid = req.query.lastSeqid;
         }
 
-        Webm.getTopByField({count: 2, field: 'viewsCount'}, function(err, viewsTop){
-            Webm.getTopByField({count: 2, field: 'commentsCount'}, function(err, commentsTop) {
+        Webm.getTopByField({count: 2, field: 'viewsCount'}, function (err, viewsTop) {
+            Webm.getTopByField({count: 2, field: 'commentsCount'}, function (err, commentsTop) {
                 Webm.getWebms(params, function (err, result) {
                     if (err) {
                         log.error(err);
@@ -51,7 +51,8 @@ router.get('/', function (req, res) {
                         tags: tags,
                         webms: result.webms,
                         lastSeqid: result.lastSeqid,
-                        viewPath: '/' + (req.user ? 'edit/' : '')
+                        viewPath: '/' + (req.user ? 'edit/' : ''),
+                        tagsQuery: req.query.tags ? '?tags=' + req.query.tags : ''
                     });
                 });
             });
@@ -95,7 +96,8 @@ router.get('/page/:page([0-9]+)', function (req, res) {
                 tags: tags,
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
-                viewPath: '/' + (req.user ? 'edit/' : '')
+                viewPath: '/' + (req.user ? 'edit/' : ''),
+                tagsQuery: req.query.tags ? '?tags=' + req.query.tags : ''
             });
         });
     });
@@ -130,8 +132,8 @@ router.get('/:id([0-9]+)', function (req, res) {
                     videoSrc: staticPathUtils.resolveVideoSrc(webm.file_info.path),
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     tags: webm.tags,
-                    prevHref: '/' + prevId,
-                    nextHref: '/' + nextId
+                    prevHref: '/' + prevId + (req.query.tags ? '?tags=' + req.query.tags : ''),
+                    nextHref: '/' + nextId + (req.query.tags ? '?tags=' + req.query.tags : '')
                 });
             }
 
@@ -210,8 +212,8 @@ router.get('/edit/:id([0-9]+)', function (req, res) {
                     previewSrc: staticPathUtils.resolvePreviewSrc(webm.file_info.path),
                     shareUrl: url.format({protocol: req.protocol, host: req.hostname, pathname: String(id)}),
                     tags: tags,
-                    prevHref: '/edit/' + prevId,
-                    nextHref: '/edit/' + nextId,
+                    prevHref: '/edit/' + prevId + (req.query.tags ? '?tags=' + req.query.tags : ''),
+                    nextHref: '/edit/' + nextId + (req.query.tags ? '?tags=' + req.query.tags : ''),
                     danger: danger
                 });
             }

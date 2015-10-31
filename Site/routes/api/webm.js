@@ -43,7 +43,8 @@ router.get('/', function (req, res) {
                 webms: result.webms,
                 lastSeqid: result.lastSeqid,
                 viewPath: '/' + (req.user ? 'edit/' : ''),
-                tags: tags
+                tags: tags,
+                tagsQuery: req.query.tags ? '?tags=' + req.query.tags : ''
             });
         });
     });
@@ -79,7 +80,8 @@ router.get('/moar', function (req, res) {
         res.json({
             webms: result.webms,
             lastSeqid: result.lastSeqid,
-            viewPath: '/' + (req.user ? 'edit/' : '')
+            viewPath: '/' + (req.user ? 'edit/' : ''),
+            tagsQuery: req.query.tags ? '?tags=' + req.query.tags : ''
         });
     });
 });
