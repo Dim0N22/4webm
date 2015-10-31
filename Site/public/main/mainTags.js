@@ -1,15 +1,11 @@
-/*global utils */
+/*global utils, moar */
 
 var mainTags = {
-    lastSeqid: null,
-    prevSeqid: this.lastSeqid, // prevSeqid use in onscroll event and lastSeqid at this time can be changed (if new page loaded but page/number not yet changed)
     selectedTags: null,
     loading: false,
 
 
-    init: function (lastSeqid) {
-        this.lastSeqid = lastSeqid;
-
+    init: function () {
         this.selectedTags = this.getTagsFromUrl();
 
         for (var i = 0; i < this.selectedTags.length; i++) {
@@ -108,10 +104,10 @@ var mainTags = {
             var webmsGrid = document.getElementById('webmsGrid');
             webmsGrid.innerHTML = '';
             webmsGrid.appendChild(utils.generateWebmsGridHtml(data.webms, data.viewPath, data.tagsQuery));
-            self.lastSeqid = data.lastSeqid;
+            moar.lastSeqid = data.lastSeqid;
 
             // paging
-            self.prevSeqid = self.lastSeqid;
+            moar.prevSeqid = self.lastSeqid;
         }).always(function () {
             self.loading = false;
         });
