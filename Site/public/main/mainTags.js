@@ -27,7 +27,7 @@ var mainTags = {
         var name = 'tags';
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
         var results = regex.exec(location.search);
-        return results === null ? [] : decodeURIComponent(results[1]).split('+');
+        return results === null ? [] : decodeURIComponent(results[1]).split(';');
     },
 
     /**
@@ -35,7 +35,7 @@ var mainTags = {
      * @returns {string}
      */
     getParamTags: function () {
-        return this.selectedTags.join('+');
+        return this.selectedTags.join(';');
     },
 
     /**

@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
 
     req.tagsQuery = '';
     if (req.query.tags) {
-        var tags = req.query.tags.split('+');
+        var tags = req.query.tags.split(';');
 
         if (tags && tags.length > 0) {
             req.tags = tags;
