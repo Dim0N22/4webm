@@ -6,16 +6,17 @@
  * @returns {*}
  */
 module.exports = function (req, res, next) {
-    if (req.cookies.tags) {
+    if (req.cookies.tags) { // TODO remove in next release
         res.clearCookie('tags');
     }
 
+    req.tagsQuery = '';
     if (req.query.tags) {
         var tags = req.query.tags.split('+');
 
         if (tags && tags.length > 0) {
             req.tags = tags;
-            req.tagsQuery = req.query.tags ? '?tags=' + req.query.tags : '';
+            req.tagsQuery = req.query.tags ? '?tags=' + encodeURIComponent(req.query.tags) : '';
         }
     }
 
