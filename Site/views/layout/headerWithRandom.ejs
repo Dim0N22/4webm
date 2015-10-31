@@ -24,7 +24,7 @@
                 <% } %>
                 <a class="navbar-brand" href="/"><%= projectName %></a>
                 <ul class="nav navbar-nav" style="margin-bottom: 0px; margin-top: 7.5px">
-                    <a href="/random" id="random" type="button" class="btn btn-default">
+                    <a id="random" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-random" aria-hidden="true"></span> Random
                     </a>
                 </ul>
@@ -52,3 +52,9 @@
         </div>
     </div>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        header.init();
+    });
+</script>
