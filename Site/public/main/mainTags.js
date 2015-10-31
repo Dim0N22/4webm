@@ -19,7 +19,10 @@ var mainTags = {
         }
     },
 
-
+    /**
+     * get tags array from url
+     * @returns {Array}
+     */
     getTagsFromUrl: function () {
         var name = 'tags';
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
