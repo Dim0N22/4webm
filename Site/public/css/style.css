@@ -90,6 +90,8 @@
 
     .index-tags {
         text-align: center;
+        max-height: 130px; /*5 lines*/
+        overflow-y: scroll;
     }
 }
 

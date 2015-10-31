@@ -45,7 +45,7 @@ var mainTags = {
             return '';
         }
 
-        var html = '<div class="index-tags hidden-print" data-spy="affix" role="complementary" data-offset-top="0">';
+        var html = '<div class="index-tags hidden-print">';
         for (var i = 0; i < tags.length; i++) {
             html += '<a id="' + tags[i]._id + '" class="btn ';
 

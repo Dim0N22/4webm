@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div id="tags" class="col-md-2">
-            <div class="index-tags hidden-print" data-spy="affix" role="complementary" data-offset-top="0">
+            <div class="index-tags hidden-print">
                 <% tags.forEach(function(tag){ %>
                 <a id="<%= tag._id %>" class="btn btn-default btn-xs tag-radius" type="button" onclick="mainTags.clickTag(this);" title="<%= tag._id %>">
                     <span class="tag-name pull-left"> <%= tag._id %> </span>
