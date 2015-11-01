@@ -8,7 +8,7 @@
                     </div>
                     <div class="panel-body">
                         <% for (var i = 0; i < viewsTop.length; i++ ) {%>
-                            <div class="col-xs-6" id="div<%= viewsTop[i].seqid %>">
+                            <div class="col-xs-6" style="padding-left: 5px; padding-right: 5px;" id="div<%= viewsTop[i].seqid %>">
                                 <em>#<%= viewsTop[i].seqid %></em>
 
                                 <a href="<%= viewPath + viewsTop[i].seqid %>" class="thumbnail" title="<%= viewsTop[i].createDate %>">
@@ -26,7 +26,7 @@
                     </div>
                     <div class="panel-body">
                         <% for (var i = 0; i < commentsTop.length; i++ ) {%>
-                            <div class="col-xs-6" id="div<%= commentsTop[i].seqid %>">
+                            <div class="col-xs-6" style="padding-left: 5px; padding-right: 5px;" id="div<%= commentsTop[i].seqid %>">
                                 <em>#<%= commentsTop[i].seqid %></em>
 
                                 <a href="<%= viewPath + commentsTop[i].seqid %>" class="thumbnail" title="<%= commentsTop[i].createDate %>">
