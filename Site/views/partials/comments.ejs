@@ -1,16 +1,19 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <form id="formComments" class="form-horizontal" role="form">
-            <div class="form-group row">
-                <div class="col-md-4 col-xs-8">
-                    <input id="username" type="text" class="form-control" placeholder="Имя">
+            <textarea id="comment" class="form-control" maxlength="140"></textarea>
+
+            <div class="form-group row" style="margin-top: 5px; margin-bottom: 0px;">
+                <div class="col-md-7 hidden-xs"></div>
+
+                <div class="col-md-3 col-xs-8" style="padding-right: 0px;">
+                    <input id="username" type="text" class="form-control input-sm" placeholder="Имя">
                 </div>
-                <div class="col-md-4 hidden-xs"></div>
-                <div class="col-md-4 col-xs-4 text-right">
-                    <button id="sendComment" class="btn btn-default">Отправить</button>
+
+                <div class="col-md-2 col-xs-4 text-right" style="padding-left: 5px;">
+                    <button id="sendComment" class="btn btn-default btn-sm btn-block">Отправить</button>
                 </div>
             </div>
-            <textarea id="comment" class="form-control" maxlength="140"></textarea>
         </form>
     </div>
     <div class="panel-body">
