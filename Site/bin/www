@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
         var app = require('../app');
         var server = http.createServer(app);
 
-        var io = require('../comments')(server);
+        var io = require('../socket')(server);
         app.set('io', io);
 
         callback(server);
@@ -26,6 +26,6 @@ if (process.env.NODE_ENV === 'production') {
         console.log('Server running at http://localhost:' + config.get('port'));
     });
 
-    var io = require('../comments')(server);
+    var io = require('../socket')(server);
     app.set('io', io);
 }
