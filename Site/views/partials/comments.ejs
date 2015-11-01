@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div id="panelComments" class="panel panel-default  <% if (comments.length === 0) { %> panel-body-hidden <% } %>">
     <div class="panel-heading">
         <form id="formComments" class="form-horizontal" role="form">
             <textarea id="comment" class="form-control" maxlength="140"></textarea>
@@ -16,7 +16,7 @@
             </div>
         </form>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" style="padding-bottom: 5px;">
         <ul id="messages" class="list-unstyled">
             <% comments.forEach(function(comment){ %>
             <li>

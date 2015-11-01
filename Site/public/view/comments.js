@@ -4,6 +4,7 @@ var comments = {
     webmId: null,
     elName: null,
     elComment: null,
+    removedPanelBodyHidden: false,
 
     init: function (webmId) {
         var self = this;
@@ -65,6 +66,8 @@ var comments = {
     printMessage: function (data) {
         var self = this;
 
+        self.showMessages();
+
         var item = '';
         item += '<li><div class="panel panel-default panel-default">';
         item += '<div class="panel-heading">' + data.name + ' ' + utils.formatDate(new Date(data.when)) + '</div>';
@@ -72,6 +75,13 @@ var comments = {
         item += self.escapeHtml(data.msg);
         item += '</div></div></li>';
         self.elMessages.innerHTML = item + self.elMessages.innerHTML;
+    },
+
+    showMessages: function () {
+        if (!this.removedPanelBodyHidden) {
+            document.getElementById('panelComments').classList.remove('panel-body-hidden');
+            this.removedPanelBodyHidden = true;
+        }
     },
 
     escapeHtml: function (str) {

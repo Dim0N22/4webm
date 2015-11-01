@@ -183,6 +183,18 @@ em {
     margin-bottom: 5px;
 }
 
+
+/*hide panel-body when no comments*/
+.panel-body-hidden {
+    border-bottom-width: 0px;
+}
+
+.panel-body-hidden .panel-body {
+    display: none!important;
+}
+
+
+/*tops*/
 .tops .panel-title {
     font-size: 13px;
 }
