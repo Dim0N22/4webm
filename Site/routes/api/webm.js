@@ -96,6 +96,11 @@ router.put('/:id([0-9]+)/tags', function (req, res) {
         return;
     }
 
+    if (req.body.value.indexOf(';') !== -1) {
+        res.status(400).end();
+        return;
+    }
+
     log.info(util.format('%s %s %s', req.body.action, req.body.property, req.body.value), {
         login: req.user ? req.user.login : null,
         seqid: req.params.id,

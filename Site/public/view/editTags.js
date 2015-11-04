@@ -49,6 +49,12 @@ var editTags = {
 
         var inputNewTag = document.getElementById('newTag');
         var tag = inputNewTag.value.trim();
+
+        if (tag.indexOf(';') !== -1){
+            alert('Тег не может содержать ;');
+            return;
+        }
+
         if (tag === '') {
             inputNewTag.value = ''; // remove spaces
             return;

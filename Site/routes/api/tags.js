@@ -5,6 +5,11 @@ var log = require('../../libs/log');
 var router = express.Router();
 
 router.post('/:tag', function (req, res) {
+    if (req.params.tag.indexOf(';') !== -1){
+        res.status(400).end();
+        return;
+    }
+
     res.status(200).end();
 
     process.nextTick(function () {
