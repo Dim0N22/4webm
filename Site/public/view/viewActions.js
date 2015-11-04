@@ -2,6 +2,7 @@
 
 var viewActions = {
     webmId: null,
+    isMobile: false,
 
     init: function (webmId) {
         this.webmId = webmId;
@@ -198,15 +199,10 @@ var viewActions = {
         // play by click
         if (typeof InstallTrigger === 'undefined') { // check browser not Firefox
             webmElement.addEventListener('click', function (e) {
-                // check control section
-                var clickY = (e.pageY - this.getBoundingClientRect().top - this.scrollHeight);
-                var height = parseFloat(this.clientHeight);
-
-                // avoids interference with controls
-                if (clickY > 0.82 * height) {
+                if (self.isMobile || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    self.isMobile = true;
                     return;
                 }
-
 
                 if (this.paused === false) {
                     this.pause();
