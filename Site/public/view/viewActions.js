@@ -12,12 +12,24 @@ var viewActions = {
         // ------------------------------------------------------------------------------
         // DOMContentLoaded
 
+        // set volume
         document.getElementById('webm').volume = localStorage.volume || 1;
 
-        if (window.history.length > 1 && document.referrer === window.location.origin + '/') {
+
+        // play on active
+        if (!document.hidden){
             document.getElementById('webm').play();
+        } else {
+            document.addEventListener("visibilitychange", function listenerVisibilityChange(e) {
+                if (!document.hidden) {
+                    document.getElementById('webm').play();
+                    e.target.removeEventListener(e.type, listenerVisibilityChange);
+                }
+            }, false);
         }
 
+
+        // navigation
         var navigation = localStorage.getItem("navigation");
 
         if (navigation === 'autoNext' || navigation === 'autoPrev') {
