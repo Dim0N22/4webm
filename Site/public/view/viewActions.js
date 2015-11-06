@@ -68,11 +68,6 @@ var viewActions = {
 
     /**
      * Save property in localStorage and send to server
-     * @param item
-     * @param property
-     * @param url
-     * @param opposite
-     * @returns {Boolean|undefined} - if undefined property is set return undefined
      */
     addToStore: function (item, property, url, opposite) {
         var self = this;
