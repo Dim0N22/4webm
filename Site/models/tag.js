@@ -2,7 +2,7 @@ var mongoose = require('../libs/mongoose');
 var Schema = mongoose.Schema;
 
 var tagSchema = new Schema({
-    name: String,
+    name: { type: String, unique: true },
     creator: String,
     when: Date
 }, {versionKey: false});
