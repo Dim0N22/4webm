@@ -95,7 +95,11 @@ func main() {
 
 		var threads topThreads
 		err = json.Unmarshal(body, &threads)
-		check(err)
+
+		if err != nil {
+			fmt.Println("Ошибка чтения json: \n" + string(body))
+			continue
+		}
 
 		fmt.Println("Получили " + strconv.Itoa(len(threads.Threads)) + " тредов")
 
