@@ -117,7 +117,7 @@ func main() {
 				bson.M{"hasharr.0": bson.M{"$exists": true}},
 				bson.M{"_id": bson.M{"$ne": objId}},
 				bson.M{"seqid": bson.M{"$exists": true}},
-			}}).Iter()
+			}}).Sort("-seqid").Iter()
 
 			dWebm := &Webm{}
 			for iter.Next(&dWebm) {
