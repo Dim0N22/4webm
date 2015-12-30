@@ -118,6 +118,7 @@ func main() {
 				bson.M{"_id": bson.M{"$ne": objId}},
 				bson.M{"seqid": bson.M{"$exists": true}},
 			}}).Iter()
+
 			dWebm := &Webm{}
 			for iter.Next(&dWebm) {
 				dHash := getHashForWebm(dWebm)
@@ -125,6 +126,7 @@ func main() {
 				check(err)
 				if distance > 0.999 {
 					doubles = append(doubles, dWebm.Id)
+					break
 				}
 			}
 
