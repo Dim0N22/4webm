@@ -99,6 +99,7 @@ func main() {
 	req.Header.Set("Referer", "http://2ch.hk/b/")
 
 	resp, err := client.Do(req)
+	check(err)
 
 	if resp.StatusCode == 503 {
 		cookie, err := cloudflarebypasser.GetCloudflareClearanceCookie(req.URL, proxyUrl)
