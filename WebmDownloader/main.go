@@ -136,6 +136,11 @@ func main() {
 				panic("Can't bypass cloudflare!")
 			}
 
+			if resp.StatusCode == 404 {
+				msg.Ack(false)
+				continue
+			}
+
 			bytes, err := ioutil.ReadAll(resp.Body)
 			check(err)
 
